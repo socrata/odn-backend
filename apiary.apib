@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://api.opendatanetwork.com/
 
 # ODN API
 
@@ -32,15 +32,15 @@ Entities are grouped by type and sorted in descending order by their rank.
 For example, region entities are sorted in descending order by population.
 
 + Parameters
-    + relation (required, string, `parents`)
+    + relation (required, string, `parent`)
 
         The type of relation to find.
 
         + Values
-            + `parents`
-            + `children`
-            + `siblings`
-            + `peers`
+            + `parent`
+            + `child`
+            + `sibling`
+            + `peer`
 
     + id (required, string, `0400000US53`)
 
@@ -49,6 +49,7 @@ For example, region entities are sorted in descending order by population.
     + limit (optional, number)
 
         Maximum number of results to return.
+        Capped at 100 results.
 
         + Default: `10`
 
@@ -58,9 +59,11 @@ For example, region entities are sorted in descending order by population.
 
     Get all of the parents of Washington state.
 
-    + Parameters
-        + relation: parents
-        + id: 0400000US53
+    `/related/parent?id=0400000US53`
+
+    - Parameters
+        - relation: parent
+        - id: 0400000US53
 
 + Response 200 (application/json)
 
@@ -90,8 +93,10 @@ For example, region entities are sorted in descending order by population.
     Get all of the children of Washington state
     including counties, places, and states.
 
+    `/related/child?id=0400000US53`
+
     + Parameters
-        + relation: children
+        + relation: child
         + id: 0400000US53
 
 + Response 200 (application/json)
@@ -141,8 +146,10 @@ For example, region entities are sorted in descending order by population.
 
     Get all of the siblings of Washington state.
 
+    `/related/sibling?id=0400000US53`
+
     + Parameters
-        + relation: siblings
+        + relation: sibling
         + id: 0400000US53
 
 + Response 200 (application/json)
@@ -172,11 +179,11 @@ For example, region entities are sorted in descending order by population.
 
     Get the states that are most similar to Washington state
     based on attributes like population, jobs, income, location, etc.
-    See the [odn-peers](https://github.com/socrata/odn-peers)
-    project for details on how peers are computed.
+
+    `/related/peer?id=0400000US53`
 
     + Parameters
-        + relation: peers
+        + relation: peer
         + id: 0400000US53
 
 + Response 200 (application/json)
@@ -202,8 +209,29 @@ For example, region entities are sorted in descending order by population.
             ]
         }
 
-## Related Entities [/related/v1{?id}] 
-Main endpoint for getting related entities
++ Request
 
-+ Parameters
-    + id (required, string, `310M200US41180`) Include detailed model information
+    If limit > 100, then 100 results will be returned along with a message.
+
+    `/related/child?id=0400000US53&size=10000`
+
+    + Parameters
+        + relation: child
+        + id: 0400000US53
+        + size: 10000
+
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [ ... ],
+            
+            "message": {
+                "text": "Limit exceeded cap of 100. Response contains first 100 results for each group."
+            }
+        }
