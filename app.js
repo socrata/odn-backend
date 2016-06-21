@@ -7,7 +7,10 @@ const app = express();
 
 app.use(compression());
 
+app.set('json spaces', 4);
+
 app.get('/', require('./controllers/home'));
+app.get('/related/:relation', require('./controllers/related'));
 
 app.use(require('./controllers/error'));
 
