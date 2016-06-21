@@ -207,36 +207,3 @@ Main endpoint for getting related entities
 
 + Parameters
     + id (required, string, `310M200US41180`) Include detailed model information
-    
-### Compute dataset classification from JSON representing a dataset [POST]
-
-+ Request (application/json)
-  + Body
-
-            {
-             "name":"The dataset name",
-             "description":"The description",
-             "keywords":["word1", "word2", "wordk"]
-            }
-
-
-+ Response 200
-
-            {
-                "metadata":{
-                    "model_version":1,
-                    "time_to_compute":300,
-                    "input_size":1024
-                },
-                "tags": ["health", "transportation"],
-                "tags_detailed": [
-                {
-                    "tag":"health",
-                    "confidence": .8
-                },
-                {
-                    "tag":"transportation",
-                    "confidence": .9342
-                }
-                ]
-            }
