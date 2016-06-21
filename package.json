@@ -1,0 +1,28 @@
+{
+  "name": "odn-backend",
+  "description": "Open Data Network API",
+  "private": true,
+  "dependencies": {
+    "compression": "1.6.2",
+    "express": "4.14.0"
+  },
+  "engines": {
+    "node": "5.0.0"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/socrata/odn-backend.com.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/socrata/odn-backend/issues"
+  },
+  "homepage": "https://github.com/socrata/odn-backend.com#readme"
+}
