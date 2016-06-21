@@ -5,76 +5,238 @@ HOST: http://polls.apiblueprint.org/
 
 The ODN API exposes all functionality in the opendatanetwork.com
 
-## Related Entities [/related]
 
-### List All Questions [GET]
+## Relatives [/related/{relation}{?id}{?size}]
+
+Find entities that are related to one another.
+
+
+The current hierarchy of entities is listed below,
+where "a > b" means that a is a parent of b.
+Note that some entities, like metropolitan areas, may have multiple parents.
+For example, the New York metropolitan area lies within the states of New York,
+New Jersey, and Pennsylvania.
+
+```
+nation > region
+region > division
+division > state
+state > county
+state > msa
+state > place
+```
+
+TODO: update with link to relation file on odn-backend when available
+
+Entities are grouped by type and sorted in descending order by their rank.
+For example, region entities are sorted in descending order by population.
+
++ Parameters
+    + relation (required, string, `parents`)
+
+        The type of relation to find.
+
+        + Values
+            + `parents`
+            + `children`
+            + `siblings`
+            + `peers`
+
+    + id (required, string, `0400000US53`)
+
+        ID of the target entity.
+
+    + size (optional, number)
+
+        Maximum number of results to return.
+
+        + Default: `10`
+
+### Find the relatives of an entity [GET]
+
++ Request
+
+    Get all of the parents of Washington state.
+
+    + Parameters
+        + relation: parents
+        + id: 0400000US53
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
-
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
+            "entity": {
+                "id": "0400000US53",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "division",
+                    "entities": [
+                        {
+                            "id": "0300000US9",
+                            "name": "Pacific Division",
+                            "type": "division"
+                        }
+                    ]
+                }
             ]
         }
 
-+ Response 201 (application/json)
++ Request
 
-    + Headers
+    Get all of the children of Washington state
+    including counties, places, and states.
 
-            Location: /questions/2
+    + Parameters
+        + relation: children
+        + id: 0400000US53
 
-    + Body
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "county",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "King County",
+                            "type": "county"
+                        }
+                    ]
+                },
+                {
+                    "type": "place",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "Seattle, WA",
+                            "type": "place"
+                        }
+                    ]
+                },
+                {
+                    "type": "msa",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "Seattle Metro Area (WA)",
+                            "type": "msa"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Request
+
+    Get all of the siblings of Washington state.
+
+    + Parameters
+        + relation: siblings
+        + id: 0400000US53
+
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "state",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "California",
+                            "type": "state"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Request
+
+    Get the states that are most similar to Washington state
+    based on attributes like population, jobs, income, location, etc.
+    See the [odn-peers](https://github.com/socrata/odn-peers)
+    project for details on how peers are computed.
+
+    + Parameters
+        + relation: peers
+        + id: 0400000US53
+
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "state",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "Oregon",
+                            "type": "state"
+                        }
+                    ]
+                }
+            ]
+        }
+
+## Related Entities [/related/v1{?id}] 
+Main endpoint for getting related entities
+
++ Parameters
+    + id (required, string, `310M200US41180`) Include detailed model information
+    
+### Compute dataset classification from JSON representing a dataset [POST]
+
++ Request (application/json)
+  + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
+             "name":"The dataset name",
+             "description":"The description",
+             "keywords":["word1", "word2", "wordk"]
+            }
+
+
++ Response 200
+
+            {
+                "metadata":{
+                    "model_version":1,
+                    "time_to_compute":300,
+                    "input_size":1024
+                },
+                "tags": ["health", "transportation"],
+                "tags_detailed": [
+                {
+                    "tag":"health",
+                    "confidence": .8
+                },
+                {
+                    "tag":"transportation",
+                    "confidence": .9342
+                }
                 ]
             }
