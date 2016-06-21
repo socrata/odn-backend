@@ -1,8 +1,14 @@
 'use strict';
 
-function get(request, response) {
-    response.send('ODN');
-}
+/**
+ * Controller for the root of the site.
+ */
 
-module.exports = get;
+module.exports = (request, response) => {
+    response.send(`
+        Welcome to the ODN API. \
+        Documentation is available
+        <a href="http://docs.odn.apiary.io/">here</a>.
+    `);
+};
 

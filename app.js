@@ -9,9 +9,7 @@ app.use(compression());
 
 app.get('/', require('./controllers/home'));
 
-app.use((error, req, res, next) => {
-    // RenderController.error(req, res)(error);
-});
+app.use(require('./controllers/error'));
 
 const port = Number(process.env.PORT || 3001);
 
