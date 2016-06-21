@@ -1,80 +1,237 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://api.opendatanetwork.com/
 
 # ODN API
 
 The ODN API exposes all functionality in the opendatanetwork.com
 
-## Related Entities [/related]
 
-### List All Questions [GET]
+## Relatives [/related/{relation}{?id}{?limit}]
+
+Find entities that are related to one another.
+
+
+The current hierarchy of entities is listed below,
+where "a > b" means that a is a parent of b.
+Note that some entities, like metropolitan areas, may have multiple parents.
+For example, the New York metropolitan area lies within the states of New York,
+New Jersey, and Pennsylvania.
+
+```
+nation > region
+region > division
+division > state
+state > county
+state > msa
+state > place
+```
+
+TODO: update with link to relation file on odn-backend when available
+
+Entities are grouped by type and sorted in descending order by their rank.
+For example, region entities are sorted in descending order by population.
+
++ Parameters
+    + relation (required, string, `parent`)
+
+        The type of relation to find.
+
+        + Values
+            + `parent`
+            + `child`
+            + `sibling`
+            + `peer`
+
+    + id (required, string, `0400000US53`)
+
+        ID of the target entity.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Capped at 100 results.
+
+        + Default: `10`
+
+### Find the relatives of an entity [GET]
+
++ Request
+
+    Get all of the parents of Washington state.
+
+    `/related/parent?id=0400000US53`
+
+    - Parameters
+        - relation: parent
+        - id: 0400000US53
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
-
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
+            "entity": {
+                "id": "0400000US53",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "division",
+                    "entities": [
+                        {
+                            "id": "0300000US9",
+                            "name": "Pacific Division",
+                            "type": "division"
+                        }
+                    ]
+                }
             ]
         }
 
-+ Response 201 (application/json)
++ Request
 
-    + Headers
+    Get all of the children of Washington state
+    including counties, places, and states.
 
-            Location: /questions/2
+    `/related/child?id=0400000US53`
 
-    + Body
+    + Parameters
+        + relation: child
+        + id: 0400000US53
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "county",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "King County",
+                            "type": "county"
+                        }
+                    ]
+                },
+                {
+                    "type": "place",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "Seattle, WA",
+                            "type": "place"
+                        }
+                    ]
+                },
+                {
+                    "type": "msa",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "Seattle Metro Area (WA)",
+                            "type": "msa"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Request
+
+    Get all of the siblings of Washington state.
+
+    `/related/sibling?id=0400000US53`
+
+    + Parameters
+        + relation: sibling
+        + id: 0400000US53
+
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "state",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "California",
+                            "type": "state"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Request
+
+    Get the states that are most similar to Washington state
+    based on attributes like population, jobs, income, location, etc.
+
+    `/related/peer?id=0400000US53`
+
+    + Parameters
+        + relation: peer
+        + id: 0400000US53
+
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [
+                {
+                    "type": "state",
+                    "entities": [
+                        {
+                            "id": "...",
+                            "name": "Oregon",
+                            "type": "state"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Request
+
+    If limit > 100, then 100 results will be returned along with a message.
+
+    `/related/child?id=0400000US53&size=10000`
+
+    + Parameters
+        + relation: child
+        + id: 0400000US53
+        + size: 10000
+
++ Response 200 (application/json)
+
+        {
+            "entity": {
+                "id": "...",
+                "name": "Washington",
+                "type": "state"
+            },
+
+            "groups": [ ... ],
+            
+            "message": {
+                "text": "Limit exceeded cap of 100. Response contains first 100 results for each group."
             }
+        }
