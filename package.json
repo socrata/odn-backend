@@ -4,8 +4,13 @@
   "private": true,
   "dependencies": {
     "compression": "1.6.2",
+    "crypto": "0.0.3",
     "express": "4.14.0",
-    "nodemon": "1.9.2"
+    "lodash": "4.13.1",
+    "memjs": "0.10.0",
+    "nodemon": "1.9.2",
+    "querystring": "0.2.0",
+    "request-promise": "3.0.0"
   },
   "engines": {
     "node": "5.0.0"

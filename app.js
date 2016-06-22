@@ -9,10 +9,17 @@ app.use(compression());
 
 app.set('json spaces', 4);
 
-app.get('/', require('./controllers/home'));
-app.get('/related/:relation', require('./controllers/related'));
+app.get('/', require('./app/controllers/home'));
+app.get('/related/:relation', require('./app/controllers/related'));
 
-app.use(require('./controllers/error'));
+app.use(require('./app/controllers/error'));
+
+
+process.on('uncaughtException', function(err) {
+    console.log( " UNCAUGHT EXCEPTION " );
+    console.log( "[Inside 'uncaughtException' event] " + err.stack || err.message );
+    console.log(err);
+});
 
 const port = Number(process.env.PORT || 3001);
 
