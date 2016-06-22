@@ -97,15 +97,15 @@ function validateRequest(request, response) {
     ]);
 }
 
-function relationPromise(entity, relation) {
+function relationPromise(entity, relation, n) {
     if (relation === 'parent') {
-        return Relatives.parents(entity);
+        return Relatives.parents(entity, n);
     } else if (relation === 'child') {
-        return Relatives.children(entity);
+        return Relatives.children(entity, n);
     } else if (relation === 'sibling') {
-        return Relatives.siblings(entity);
+        return Relatives.siblings(entity, n);
     } else if (relation === 'peer') {
-        return Relatives.peers(entity);
+        return Relatives.peers(entity, n);
     } else {
         return new Promise((resolve, reject) => reject({
             message: `Invalid relation type: ${relation}`
@@ -121,7 +121,7 @@ module.exports = (request, response) => {
             type: 'state'
         };
 
-        relationPromise(entity, relation).then(json => {
+        relationPromise(entity, relation, limit).then(json => {
             response.json(json);
         }, error => {
             console.log(error);
