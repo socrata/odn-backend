@@ -13,7 +13,7 @@
     "request-promise": "3.0.0"
   },
   "engines": {
-    "node": "5.0.0"
+    "node": "6.2.2"
   },
   "scripts": {
     "start": "node app.js"

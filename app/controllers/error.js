@@ -1,19 +1,54 @@
 'use strict';
 
+const _ = require('lodash');
+
 /**
  * Middleware to handle errors that were not handled anywhere else.
  */
 
-module.exports = (error, request, response, next, statusCode) => {
-    statusCode = statusCode || 500;
+class ClientError {
+    constructor(message, statusCode, payload) {
+        this.message = message;
+        this.statusCode = statusCode || 400;
+        this.payload = payload || {};
+    }
+}
 
-    console.error(`error rendering request at: ${request.path}`);
-    console.error(error);
+class ErrorController {
+    constructor(request, response) {
+        this.request = request;
+        this.response = response;
+    }
 
-    response.status(statusCode).json({
-        error,
-        statusCode,
-        url: request.url
-    });
-};
+    /**
+     * Handles promise rejection.
+     */
+    reject(statusCode) {
+        return error => {
+            ErrorController.respond(error, this.request, this.response, null, statusCode);
+        };
+    }
+
+    static respond(error, request, response, next, statusCode) {
+        statusCode = statusCode || 500;
+
+        console.error(`error rendering request at: ${request.path}`);
+        console.log(error.message);
+        console.error(error);
+
+        response.status(statusCode).json({
+            error: {
+                message: error.message
+            },
+            statusCode,
+            url: request.url
+        });
+    }
+
+    static client(message) {
+        return new Error(message);
+    }
+}
+
+module.exports = ErrorController;
 

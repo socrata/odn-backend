@@ -25,17 +25,7 @@ class Relatives {
     }
 
     static siblings(entity, n) {
-        return new Promise((resolve, reject) => {
-            Relatives.parents(entity).then(response => {
-                const siblingPromises = _.chain(response.groups)
-                    .map(group => group.entities)
-                    .flatten()
-                    .map(parentEntity => children(parentEntity, entity.type, n + 1))
-                    .value();
-
-                resolveGroups(entity, siblingPromises, n).then(resolve, reject);
-            }, reject);
-        });
+        return resolveGroups(entity, [siblings(entity, n + 1)], n);
     }
 }
 
@@ -93,6 +83,32 @@ function parents(entity, parentType, n) {
     });
 }
 
+function siblings(entity, n) {
+    return new Promise((resolve, reject) => {
+        Relatives.parents(entity).then(response => {
+            const parentIDs = _.chain(response.groups)
+                .map(group => group.entities)
+                .flatten()
+                .map(parentEntity => parentEntity.id)
+                .value();
+
+            if (parentIDs.length < 1) resolve();
+
+            const url = Request.buildURL(Constants.RELATIVES_URL, {
+                child_type: entity.type,
+                '$order': 'child_population DESC',
+                '$limit': n * parentIDs.length,
+                '$where': `parent_id in (${parentIDs.map(id => `'${id}'`).join(',')})`
+            });
+
+            Request.getJSON(url).then(json => resolve({
+                type: entity.type,
+                entities: _.uniqBy(json.map(parseChild), _.property('id'))
+            }), reject);
+        });
+    });
+}
+
 /**
  * Gets the peers of an entity.
  */
@@ -110,6 +126,10 @@ function peers(entity, n) {
 function resolveGroups(entity, groupPromises, n) {
     return new Promise((resolve, reject) => {
         Promise.all(groupPromises).then(groups => {
+            groups = groups.filter(group => {
+                return !(_.isNil(group) || _.isEmpty(group.entities));
+            });
+
             groups.forEach(group => {
                 if (group.type === entity.type) {
                     group.entities = group.entities
