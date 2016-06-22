@@ -5,7 +5,6 @@ const _ = require('lodash');
 const Constants = require('../constants');
 const Request = require('../request');
 
-
 class Relatives {
     static peers(entity, n) {
         return resolveGroups(entity, [peers(entity, n + 1)], n);

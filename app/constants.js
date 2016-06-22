@@ -18,7 +18,10 @@ const Constants = {
         'region': ['division'],
         'division': ['state'],
         'state': ['county', 'msa', 'place']
-    }
+    },
+
+    RELATED_COUNT_DEFAULT: 10,
+    RELATED_COUNT_MAX: 1000
 };
 
 module.exports = Constants;

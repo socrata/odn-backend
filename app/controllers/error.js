@@ -9,8 +9,11 @@ module.exports = (error, request, response, next, statusCode) => {
 
     console.error(`error rendering request at: ${request.path}`);
     console.error(error);
-    console.error(error.stack);
 
-    response.status(statusCode).json({error});
+    response.status(statusCode).json({
+        error,
+        statusCode,
+        url: request.url
+    });
 };
 

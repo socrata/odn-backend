@@ -8,98 +8,24 @@ const Request = require('../request');
 const errorController = require('./error');
 const Relatives = require('./relatives');
 
-const supportedRelations = ['parent', 'child', 'sibling', 'peer'];
-const supportedRelationsSet = new Set(supportedRelations);
+function validateRequest(request) {
+    return new Promise((resolve, reject) => {
+        const relation = request.params.relation;
+        const id = request.query.id;
+        const limitString = _.isNil(request.query.limit) ?
+            Constants.RELATED_COUNT_DEFAULT : request.query.limit;
 
-class OptionValidator {
-    constructor(name, options) {
-        this.name = name;
-        this.options = options;
-        this.optionSet = new Set(options);
-    }
+        if (isNaN(limitString))
+            reject('limit must be an integer');
+        const limit = parseInt(limitString);
 
-    validate(value) {
-        return new Promise((resolve, reject) => {
-            if (this.optionSet.has(value)) {
-                resolve(value);
-            } else {
-                reject({
-                    message: `Unsupported ${this.name} ${value}. Must be one of: ${this.options.join(', ')}.`
-                });
-            }
-        });
-    }
-}
+        if (limit < 1)
+            reject('limit must be at least 1');
+        if (limit > Constants.RELATED_COUNT_MAX)
+            reject(`limit cannot be greater than ${Constants.RELATED_COUNT_MAX}`);
 
-class RequiredValidator {
-    constructor(name) {
-        this.name = name;
-    }
-
-    validate(value) {
-        return new Promise((resolve, reject) => {
-            if (value !== undefined) {
-                resolve(value);
-            } else {
-                reject({
-                    message: `${this.name} query parameter required but not found.`,
-                });
-            }
-        });
-    }
-}
-
-/*
-new Validator(request.params.relation)
-
-
-class Validator {
-    constructor(name, value) {
-        this.name = name;
-        this.value = value;
-    }
-
-    oneOf(options) {
-        if (_.contains(options, value)) return this;
-        return
-
-    }
-
-
-
-}
-
-const relation = new Validator('relation')
-    .exists()
-    .oneOf(['parent', 'child', 'sibling', 'peer'])
-    .get();
-
-const id = new Validator('id')
-    .exists()
-    .notEmpty()
-    .get();
-
-const limit = new Validator('limit')
-    .optional(10)
-    .toInt()
-    .min(1)
-    .max(100)
-    .get();
-
-validator.exists().oneOf(['parent', 'child', 'sibling', 'peer'])
-*/
-
-const relationValidator = new OptionValidator('relation', ['parent', 'child', 'sibling', 'peer']);
-const idValidator = new RequiredValidator('id');
-const limitValidator = new RequiredValidator('limit');
-//const limitValidator = new RangeValidator('limit', 0, 100);
-
-function validateRequest(request, response) {
-    return Promise.all([
-        relationValidator.validate(request.params.relation),
-        idValidator.validate(request.query.id),
-        limitValidator.validate(request.query.limit)
-    ]);
+        resolve([relation, id, limit]);
+    });
 }
 
 function relationPromise(entity, relation, n) {
@@ -112,15 +38,15 @@ function relationPromise(entity, relation, n) {
     } else if (relation === 'peer') {
         return Relatives.peers(entity, n);
     } else {
-        return new Promise((resolve, reject) => reject({
-            message: `Invalid relation type: ${relation}`
-        }));
+        return new Promise((resolve, reject) => {
+            reject(`invalid relation type: '${relation}', must be 'parent', 'child', 'sibling', or 'peer'`);
+        });
     }
 }
 
 function getEntity(id) {
     return new Promise((resolve, reject) => {
-        if (id === null || id === undefined) {
+        if (_.isNil(id)) {
             reject('id cannot be null');
         } else {
             const url = Request.buildURL(Constants.ENTITY_URL, {id});
@@ -139,18 +65,18 @@ function getEntity(id) {
 }
 
 module.exports = (request, response) => {
-    validateRequest(request, response).then(([relation, id, limit]) => {
+    validateRequest(request).then(([relation, id, limit]) => {
         getEntity(id).then(entity => {
             relationPromise(entity, relation, limit).then(json => {
                 response.json(json);
             }, error => {
-                errorController({message: error}, request, response, null, 400);
+                errorController(error, request, response, null, 400);
             });
         }, error => {
             errorController(error, request, response, null, 422);
         });
     }, error => {
-        errorController(error, request, response, null, 400);
+        errorController(error, request, response, null, 422);
     });
 };
 
