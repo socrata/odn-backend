@@ -5,6 +5,41 @@ const _ = require('lodash');
 const Constants = require('../constants');
 const Request = require('../request');
 
+
+class Relatives {
+    static peers(entity) {
+        return resolveGroups(entity, [peers(entity)]);
+    }
+
+    static parents(entity) {
+        const parentPromises = parentTypes(entity)
+            .map(parentType => parents(entity, parentType));
+
+        return resolveGroups(entity, parentPromises);
+    }
+
+    static children(entity) {
+        const childPromises = childTypes(entity)
+            .map(childType => children(entity, childType));
+
+        return resolveGroups(entity, childPromises);
+    }
+
+    static siblings(entity) {
+        return new Promise((resolve, reject) => {
+            Relatives.parents(entity).then(response => {
+                const siblingPromises = _.chain(response.groups)
+                    .map(group => group.entities)
+                    .flatten()
+                    .map(parentEntity => children(parentEntity, entity.type))
+                    .value();
+
+                resolveGroups(entity, siblingPromises).then(resolve, reject);
+            }, reject);
+        });
+    }
+}
+
 /**
  * Finds all of the child types of an entity.
  */
@@ -39,7 +74,6 @@ function children(entity, childType) {
     });
 }
 
-
 /**
  * Gets the parents of an entity with the given parentType.
  */
@@ -58,54 +92,40 @@ function parents(entity, parentType) {
     });
 }
 
-function resolveGroups(entity, groupPromises) {
+/**
+ * Gets the peers of an entity.
+ */
+function peers(entity) {
     return new Promise((resolve, reject) => {
-        Promise.all(groupPromises)
-            .then(groups => resolve({entity, groups}), reject);
+        const url = Request.buildURL(`${Constants.PEERS_URL}/${entity.id}`, {
+            n: Constants.N_PEERS * 4
+        });
+
+        Request.getJSON(url).then(json => resolve({
+            type: entity.type,
+            entities: json.peers
+        }), reject);
     });
 }
 
-class Relatives {
-    static peers(entity) {
-        return new Promise((resolve, reject) => {
-            const url = Request.buildURL(`${Constants.PEERS_URL}/${entity.id}`, {
-                n: Constants.N_PEERS * 4
+function resolveGroups(entity, groupPromises) {
+    return new Promise((resolve, reject) => {
+        Promise.all(groupPromises).then(groups => {
+            groups.forEach(group => {
+                if (group.type === entity.type) {
+                    group.entities = group.entities
+                        .filter(anotherEntity => entity.id !== anotherEntity.id);
+                }
             });
 
-            Request.getJSON(url).then(json => resolve(json.peers), reject);
-        });
-    }
-
-    static parents(entity) {
-        const parentPromises = parentTypes(entity)
-            .map(parentType => parents(entity, parentType));
-
-        return resolveGroups(entity, parentPromises);
-    }
-
-
-    static children(entity) {
-        const childPromises = childTypes(entity)
-            .map(childType => children(entity, childType));
-
-        return resolveGroups(entity, childPromises);
-    }
-
-    static siblings(entity) {
-        return new Promise((resolve, reject) => {
-            Relatives.parents(entity).then(response => {
-                const siblingPromises = _.chain(response.groups)
-                    .map(group => group.entities)
-                    .flatten()
-                    .map(parentEntity => children(parentEntity, entity.type))
-                    .value();
-
-                resolveGroups(entity, siblingPromises).then(resolve, reject);
-            }, reject);
-        });
-    }
+            resolve({entity, groups});
+        }, reject);
+    });
 }
 
+/**
+ * Parses parent entity from relation row.
+ */
 function parseParent(json) {
     return {
         id: json.parent_id,
@@ -114,6 +134,9 @@ function parseParent(json) {
     };
 }
 
+/**
+ * Parses child entity from relation row.
+ */
 function parseChild(json) {
     return {
         id: json.child_id,
