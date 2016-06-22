@@ -3,6 +3,7 @@ const Constants = {
     PEERS_URL: 'https://odn-peers.herokuapp.com/peers',
 
     RELATIVES_URL: 'https://odn.data.socrata.com/resource/iv2c-wasz.json',
+    ENTITY_URL: 'https://odn.data.socrata.com/resource/7g2b-8brv.json',
 
     TIMEOUT_MS: 5000,
     CACHE_OPTIONS: {

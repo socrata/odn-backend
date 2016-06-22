@@ -1,5 +1,10 @@
 'use strict';
 
+const _ = require('lodash');
+
+const Constants = require('../constants');
+const Request = require('../request');
+
 const errorController = require('./error');
 const Relatives = require('./relatives');
 
@@ -113,19 +118,36 @@ function relationPromise(entity, relation, n) {
     }
 }
 
+function getEntity(id) {
+    return new Promise((resolve, reject) => {
+        if (id === null || id === undefined) {
+            reject('id cannot be null');
+        } else {
+            const url = Request.buildURL(Constants.ENTITY_URL, {id});
+
+            Request.getJSON(url).then(json => {
+                if (json.length === 0) {
+                    reject(`id not found: '${id}'`);
+                } else if (json.length === 1) {
+                    resolve(_.pick(json[0], ['id', 'name', 'type']));
+                } else {
+                    reject(`multiple entities found for id: '${id}'`);
+                }
+            });
+        }
+    });
+}
+
 module.exports = (request, response) => {
     validateRequest(request, response).then(([relation, id, limit]) => {
-        const entity = {
-            id: '0400000US53',
-            name: 'Washington',
-            type: 'state'
-        };
-
-        relationPromise(entity, relation, limit).then(json => {
-            response.json(json);
+        getEntity(id).then(entity => {
+            relationPromise(entity, relation, limit).then(json => {
+                response.json(json);
+            }, error => {
+                errorController({message: error}, request, response, null, 400);
+            });
         }, error => {
-            console.log(error);
-            errorController(error, request, response, null, 400);
+            errorController(error, request, response, null, 422);
         });
     }, error => {
         errorController(error, request, response, null, 400);
