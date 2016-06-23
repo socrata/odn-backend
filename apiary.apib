@@ -85,3 +85,67 @@ For example, region entities are sorted in descending order by population.
                 }
             ]
         }
+        
+## Topics [/topic{?id}]
+
+Returns a tree of all topics that have data for the given entities.
+
++ Parameters
+    + id (required, string, `0100000US-0400000US53`)
+    
+        Hyphen-separated list of entity IDs.
+
+### Find the data available for some entities [GET]
+
++ Request
+
+    Get data that is available for both the United States and Washington State.
+    
+    - Parameters
+        - id: 0100000US-0400000US53
+    
++ Response 200 (application/json)
+
+        {
+            "entities": [
+                {
+                    "id": "0100000US",
+                    "name": "United States",
+                    "type": "region.nation"
+                },
+                {
+                    "id": "0400000US53",
+                    "name": "Washington",
+                    "type": "region.state"
+                }
+            ],
+            "topics": [
+                {
+                    "id": "demographics",
+                    "name": "Demographics",
+                    "type": "root",
+                    "topics": [
+                        {
+                            "id": "demographics.population",
+                            "name": "Population",
+                            "type": "topic",
+                            "topics": [
+                                {
+                                    "id": "demographics.population.count",
+                                    "name": "Population Count",
+                                    "type": "variable",
+                                    "did": "1234-abcd",
+                                    "topics": [
+                                        {
+                                            "id": "demographics.population.count.year",
+                                            "name": "Year",
+                                            "type": "constraint"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
