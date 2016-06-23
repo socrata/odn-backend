@@ -1,6 +1,8 @@
 # ODN Backend
 
-Backend for the Open Data Network.
+[![Build Status](https://travis-ci.org/socrata/odn-backend.svg?branch=master)](https://travis-ci.org/socrata/odn-backend)
+
+A REST API for the Open Data Network.
 
 ## Documentation
 
@@ -9,26 +11,28 @@ API documentation is available on [Apiary](http://docs.odn.apiary.io/).
 ## Development
 
 The ODN backend is built using [Node.js](https://nodejs.org/).
-
-After downloading node,
+After cloning the repository and downloading node,
+simply run `npm install` from within the project directory
+to install all dependencies.
 
 ### Server
 
-Run `npm install` and then `npm run server` to start the development
+Use `npm run server` to start the development
 server at [localhost:3001](http://localhost:3001/).
+It will automatically restart when the source is changed.
 
 ### Tests
 
-Unit tests are available in the `test` directory.
+REST API tests are written using [Chakram](https://github.com/dareid/chakram).
+They are available in the `test` directory.
 Run tests using `npm run test`.
 
 ### Logging
 
 [Winston](https://github.com/winstonjs/winston) is used for logging.
-
 Information about 500 errors is logged to the console and available
 through the Heroku logs.
-Logging info for client errors is dumped to debug.log.
+Logging info for client errors is dumped to `debug.log`.
 
 ### Deployment
 
