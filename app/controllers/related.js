@@ -16,13 +16,13 @@ function validateRequest(request) {
             Constants.RELATED_COUNT_DEFAULT : request.query.limit;
 
         if (isNaN(limitString))
-            reject(Exception.client('limit must be an integer'));
+            reject(Exception.client('limit must be an integer', 422));
         const limit = parseInt(limitString);
 
         if (limit < 1)
-            reject(Exception.client('limit must be at least 1'));
+            reject(Exception.client('limit must be at least 1', 422));
         if (limit > Constants.RELATED_COUNT_MAX)
-            reject(Exception.client(`limit cannot be greater than ${Constants.RELATED_COUNT_MAX}`));
+            reject(Exception.client(`limit cannot be greater than ${Constants.RELATED_COUNT_MAX}`, 422));
 
         resolve([relation, id, limit]);
     });
@@ -46,7 +46,7 @@ must be 'parent', 'child', 'sibling', or 'peer'`, 404));
 function getEntity(id) {
     return new Promise((resolve, reject) => {
         if (_.isNil(id)) {
-            reject(Exception.client('id cannot be null'));
+            reject(Exception.client('id cannot be null', 422));
         } else {
             const url = Request.buildURL(Constants.ENTITY_URL, {id});
 
@@ -61,8 +61,6 @@ function getEntity(id) {
     });
 }
 
-
-
 module.exports = (request, response) => {
     const error = new Exception(request, response);
 
@@ -70,8 +68,8 @@ module.exports = (request, response) => {
         getEntity(id).then(entity => {
             relationPromise(entity, relation, limit).then(json => {
                 response.json(json);
-            }).catch(error.reject(422));
-        }).catch(error.reject(422));
-    }).catch(error.reject(422));
+            }).catch(error.reject());
+        }).catch(error.reject());
+    }).catch(error.reject());
 };
 

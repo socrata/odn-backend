@@ -9,7 +9,8 @@
     "lodash": "4.13.1",
     "memjs": "0.10.0",
     "querystring": "0.2.0",
-    "request-promise": "3.0.0"
+    "request-promise": "3.0.0",
+    "winston": "2.2.0"
   },
   "engines": {
     "node": "6.2.2"

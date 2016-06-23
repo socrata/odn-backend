@@ -2,6 +2,8 @@
 
 const _ = require('lodash');
 
+const log = require('../log');
+
 /**
  * Middleware to handle errors that were not handled anywhere else.
  */
@@ -32,17 +34,21 @@ class ErrorController {
     static respond(error, request, response, next, statusCode) {
         statusCode = error.statusCode || statusCode || 500;
 
-        console.error(`error rendering request at: ${request.path}`);
-        console.log(error.message);
-        console.error(error);
+        if (statusCode >= 500) {
+            log.error(error);
+        } else {
+            log.info(error);
+        }
 
-        response.status(statusCode).json({
+        const errorJSON = {
             error: {
                 message: error.message
             },
             statusCode,
             url: request.url
-        });
+        };
+
+        response.status(statusCode).json(errorJSON);
     }
 
     static client(message, statusCode) {
