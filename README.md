@@ -30,3 +30,24 @@ Information about 500 errors is logged to the console and available
 through the Heroku logs.
 Logging info for client errors is dumped to debug.log.
 
+### Deployment
+
+The ODN backend is hosted on Heroku.
+There are two environments:
+[production](http://odn-backend.herokuapp.com/) and
+[staging](http://odn-backend-staging.herokuapp.com/).
+
+To deploy to an environment, push to the corresponding branch on github.
+For production, push to `master` and for staging, push to `staging`.
+There should be no need to manually deploy to Heroku,
+but if you do, make sure that `master` stays in sync with what is
+on Heroku.
+
+Email `lane.aasen@socrata.com` for Heroku access.
+
+#### Integration Tests
+
+Integration tests are run to check each deployment using
+[Travis CI](https://travis-ci.org/socrata/odn-backend).
+These tests must pass for the deployment to succeed.
+
