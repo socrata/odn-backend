@@ -201,7 +201,7 @@ For example, region entities are sorted in descending order by population.
                     "entities": [
                         {
                             "id": "...",
-                            "name": "Oregon",
+                            "name": "Colorado",
                             "type": "state"
                         }
                     ]
@@ -211,7 +211,7 @@ For example, region entities are sorted in descending order by population.
 
 + Request
 
-    If limit > 100, then 100 results will be returned along with a message.
+    If limit > 1000 or limit < 1 then a 422 will be returned.
 
     `/related/child?id=0400000US53&size=10000`
 
@@ -220,18 +220,10 @@ For example, region entities are sorted in descending order by population.
         + id: 0400000US53
         + size: 10000
 
-+ Response 200 (application/json)
++ Response 422 (application/json)
 
         {
-            "entity": {
-                "id": "...",
-                "name": "Washington",
-                "type": "state"
-            },
-
-            "groups": [ ... ],
-            
-            "message": {
-                "text": "Limit exceeded cap of 100. Response contains first 100 results for each group."
+            "error": {
+                "message": "limit cannot be greater than 1000"
             }
         }
