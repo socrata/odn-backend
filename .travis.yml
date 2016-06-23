@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- 6.2.2
+install:
+- npm install
+script:
+- npm run test
+services:
+- memcached
+notifications:
+  email:
+  - deep.dhillon@socrata.com
+  - lane.aasen@socrata.com
+  - tosh.meston@gmail.com
+  - chris.metcalf@socrata.com
