@@ -16,7 +16,7 @@ function validateRequest(request) {
             Constants.RELATED_COUNT_DEFAULT : request.query.limit;
 
         if (isNaN(limitString))
-            reject(Exception.client('limit must be an integer', 422));
+            reject(Exception.client('limit must be an integer'));
         const limit = parseInt(limitString);
 
         if (limit < 1)
@@ -38,8 +38,8 @@ function relationPromise(entity, relation, n) {
     } else if (relation === 'peer') {
         return Relatives.peers(entity, n);
     } else {
-        return Promise.reject(Exception.client(`invalid relation type: '${relation}', \
-must be 'parent', 'child', 'sibling', or 'peer'`, 422));
+        return Promise.reject(Exception.client(`relation type not found: '${relation}', \
+must be 'parent', 'child', 'sibling', or 'peer'`, 404));
     }
 }
 
@@ -52,11 +52,9 @@ function getEntity(id) {
 
             Request.getJSON(url).then(json => {
                 if (json.length === 0) {
-                    reject(Exception.client(`id not found: '${id}'`));
-                } else if (json.length === 1) {
-                    resolve(_.pick(json[0], ['id', 'name', 'type']));
+                    reject(Exception.client(`id not found: '${id}'`, 404));
                 } else {
-                    reject(Exception.client(`multiple entities found for id: '${id}'`));
+                    resolve(_.pick(json[0], ['id', 'name', 'type']));
                 }
             }).catch(reject);
         }

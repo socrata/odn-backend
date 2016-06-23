@@ -30,7 +30,7 @@ class ErrorController {
     }
 
     static respond(error, request, response, next, statusCode) {
-        statusCode = statusCode || 500;
+        statusCode = error.statusCode || statusCode || 500;
 
         console.error(`error rendering request at: ${request.path}`);
         console.log(error.message);
@@ -45,8 +45,10 @@ class ErrorController {
         });
     }
 
-    static client(message) {
-        return new Error(message);
+    static client(message, statusCode) {
+        const error = new Error(message);
+        error.statusCode = statusCode;
+        return error;
     }
 }
 
