@@ -3,10 +3,8 @@ node_js:
 - 6.2.2
 install:
 - npm install
-before_script:
-- node app.js
 script:
-- npm run test
+- node app.js & npm run test
 services:
 - memcached
 notifications:
