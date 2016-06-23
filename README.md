@@ -27,13 +27,6 @@ REST API tests are written using [Chakram](https://github.com/dareid/chakram).
 They are available in the `test` directory.
 Run tests using `npm run test`.
 
-### Logging
-
-[Winston](https://github.com/winstonjs/winston) is used for logging.
-Information about 500 errors is logged to the console and available
-through the Heroku logs.
-Logging info for client errors is dumped to `debug.log`.
-
 ### Deployment
 
 The ODN backend is hosted on Heroku.
@@ -54,4 +47,19 @@ Email `lane.aasen@socrata.com` for Heroku access.
 Integration tests are run to check each deployment using
 [Travis CI](https://travis-ci.org/socrata/odn-backend).
 These tests must pass for the deployment to succeed.
+
+### Logging
+
+All Heroku logs are forwarded to [Sumo Logic](https://www.sumologic.com/).
+This includes basic information for each request,
+as well as detailed stack traces for all exceptions and 500s.
+Search with `_source=odn_api_heroku` to see all of the logs.
+
+### Monitoring
+
+There is a [Pingdom alert](https://my.pingdom.com/reports/uptime#check=2202319)
+that checks to make sure production is up.
+
+It will email Chris, Deep, Lane, and Tosh if the API is down.
+Once apps are built around the ODN API, alerts will be sent to on call.
 
