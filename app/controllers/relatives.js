@@ -49,40 +49,19 @@ function parentTypes(entity) {
  * Gets the children of an entity with the given childType.
  */
 function children(entity, childType, n) {
-    return new Promise((resolve, reject) => {
-        const url = Request.buildURL(Constants.RELATIVES_URL, {
-            parent_id: entity.id,
-            child_type: childType,
-            '$order': 'child_population DESC',
-            '$limit': n
-        });
-
-        Request.getJSON(url).then(json => resolve({
-            type: childType,
-            entities: json.map(parseChild)
-        }), reject);
-    });
+    return relatives('child', [entity.id], childType, n);
 }
 
 /**
  * Gets the parents of an entity with the given parentType.
  */
 function parents(entity, parentType, n) {
-    return new Promise((resolve, reject) => {
-        const url = Request.buildURL(Constants.RELATIVES_URL, {
-            child_id: entity.id,
-            parent_type: parentType,
-            '$order': 'parent_population DESC',
-            '$limit': n
-        });
-
-        Request.getJSON(url).then(json => resolve({
-            type: parentType,
-            entities: json.map(parseParent)
-        }), reject);
-    });
+    return relatives('parent', [entity.id], parentType, n);
 }
 
+/**
+ * Gets the siblings of an entity which are children of any of its parents.
+ */
 function siblings(entity, n) {
     return new Promise((resolve, reject) => {
         Relatives.parents(entity).then(response => {
@@ -94,18 +73,33 @@ function siblings(entity, n) {
 
             if (parentIDs.length < 1) resolve();
 
-            const url = Request.buildURL(Constants.RELATIVES_URL, {
-                child_type: entity.type,
-                '$order': 'child_population DESC',
-                '$limit': n * parentIDs.length,
-                '$where': `parent_id in (${parentIDs.map(id => `'${id}'`).join(',')})`
-            });
-
-            Request.getJSON(url).then(json => resolve({
-                type: entity.type,
-                entities: _.uniqBy(json.map(parseChild), _.property('id'))
-            }), reject);
+            relatives('child', parentIDs, entity.type, n * parentIDs.length).then(response => {
+                response.entities = _.uniqBy(response.entities, _.property('id'));
+                resolve(response);
+            }, reject);
         });
+    });
+}
+
+/**
+ * Gets relatives with the given parameters from Socrata.
+ */
+function relatives(relation, ids, relativeType, n) {
+    return new Promise((resolve, reject) => {
+        const complement = relation === 'parent' ? 'child' : 'parent';
+
+        const url = Request.buildURL(Constants.RELATIVES_URL, {
+            [`${relation}_type`]: relativeType,
+            '$where': `${complement}_id in (${ids.map(id => `'${id}'`).join(',')})`,
+            '$select': `${relation}_id as id, ${relation}_name as name, ${relation}_type as type`,
+            '$order': `${relation}_population DESC`,
+            '$limit': n
+        });
+
+        Request.getJSON(url).then(entities => resolve({
+            entities,
+            type: relativeType
+        }), reject);
     });
 }
 
@@ -144,28 +138,6 @@ function resolveGroups(entity, groupPromises, n) {
             resolve({entity, groups});
         }, reject);
     });
-}
-
-/**
- * Parses parent entity from relation row.
- */
-function parseParent(json) {
-    return {
-        id: json.parent_id,
-        name: json.parent_name,
-        type: json.parent_type
-    };
-}
-
-/**
- * Parses child entity from relation row.
- */
-function parseChild(json) {
-    return {
-        id: json.child_id,
-        name: json.child_name,
-        type: json.child_type
-    };
 }
 
 module.exports = Relatives;
