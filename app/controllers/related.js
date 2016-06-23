@@ -61,9 +61,7 @@ function getEntity(id) {
     });
 }
 
-const handleReject = (error) => {
-    console.log(error);
-};
+
 
 module.exports = (request, response) => {
     const error = new Exception(request, response);
