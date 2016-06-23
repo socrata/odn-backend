@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://api.opendatanetwork.com/
+HOST: http://odn-backend.herokuapp.com/
 
 # ODN API
 
@@ -48,8 +48,8 @@ For example, region entities are sorted in descending order by population.
 
     + limit (optional, number)
 
-        Maximum number of results to return.
-        Capped at 100 results.
+        Maximum number of entities in each group.
+        Must be an integer from 1 to 1000.
 
         + Default: `10`
 
@@ -57,10 +57,8 @@ For example, region entities are sorted in descending order by population.
 
 + Request
 
-    Get all of the parents of Washington state.
-
-    `/related/parent?id=0400000US53`
-
+    Get the parent region of Washington state.
+    
     - Parameters
         - relation: parent
         - id: 0400000US53
@@ -86,144 +84,4 @@ For example, region entities are sorted in descending order by population.
                     ]
                 }
             ]
-        }
-
-+ Request
-
-    Get all of the children of Washington state
-    including counties, places, and states.
-
-    `/related/child?id=0400000US53`
-
-    + Parameters
-        + relation: child
-        + id: 0400000US53
-
-+ Response 200 (application/json)
-
-        {
-            "entity": {
-                "id": "...",
-                "name": "Washington",
-                "type": "state"
-            },
-
-            "groups": [
-                {
-                    "type": "county",
-                    "entities": [
-                        {
-                            "id": "...",
-                            "name": "King County",
-                            "type": "county"
-                        }
-                    ]
-                },
-                {
-                    "type": "place",
-                    "entities": [
-                        {
-                            "id": "...",
-                            "name": "Seattle, WA",
-                            "type": "place"
-                        }
-                    ]
-                },
-                {
-                    "type": "msa",
-                    "entities": [
-                        {
-                            "id": "...",
-                            "name": "Seattle Metro Area (WA)",
-                            "type": "msa"
-                        }
-                    ]
-                }
-            ]
-        }
-
-+ Request
-
-    Get all of the siblings of Washington state.
-
-    `/related/sibling?id=0400000US53`
-
-    + Parameters
-        + relation: sibling
-        + id: 0400000US53
-
-+ Response 200 (application/json)
-
-        {
-            "entity": {
-                "id": "...",
-                "name": "Washington",
-                "type": "state"
-            },
-
-            "groups": [
-                {
-                    "type": "state",
-                    "entities": [
-                        {
-                            "id": "...",
-                            "name": "California",
-                            "type": "state"
-                        }
-                    ]
-                }
-            ]
-        }
-
-+ Request
-
-    Get the states that are most similar to Washington state
-    based on attributes like population, jobs, income, location, etc.
-
-    `/related/peer?id=0400000US53`
-
-    + Parameters
-        + relation: peer
-        + id: 0400000US53
-
-+ Response 200 (application/json)
-
-        {
-            "entity": {
-                "id": "...",
-                "name": "Washington",
-                "type": "state"
-            },
-
-            "groups": [
-                {
-                    "type": "state",
-                    "entities": [
-                        {
-                            "id": "...",
-                            "name": "Colorado",
-                            "type": "state"
-                        }
-                    ]
-                }
-            ]
-        }
-
-+ Request
-
-    If limit > 1000 or limit < 1 then a 422 will be returned.
-
-    `/related/child?id=0400000US53&size=10000`
-
-    + Parameters
-        + relation: child
-        + id: 0400000US53
-        + size: 10000
-
-+ Response 422 (application/json)
-
-        {
-            "error": {
-                "message": "limit cannot be greater than 1000"
-            }
         }
