@@ -6,7 +6,7 @@ HOST: http://odn-backend.herokuapp.com/
 The ODN API exposes all functionality in the opendatanetwork.com
 
 
-## Relatives [/related/{relation}{?id}{?limit}]
+## Relatives [/related/v1/{relation}{?id}{?limit}]
 
 Find entities that are related to one another.
 
@@ -86,7 +86,7 @@ For example, region entities are sorted in descending order by population.
             ]
         }
         
-## Variables [/variable{?id}]
+## Variables [/variable/v1/{?id}]
 
 Find all of the variables that have data for the given entities.
 
@@ -143,7 +143,7 @@ Find all of the variables that have data for the given entities.
             ]
         }
         
-## Data [/data/{variable}{?id}{?constraint}]
+## Data [/data/v1/ed {variable}{?id}{?constraint}]
 
 Get data for the given variable and entities.
 
