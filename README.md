@@ -27,6 +27,15 @@ REST API tests are written using [Chakram](https://github.com/dareid/chakram).
 They are available in the `test` directory.
 Run tests using `npm run test`.
 
+#### Running Tests before Committing
+
+The `pre-commit.sh` script will make sure that all unit tests succeed before
+every commit. To install it, run:
+
+```sh
+ln -s -f ../../pre-commit.sh .git/hooks/pre-commit
+```
+
 ### Deployment
 
 The ODN backend is hosted on Heroku.
