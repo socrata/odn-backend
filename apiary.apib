@@ -91,9 +91,9 @@ For example, region entities are sorted in descending order by population.
 Find all of the variables that have data for the given entities.
 
 + Parameters
-    + id (required, string, `0100000US-0400000US53`)
+    + id (required, string, `0100000US,0400000US53`)
     
-        Hyphen-separated list of entity IDs.
+        Comma separated list of entity IDs.
 
 ### Find all variables that have data for some entities [GET]
 
@@ -102,7 +102,7 @@ Find all of the variables that have data for the given entities.
     Get variables that have data for both the United States and Washington State.
     
     - Parameters
-        - id: 0100000US-0400000US53
+        - id: 0100000US, 0400000US53
     
 + Response 200 (application/json)
 
@@ -152,9 +152,9 @@ Get data for the given variable and entities.
     
         Full ID of the variable to retrieve.
 
-    + id (required, string, `0100000US-0400000US53`)
+    + id (required, string, `0100000US, 0400000US53`)
     
-        Hyphen-separated list of entity IDs.
+        Comma separated list of entity IDs.
     
     + constraint (optional, string, `age`)
     
@@ -169,7 +169,7 @@ Get data for the given variable and entities.
     and Washington State for the year 2010.
     
     - Parameters
-        - id: 0100000US-0400000US53
+        - id: 0100000US, 0400000US53
         - variable: demographics.population.count
         - constraint: age
     
