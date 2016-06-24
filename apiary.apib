@@ -86,9 +86,14 @@ For example, region entities are sorted in descending order by population.
             ]
         }
         
-## Topics [/topic{?id}]
+## Variables [/variable{?id}]
 
-Returns a tree of all topics that have data for the given entities.
+Find all of the variables that have data for the given entities.
+
+Returns a tree of topics where the leaf nodes are datasets
+that have a list of available variables.
+
+Each variable contains a 
 
 + Parameters
     + id (required, string, `0100000US-0400000US53`)
@@ -99,7 +104,7 @@ Returns a tree of all topics that have data for the given entities.
 
 + Request
 
-    Get data that is available for both the United States and Washington State.
+    Get variables that have data for both the United States and Washington State.
     
     - Parameters
         - id: 0100000US-0400000US53
@@ -123,20 +128,18 @@ Returns a tree of all topics that have data for the given entities.
                 {
                     "id": "demographics",
                     "name": "Demographics",
-                    "type": "topic",
-                    "topics": [
+                    "datasets": [
                         {
                             "id": "demographics.population",
                             "name": "Population",
-                            "type": "dataset",
-                            "constraints": ["year", "age"],
-                            "fxf": "1234-abcd",
                             "domain": "odn.data.socrata.com",
+                            "fxf": "1234-abcd",
+                            "constraints": ["year", "age"],
                             "variables": [
                                 {
                                     "id": "demographics.population.count",
                                     "name": "Population Count",
-                                    "url": "http://odn.data.socrata.com/resource/1234-abcd?variable=count&$where=id in('0100000US','0400000US53')"
+                                    "url": "https://odn.data.socrata.com/resource/1234-abcd?variable=count&$where=id in('0100000US','0400000US53')"
                                 }
                             ]
                         }
@@ -144,3 +147,7 @@ Returns a tree of all topics that have data for the given entities.
                 }
             ]
         }
+        
+## Data [/data/{variable}{?id}{?constraint}]
+
+### Get all of the data for some entities
