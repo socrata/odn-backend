@@ -123,25 +123,20 @@ Returns a tree of all topics that have data for the given entities.
                 {
                     "id": "demographics",
                     "name": "Demographics",
-                    "type": "root",
+                    "type": "topic",
                     "topics": [
                         {
                             "id": "demographics.population",
                             "name": "Population",
-                            "type": "topic",
-                            "topics": [
+                            "type": "dataset",
+                            "constraints": ["year", "age"],
+                            "fxf": "1234-abcd",
+                            "domain": "odn.data.socrata.com",
+                            "variables": [
                                 {
                                     "id": "demographics.population.count",
                                     "name": "Population Count",
-                                    "type": "variable",
-                                    "did": "1234-abcd",
-                                    "topics": [
-                                        {
-                                            "id": "demographics.population.count.year",
-                                            "name": "Year",
-                                            "type": "constraint"
-                                        }
-                                    ]
+                                    "url": "http://odn.data.socrata.com/resource/1234-abcd?variable=count&$where=id in('0100000US','0400000US53')"
                                 }
                             ]
                         }
