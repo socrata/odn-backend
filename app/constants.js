@@ -5,6 +5,7 @@ const Constants = {
     // All dataset URLs should use the NBE FXF.
     RELATIVES_URL: 'https://odn.data.socrata.com/resource/dc4t-zwj5.json',
     ENTITY_URL: 'https://odn.data.socrata.com/resource/kksg-4m3m.json',
+    VARIABLE_URL: 'https://odn.data.socrata.com/resource/sutp-685r.json',
 
     TIMEOUT_MS: 5000,
     CACHE_OPTIONS: {
