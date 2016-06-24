@@ -1,0 +1,31 @@
+
+[
+    {
+        "name": "Demographics",
+        "id": "demographics",
+        "datasets": [
+            {
+                "name": "Population",
+                "id": "population",
+                "domain": "odn.data.socrata.com",
+                "fxf": "9jg8-ki9x",
+                "constraints": ["year", "age"],
+                "variables": [
+                    {
+                        "name": "Population Count",
+                        "id": "count"
+                    },
+                    {
+                        "name": "Population Change",
+                        "id": "change"
+                    }
+                ]
+            },
+            {
+                "name": "asd",
+                "id": "asd"
+            }
+        ]
+    }
+]
+
