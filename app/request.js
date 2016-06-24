@@ -25,11 +25,15 @@ class Request {
     static get(url, timeout) {
         return new Promise((resolve, reject) => {
             if (!cache) {
-                console.log('WARNING: no cache found');
-
                 Request.timeout(request(url), timeout).then(body => {
                     resolve(body);
-                }, reject);
+                }).catch(error => {
+                    const exception = new Exception(`error fetching ${url}`,
+                            error.statusCode || 500);
+                    exception.error = error;
+
+                    reject(exception);
+                });
             } else {
                 const key = Request.key(_.isString(url) ? url : url.uri);
 
@@ -40,7 +44,13 @@ class Request {
                         Request.timeout(request(url), timeout).then(body => {
                             resolve(body);
                             if (!error) cache.set(key, body);
-                        }, reject);
+                        }).catch(error => {
+                            const exception = new Exception(`error fetching ${url}`,
+                                    error.statusCode || 500);
+                            exception.error = error;
+
+                            reject(exception);
+                        });
                     }
                 });
             }
@@ -51,23 +61,21 @@ class Request {
         return new Promise((resolve, reject) => {
             Request.get(url, timeout).then(value => {
                 resolve(JSON.parse(value.toString()));
-            }, error => {
-                reject(Exception.client(error, 500));
-            });
+            }).catch(reject);
         });
     }
 
     static timeout(promise, milliseconds) {
-        return new Promise((resolve, reject) => {
-            Promise.race([Request._timeout(milliseconds), promise]).then(resolve, reject);
-        });
+        return Promise.race([Request._timeout(milliseconds), promise]);
     }
 
     static _timeout(milliseconds) {
         milliseconds = milliseconds || Constants.TIMEOUT_MS;
 
         return new Promise((resolve, reject) => {
-            setTimeout(reject, milliseconds);
+            setTimeout(() => {
+                reject(Exception.timeout('request timed out'));
+            }, milliseconds);
         });
     }
 

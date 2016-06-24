@@ -4,30 +4,32 @@ const _ = require('lodash');
 
 const log = require('../log');
 
-/**
- * Middleware to handle errors that were not handled anywhere else.
- */
 
-class ClientError {
-    constructor(message, statusCode, payload) {
+class Exception {
+    constructor(message, statusCode) {
         this.message = message;
-        this.statusCode = statusCode || 400;
-        this.payload = payload || {};
-    }
-}
-
-class ErrorController {
-    constructor(request, response) {
-        this.request = request;
-        this.response = response;
+        this.statusCode = statusCode;
     }
 
-    /**
-     * Handles promise rejection.
-     */
-    reject(statusCode) {
+    static notFound(message) {
+        return new Exception(message, 404);
+    }
+
+    static invalidParam(message) {
+        return new Exception(message, 422);
+    }
+
+    static server(message) {
+        return new Exception(message, 500);
+    }
+
+    static timeout(message) {
+        return new Exception(message, 504);
+    }
+
+    static getHandler(request, response) {
         return error => {
-            ErrorController.respond(error, this.request, this.response, null, statusCode);
+            Exception.respond(error, request, response);
         };
     }
 
@@ -50,13 +52,7 @@ class ErrorController {
 
         response.status(statusCode).json(errorJSON);
     }
-
-    static client(message, statusCode) {
-        const error = new Error(message);
-        error.statusCode = statusCode;
-        return error;
-    }
 }
 
-module.exports = ErrorController;
+module.exports = Exception;
 

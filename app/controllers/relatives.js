@@ -76,8 +76,8 @@ function siblings(entity, n) {
             relatives('child', parentIDs, entity.type, n * parentIDs.length).then(response => {
                 response.entities = _.uniqBy(response.entities, _.property('id'));
                 resolve(response);
-            }, reject);
-        });
+            }).catch(reject);
+        }).catch(reject);
     });
 }
 
@@ -99,7 +99,7 @@ function relatives(relation, ids, relativeType, n) {
         Request.getJSON(url).then(entities => resolve({
             entities,
             type: relativeType
-        }), reject);
+        })).catch(reject);
     });
 }
 
@@ -119,7 +119,7 @@ function peers(entity, n) {
                 type: entity.type,
                 entities: json.peers
             });
-        }, reject);
+        }).catch(reject);
     });
 }
 
