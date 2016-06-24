@@ -2,8 +2,8 @@
 
 const _ = require('lodash');
 
-const Constants = require('../constants');
-const Request = require('../request');
+const Constants = require('../../constants');
+const Request = require('../../request');
 
 class Relatives {
     static peers(entity, n) {

@@ -2,11 +2,10 @@
 
 const _ = require('lodash');
 
-const Constants = require('../constants');
-const Request = require('../request');
-
-const Exception = require('./error');
-const Relatives = require('./relatives');
+const Constants = require('../../../constants');
+const Request = require('../../../request');
+const Exception = require('../../error');
+const Relatives = require('../relatives');
 
 function validateRequest(request) {
     return new Promise((resolve, reject) => {
