@@ -66,13 +66,7 @@ For example, region entities are sorted in descending order by population.
 + Response 200 (application/json)
 
         {
-            "entity": {
-                "id": "0400000US53",
-                "name": "Washington",
-                "type": "state"
-            },
-
-            "groups": [
+            "relatives": [
                 {
                     "type": "division",
                     "entities": [
@@ -107,18 +101,6 @@ Find all of the variables that have data for the given entities.
 + Response 200 (application/json)
 
         {
-            "entities": [
-                {
-                    "id": "0100000US",
-                    "name": "United States",
-                    "type": "region.nation"
-                },
-                {
-                    "id": "0400000US53",
-                    "name": "Washington",
-                    "type": "region.state"
-                }
-            ],
             "topics": [
                 {
                     "id": "demographics",
@@ -143,7 +125,7 @@ Find all of the variables that have data for the given entities.
             ]
         }
         
-## Data [/data/v1/ed {variable}{?id}{?constraint}]
+## Data [/data/v1/{variable}{?id}{?constraint}]
 
 Get data for the given variable and entities.
 
@@ -176,18 +158,6 @@ Get data for the given variable and entities.
 + Response 200 (application/json)
 
         {
-            "entities": [
-                {
-                    "id": "0100000US",
-                    "name": "United States",
-                    "type": "region.nation"
-                },
-                {
-                    "id": "0400000US53",
-                    "name": "Washington",
-                    "type": "region.state"
-                }
-            ],
             "options": [
                 {
                     "value": "young",
