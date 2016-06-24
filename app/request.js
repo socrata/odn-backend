@@ -5,6 +5,8 @@ const request = require('request-promise');
 const querystring = require('querystring');
 const memjs = require('memjs');
 const crypto = require('crypto');
+
+const Exception = require('./controllers/error');
 const Constants = require('./constants');
 
 const cache = memjs.Client.create(null, Constants.CACHE_OPTIONS);
@@ -49,7 +51,9 @@ class Request {
         return new Promise((resolve, reject) => {
             Request.get(url, timeout).then(value => {
                 resolve(JSON.parse(value.toString()));
-            }, reject);
+            }, error => {
+                reject(Exception.client(error, 500));
+            });
         });
     }
 
