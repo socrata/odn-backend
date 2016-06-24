@@ -5,3 +5,8 @@ node_modules
 
 *.swp
 *.log
+*.csv
+*.zip
+*.bak
+*.jar
+
