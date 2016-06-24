@@ -111,7 +111,7 @@ describe('/data/v1/availability', () => {
                                 'name': 'Population',
                                 'domain': 'odn.data.socrata.com',
                                 'fxf': '1234-abcd',
-                                'constraints': ['year', 'age'],
+                                'constraints': ['year'],
                                 'variables': [
                                     {
                                         'id': 'demographics.population.count',

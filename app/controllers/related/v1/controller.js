@@ -4,6 +4,7 @@ const _ = require('lodash');
 
 const Constants = require('../../../constants');
 const Request = require('../../../request');
+const EntityLookup = require('../../../entity-lookup');
 const Exception = require('../../error');
 const Relatives = require('../relatives');
 
@@ -42,29 +43,11 @@ must be 'parent', 'child', 'sibling', or 'peer'`));
     }
 }
 
-function getEntity(id) {
-    return new Promise((resolve, reject) => {
-        if (_.isNil(id)) {
-            reject(Exception.invalidParam('id cannot be null'));
-        } else {
-            const url = Request.buildURL(Constants.ENTITY_URL, {id});
-
-            Request.getJSON(url).then(json => {
-                if (json.length === 0) {
-                    reject(Exception.notFound(`id not found: '${id}'`));
-                } else {
-                    resolve(_.pick(json[0], ['id', 'name', 'type']));
-                }
-            }).catch(reject);
-        }
-    });
-}
-
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
     validateRequest(request).then(([relation, id, limit]) => {
-        getEntity(id).then(entity => {
+        EntityLookup.byID(id).then(entity => {
             relationPromise(entity, relation, limit).then(json => {
                 response.json(json);
             }).catch(errorHandler);

@@ -16,14 +16,15 @@ if (args.length !== 3) {
     console.log(`found dataset: ${dataset.domain}:${dataset.fxf}`);
 
     const datasetView = new DatasetView(dataset, {
-        '$select': 'id,variable'
+        '$select': 'id,variable',
+        '$group': 'id,variable'
     });
     const csvWriter = new CSVWriter(outputFile, ['id', 'variable']);
 
     let rowsProcessed = 0;
     datasetView.all(page => {
         rowsProcessed += page.length;
-        console.log(`processed ${rowsProcessed} rows...`);
+        console.log(`processed ${rowsProcessed} variables...`);
 
         page.forEach(row => {
             row.variable = `${datasetID}.${row.variable}`;
