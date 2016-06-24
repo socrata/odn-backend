@@ -80,19 +80,20 @@ For example, region entities are sorted in descending order by population.
             ]
         }
         
-## Variables [/variable/v1/{?id}]
+## Data Availability [/data/availability/v1/{?id}]
 
-Find all of the variables that have data for the given entities.
+Find all of the topics, datasets, and variables that have data
+for all of the given entities.
 
 + Parameters
     + id (required, string, `0100000US,0400000US53`)
     
         Comma separated list of entity IDs.
 
-### Find all variables that have data for some entities [GET]
+### Find all available data for some entities [GET]
 
 + Request
-
+    
     Get variables that have data for both the United States and Washington State.
     
     - Parameters
