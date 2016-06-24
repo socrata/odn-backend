@@ -80,7 +80,7 @@ For example, region entities are sorted in descending order by population.
             ]
         }
         
-## Data Availability [/data/availability/v1/{?id}]
+## Data Availability [/data/v1/availability/{?id}]
 
 Find all of the topics, datasets, and variables that have data
 for all of the given entities.
@@ -126,9 +126,9 @@ for all of the given entities.
             ]
         }
         
-## Data [/data/v1/{variable}{?id}{?constraint}]
+## Data Constraints [/data/v1/constraint/{variable}{?id}{?constraint}]
 
-Get data for the given variable and entities.
+Get constraints for the given variable and entities.
 
 + Parameters
     + variable (required, string, `demographics.population.count`)
@@ -144,7 +144,7 @@ Get data for the given variable and entities.
         Constraint to use.
         
     
-### Get all of the data for some entities [GET]
+### Get constraint permutations for entities [GET]
 
 + Request
 
@@ -155,18 +155,19 @@ Get data for the given variable and entities.
         - id: 0100000US, 0400000US53
         - variable: demographics.population.count
         - constraint: age
+        - year: 2010
     
 + Response 200 (application/json)
 
         {
-            "options": [
+            "permutations": [
                 {
-                    "value": "young",
-                    "url": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
+                    "constraintValue": "young",
+                    "constraintURL": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
                 },
                 {
-                    "value": "old",
-                    "url": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
+                    "constraintValue": "old",
+                    "constraintURL": "https://odn.data.socrata.com/resource/1234-abcd?age=old&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
                 }
             ]
         }
