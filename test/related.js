@@ -33,13 +33,12 @@ const relatedSchema = {
     },
     type: 'object',
     properties: {
-        entity: {'$ref': '#/definitions/entity'},
-        groups: {
+        relatives: {
             type: 'array',
             items: {'$ref': '#/definitions/group'}
         }
     },
-    required: ['entity', 'groups']
+    required: ['relatives']
 };
 
 describe('/related', () => {
@@ -76,13 +75,7 @@ describe('/related', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.have.json({
-                'entity': {
-                    'id': '0400000US53',
-                    'name': 'Washington',
-                    'type': 'region.state'
-                },
-
-                'groups': [
+                'relatives': [
                     {
                         'type': 'region.division',
                         'entities': [
@@ -103,12 +96,7 @@ describe('/related', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
-                'entity': {
-                    'name': 'Washington',
-                    'type': 'region.state'
-                },
-
-                'groups': [
+                'relatives': [
                     {
                         'type': 'region.county',
                         'entities': [
@@ -145,7 +133,7 @@ describe('/related', () => {
         return related('child?id=0400000US53&limit=33').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
-            response.body.groups.forEach(group => {
+            response.body.relatives.forEach(group => {
                 expect(group.entities).to.have.length.below(34);
             });
         });
@@ -156,12 +144,7 @@ describe('/related', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
-                'entity': {
-                    'name': 'Washington',
-                    'type': 'region.state'
-                },
-
-                'groups': [
+                'relatives': [
                     {
                         'type': 'region.state',
                         'entities': [
@@ -181,12 +164,7 @@ describe('/related', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
-                'entity': {
-                    'name': 'Washington',
-                    'type': 'region.state'
-                },
-
-                'groups': [
+                'relatives': [
                     {
                         'type': 'region.state',
                         'entities': [
@@ -205,7 +183,7 @@ describe('/related', () => {
         return related('parent?id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
-            expect(response).to.comprise.of.json('groups', []);
+            expect(response).to.comprise.of.json('relatives', []);
         });
     });
 
@@ -213,7 +191,7 @@ describe('/related', () => {
         return related('parent?id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
-            expect(response).to.comprise.of.json('groups', []);
+            expect(response).to.comprise.of.json('relatives', []);
         });
     });
 
@@ -221,7 +199,7 @@ describe('/related', () => {
         return related('parent?id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
-            expect(response).to.comprise.of.json('groups', []);
+            expect(response).to.comprise.of.json('relatives', []);
         });
     });
 
@@ -229,7 +207,7 @@ describe('/related', () => {
         return related('child?id=1600000US5363000').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
-            expect(response).to.comprise.of.json('groups', []);
+            expect(response).to.comprise.of.json('relatives', []);
         });
     });
 
@@ -238,12 +216,7 @@ describe('/related', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
-                'entity': {
-                    'id': '310M200US35620',
-                    'name': 'New York Metro Area (NY-NJ-PA)',
-                    'type': 'region.msa'
-                },
-                'groups': [
+                'relatives': [
                     {
                         'type': 'region.state',
                         'entities': [

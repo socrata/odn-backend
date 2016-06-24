@@ -65,7 +65,7 @@ function parents(entity, parentType, n) {
 function siblings(entity, n) {
     return new Promise((resolve, reject) => {
         Relatives.parents(entity).then(response => {
-            const parentIDs = _.chain(response.groups)
+            const parentIDs = _.chain(response.relatives)
                 .map(group => group.entities)
                 .flatten()
                 .map(parentEntity => parentEntity.id)
@@ -141,7 +141,7 @@ function resolveGroups(entity, groupPromises, n) {
                 }
             });
 
-            resolve({entity, groups});
+            resolve({relatives: groups});
         }, reject);
     });
 }
