@@ -79,17 +79,17 @@ describe('/related', () => {
                 'entity': {
                     'id': '0400000US53',
                     'name': 'Washington',
-                    'type': 'state'
+                    'type': 'region.state'
                 },
 
                 'groups': [
                     {
-                        'type': 'division',
+                        'type': 'region.division',
                         'entities': [
                             {
                                 'id': '0300000US9',
                                 'name': 'Pacific Division',
-                                'type': 'division'
+                                'type': 'region.division'
                             }
                         ]
                     }
@@ -105,34 +105,34 @@ describe('/related', () => {
             expect(response).to.comprise.of.json({
                 'entity': {
                     'name': 'Washington',
-                    'type': 'state'
+                    'type': 'region.state'
                 },
 
                 'groups': [
                     {
-                        'type': 'county',
+                        'type': 'region.county',
                         'entities': [
                             {
                                 'name': 'King County, WA',
-                                'type': 'county'
+                                'type': 'region.county'
                             }
                         ]
                     },
                     {
-                        'type': 'place',
+                        'type': 'region.place',
                         'entities': [
                             {
                                 'name': 'Seattle, WA',
-                                'type': 'place'
+                                'type': 'region.place'
                             }
                         ]
                     },
                     {
-                        'type': 'msa',
+                        'type': 'region.msa',
                         'entities': [
                             {
                                 'name': 'Seattle Metro Area (WA)',
-                                'type': 'msa'
+                                'type': 'region.msa'
                             }
                         ]
                     }
@@ -158,16 +158,16 @@ describe('/related', () => {
             expect(response).to.comprise.of.json({
                 'entity': {
                     'name': 'Washington',
-                    'type': 'state'
+                    'type': 'region.state'
                 },
 
                 'groups': [
                     {
-                        'type': 'state',
+                        'type': 'region.state',
                         'entities': [
                             {
                                 'name': 'California',
-                                'type': 'state'
+                                'type': 'region.state'
                             }
                         ]
                     }
@@ -183,16 +183,16 @@ describe('/related', () => {
             expect(response).to.comprise.of.json({
                 'entity': {
                     'name': 'Washington',
-                    'type': 'state'
+                    'type': 'region.state'
                 },
 
                 'groups': [
                     {
-                        'type': 'state',
+                        'type': 'region.state',
                         'entities': [
                             {
                                 'name': 'Colorado',
-                                'type': 'state'
+                                'type': 'region.state'
                             }
                         ]
                     }
@@ -240,27 +240,27 @@ describe('/related', () => {
             expect(response).to.comprise.of.json({
                 'entity': {
                     'id': '310M200US35620',
-                    'name': 'New York-Newark-Jersey City, NY-NJ-PA Metro Area',
-                    'type': 'msa'
+                    'name': 'New York Metro Area (NY-NJ-PA)',
+                    'type': 'region.msa'
                 },
                 'groups': [
                     {
-                        'type': 'state',
+                        'type': 'region.state',
                         'entities': [
                             {
                                 'id': '0400000US36',
                                 'name': 'New York',
-                                'type': 'state'
+                                'type': 'region.state'
                             },
                             {
                                 'id': '0400000US42',
                                 'name': 'Pennsylvania',
-                                'type': 'state'
+                                'type': 'region.state'
                             },
                             {
                                 'id': '0400000US34',
                                 'name': 'New Jersey',
-                                'type': 'state'
+                                'type': 'region.state'
                             }
                         ]
                     }

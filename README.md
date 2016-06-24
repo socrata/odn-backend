@@ -63,3 +63,24 @@ that checks to make sure production is up.
 It will email Chris, Deep, Lane, and Tosh if the API is down.
 Once apps are built around the ODN API, alerts will be sent to on call.
 
+## Datasets
+
+The ODN REST API is backed by a series of Socrata datasets.
+
+### [Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m)
+
+The entities dataset contains a list of all entities in the ODN.
+Each entity has the following properties:
+ - id: unique alphanumeric id
+ - name: canonical name of the entity
+ - type: hierarchical type of the entity (e.g. region.nation)
+
+### [Relations](https://dev.socrata.com/foundry/odn.data.socrata.com/dc4t-zwj5)
+
+The relations dataset contains parent-child relations between entities.
+Each row containsa parent entity and a child entity with an additional
+rank field for each entity that is used for sorting results.
+The higher the rank, the more important the entity.
+While the rank field is not required, it is very useful and should
+be included.
+

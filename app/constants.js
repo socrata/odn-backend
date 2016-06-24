@@ -2,8 +2,9 @@
 const Constants = {
     PEERS_URL: 'https://odn-peers.herokuapp.com/peers',
 
-    RELATIVES_URL: 'https://odn.data.socrata.com/resource/iv2c-wasz.json',
-    ENTITY_URL: 'https://odn.data.socrata.com/resource/7g2b-8brv.json',
+    // All dataset URLs should use the NBE FXF.
+    RELATIVES_URL: 'https://odn.data.socrata.com/resource/dc4t-zwj5.json',
+    ENTITY_URL: 'https://odn.data.socrata.com/resource/kksg-4m3m.json',
 
     TIMEOUT_MS: 5000,
     CACHE_OPTIONS: {
@@ -14,10 +15,10 @@ const Constants = {
      * Mapping from parent type to the types of its children.
      */
     TYPE_RELATIONS: {
-        'nation': ['region'],
-        'region': ['division'],
-        'division': ['state'],
-        'state': ['county', 'msa', 'place']
+        'region.nation': ['region.region'],
+        'region.region': ['region.division'],
+        'region.division': ['region.state'],
+        'region.state': ['region.county', 'region.msa', 'region.place']
     },
 
     RELATED_COUNT_DEFAULT: 10,

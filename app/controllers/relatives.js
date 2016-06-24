@@ -92,7 +92,7 @@ function relatives(relation, ids, relativeType, n) {
             [`${relation}_type`]: relativeType,
             '$where': `${complement}_id in (${ids.map(id => `'${id}'`).join(',')})`,
             '$select': `${relation}_id as id, ${relation}_name as name, ${relation}_type as type`,
-            '$order': `${relation}_population DESC`,
+            '$order': `${relation}_rank DESC`,
             '$limit': n
         });
 
@@ -110,10 +110,16 @@ function peers(entity, n) {
     return new Promise((resolve, reject) => {
         const url = Request.buildURL(`${Constants.PEERS_URL}/${entity.id}`, {n});
 
-        Request.getJSON(url).then(json => resolve({
-            type: entity.type,
-            entities: json.peers
-        }), reject);
+        Request.getJSON(url).then(json => {
+            json.peers.forEach(entity => {
+                entity.type = `region.${entity.type}`;
+            });
+
+            resolve({
+                type: entity.type,
+                entities: json.peers
+            });
+        }, reject);
     });
 }
 
