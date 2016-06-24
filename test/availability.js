@@ -9,16 +9,6 @@ function availability(path) {
 
 const availabilitySchema = {
     definitions: {
-        entity: {
-            type: 'object',
-            properties: {
-                id: {type: 'string'},
-                name: {type: 'string'},
-                type: {type: 'string'}
-            },
-            required: ['id', 'name', 'type']
-        },
-
         variable: {
             type: 'object',
             properties: {
@@ -73,15 +63,11 @@ const availabilitySchema = {
 
     type: 'object',
     properties: {
-        entities: {
-            type: 'array',
-            items: {'$ref': '#/definitions/entity'}
-        },
         topics: {
             type: 'array',
             items: {'$ref': '#/definitions/topic'}
         },
-        required: ['entities', 'topics']
+        required: ['topics']
     }
 };
 
