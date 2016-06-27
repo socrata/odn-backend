@@ -5,6 +5,7 @@ const _ = require('lodash');
 const EntityLookup = require('../../../../entity-lookup');
 const Exception = require('../../../error');
 const Availability = require('../availability/availability');
+const Request = require('../../../../request');
 
 function getVariable(tree, path) {
     if (_.isNil(path) || _.isNil(tree) || path.length === 0) return null;
@@ -61,7 +62,19 @@ module.exports = (request, response) => {
         if (!_.includes(dataset.constraints, constraint))
             return errorHandler(Exception.notFound(`invalid constraint: ${constraint}. Must be one of ${dataset.constraints.join(', ')}`));
 
-        response.json({});
+        const url = `${variable.url}&$group=${constraint}&$select=${constraint}&$order=${constraint} ASC`;
+        Request.getJSON(url).then(json => {
+            const options = json.map(option => {
+                const value = option[constraint];
+
+                return {
+                    constraintValue: value,
+                    constraintURL: `${variable.url}&${constraint}=${value}`
+                };
+            });
+
+            response.json({permutations: options});
+        }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
