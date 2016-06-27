@@ -1,7 +1,10 @@
 'use strict';
 
+const _ = require('lodash');
+
 const Constants = require('../../../../constants');
 const Request = require('../../../../request');
+const Sources = require('../../../../sources');
 
 class Availability {
     static get(entities) {
@@ -15,13 +18,30 @@ class Availability {
             }).catch(reject);
         });
     }
+
+    static topicTree(variables, entities) {
+        let topics = Sources.searchMany(variables);
+        topics = Sources.mapVariables(topics, (variable, id, parents) => {
+            const dataset = _.last(parents);
+            const url = Request.buildURL(dataset.url, {
+                'variable': _.last(variable.id.split('.')),
+                '$where': getIDs(entities)
+            });
+            return _.assign(variable, {url});
+        });
+
+        return topics;
+    }
+}
+
+function getIDs(entities) {
+    const entityIDs = entities.map(entity => entity.id);
+    return `id in(${entityIDs.map(id => `'${id}'`).join(',')})`;
 }
 
 function getVariables(entities) {
-    const entityIDs = entities.map(entity => entity.id);
-
     const url = Request.buildURL(Constants.VARIABLE_URL, {
-        '$where': `id in (${entityIDs.map(id => `'${id}'`).join(',')})`,
+        '$where': getIDs(entities),
         '$select': 'variable,count(variable)',
         '$group': 'variable'
     });
