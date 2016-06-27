@@ -3,10 +3,16 @@ HOST: http://odn-backend.herokuapp.com/
 
 # ODN API
 
-The ODN API exposes all functionality in the opendatanetwork.com
+The ODN REST API exposes public data and functionality available on OpenDataNetwork.com provided by
+hundreds of government and other public sector agencies.
+In addition to search and autosuggest capabilities in finding datasets, the ODN API exposes detailed
+entity level data which enables data based comparisons across geographical regions such as states, 
+counties, metropolitan areas, cities and zip codes using highly vetted data providers such as US Census,
+BEA, HUD and others. The ODN API does not duplicate API endpoints or services provided by public sector
+agencies, but rather, returns context relevant pre-populated REST URLs so the caller can access the 
+data directly from the source.
 
-
-## Relatives [/related/{relation}{?id}{?limit}]
+## Relatives [/related/v1/{relation}{?id}{?limit}]
 
 Find entities that are related to one another.
 
@@ -66,13 +72,7 @@ For example, region entities are sorted in descending order by population.
 + Response 200 (application/json)
 
         {
-            "entity": {
-                "id": "0400000US53",
-                "name": "Washington",
-                "type": "state"
-            },
-
-            "groups": [
+            "relatives": [
                 {
                     "type": "division",
                     "entities": [
@@ -86,39 +86,28 @@ For example, region entities are sorted in descending order by population.
             ]
         }
         
-## Variables [/variable{?id}]
+## Data Availability [/data/v1/availability/{?id}]
 
-Find all of the variables that have data for the given entities.
+Find all of the topics, datasets, and variables that have data
+for all of the given entities.
 
 + Parameters
-    + id (required, string, `0100000US-0400000US53`)
+    + id (required, string, `0100000US,0400000US53`)
     
-        Hyphen-separated list of entity IDs.
+        Comma separated list of entity IDs.
 
-### Find all variables that have data for some entities [GET]
+### Find all available data for some entities [GET]
 
 + Request
-
+    
     Get variables that have data for both the United States and Washington State.
     
     - Parameters
-        - id: 0100000US-0400000US53
+        - id: 0100000US, 0400000US53
     
 + Response 200 (application/json)
 
         {
-            "entities": [
-                {
-                    "id": "0100000US",
-                    "name": "United States",
-                    "type": "region.nation"
-                },
-                {
-                    "id": "0400000US53",
-                    "name": "Washington",
-                    "type": "region.state"
-                }
-            ],
             "topics": [
                 {
                     "id": "demographics",
@@ -143,25 +132,25 @@ Find all of the variables that have data for the given entities.
             ]
         }
         
-## Data [/data/{variable}{?id}{?constraint}]
+## Data Constraints [/data/v1/constraint/{variable}{?id}{?constraint}]
 
-Get data for the given variable and entities.
+Get constraints for the given variable and entities.
 
 + Parameters
     + variable (required, string, `demographics.population.count`)
     
         Full ID of the variable to retrieve.
 
-    + id (required, string, `0100000US-0400000US53`)
+    + id (required, string, `0100000US, 0400000US53`)
     
-        Hyphen-separated list of entity IDs.
+        Comma separated list of entity IDs.
     
     + constraint (optional, string, `age`)
     
         Constraint to use.
         
     
-### Get all of the data for some entities [GET]
+### Get constraint permutations for entities [GET]
 
 + Request
 
@@ -169,33 +158,22 @@ Get data for the given variable and entities.
     and Washington State for the year 2010.
     
     - Parameters
-        - id: 0100000US-0400000US53
+        - id: 0100000US, 0400000US53
         - variable: demographics.population.count
         - constraint: age
+        - year: 2010
     
 + Response 200 (application/json)
 
         {
-            "entities": [
+            "permutations": [
                 {
-                    "id": "0100000US",
-                    "name": "United States",
-                    "type": "region.nation"
+                    "constraintValue": "young",
+                    "constraintURL": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
                 },
                 {
-                    "id": "0400000US53",
-                    "name": "Washington",
-                    "type": "region.state"
-                }
-            ],
-            "options": [
-                {
-                    "value": "young",
-                    "url": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
-                },
-                {
-                    "value": "old",
-                    "url": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
+                    "constraintValue": "old",
+                    "constraintURL": "https://odn.data.socrata.com/resource/1234-abcd?age=old&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
                 }
             ]
         }
