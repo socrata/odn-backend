@@ -153,7 +153,7 @@ Get constraints for the given variable and entities.
     
         Comma separated list of entity IDs.
     
-    + constraint (optional, string, `age`)
+    + constraint (required, string, `year`)
     
         Constraint to use.
         
@@ -162,26 +162,37 @@ Get constraints for the given variable and entities.
 
 + Request
 
-    Get all the possible age values that have data for the United States
-    and Washington State for the year 2010.
+    Get all the years that have population count data for the United States
+    and Washington state.
     
     - Parameters
         - id: 0100000US, 0400000US53
         - variable: demographics.population.count
-        - constraint: age
-        - year: 2010
+        - constraint: year
     
 + Response 200 (application/json)
 
         {
-            "permutations": [
-                {
-                    "constraintValue": "young",
-                    "constraintURL": "https://odn.data.socrata.com/resource/1234-abcd?age=young&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
-                },
-                {
-                    "constraintValue": "old",
-                    "constraintURL": "https://odn.data.socrata.com/resource/1234-abcd?age=old&year=2010&variable=count&$where=id in('0100000US','0400000US53')"
-                }
-            ]
+          "permutations": [
+            {
+              "constraintValue": "2009",
+              "constraintURL": "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')&year=2009"
+            },
+            {
+              "constraintValue": "2010",
+              "constraintURL": "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')&year=2010"
+            },
+            {
+              "constraintValue": "2011",
+              "constraintURL": "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')&year=2011"
+            },
+            {
+              "constraintValue": "2012",
+              "constraintURL": "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')&year=2012"
+            },
+            {
+              "constraintValue": "2013",
+              "constraintURL": "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')&year=2013"
+            }
+          ]
         }
