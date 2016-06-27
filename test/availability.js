@@ -64,5 +64,21 @@ describe('/data/v1/availability', () => {
             });
         });
     });
+
+    it('should generate working urls', () => {
+        return availability('?id=0100000US,0400000US53').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+
+            const dataset = response.body.topics.demographics.datasets.population;
+            const promises = [dataset, dataset.variables.count, dataset.variables.change]
+                .map(value => get(value.url));
+            return Promise.all(promises);
+        }).then(responses => {
+            responses.forEach(response => {
+                expect(response).to.have.status(200);
+            });
+        });
+    });
 });
 
