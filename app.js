@@ -12,6 +12,7 @@ app.set('json spaces', 4);
 app.get('/', require('./app/controllers/home'));
 app.get('/related/v1/:relation', require('./app/controllers/related/v1/controller'));
 app.get('/data/v1/availability', require('./app/controllers/data/v1/availability/controller'));
+app.get('/data/v1/constraint/:variable', require('./app/controllers/data/v1/constraint/controller'));
 
 app.use(require('./app/controllers/error').respond);
 

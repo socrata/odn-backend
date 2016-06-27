@@ -21,6 +21,8 @@ class Availability {
 
     static topicTree(variables, entities) {
         let topics = Sources.searchMany(variables);
+        if (_.isNil(topics)) return null;
+
         topics = Sources.mapVariables(topics, (variable, id, parents) => {
             const dataset = _.last(parents);
             const url = Request.buildURL(dataset.url, {

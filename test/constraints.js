@@ -43,27 +43,27 @@ function populationUS(path) {
 
 describe('/data/v1/constraint', () => {
     it('should require a variable', () => {
-        return expect(constraint('')).to.have.status(422);
+        return expect(constraint('')).to.have.status(404);
     });
 
     it('should reject an invalid topic', () => {
-        return expect(constraint('invalid-variable')).to.have.status(404);
+        return expect(constraint('invalid-variable?id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject an invalid dataset', () => {
-        return expect(constraint('demographics.invalid-dataset')).to.have.status(404);
+        return expect(constraint('demographics.invalid-dataset?id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject a valid topic and dataset with no variable', () => {
-        return expect(constraint('demographics.population')).to.have.status(422);
+        return expect(constraint('demographics.population?id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject an invalid variable', () => {
-        return expect(constraint('demographics.population.invalid-variable')).to.have.status(404);
+        return expect(constraint('demographics.population.invalid-variable?id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject a valid variable followed by something else', () => {
-        return expect(constraint('demographics.population.count.something')).to.have.status(404);
+        return expect(constraint('demographics.population.count.something?id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should not accept an invalid id', () => {

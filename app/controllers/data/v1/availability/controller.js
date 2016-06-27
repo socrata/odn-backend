@@ -6,10 +6,6 @@ const EntityLookup = require('../../../../entity-lookup');
 const Exception = require('../../../error');
 const Availability = require('./availability');
 
-function datasetID(variableID) {
-    return variableID.substring(0, variableID.lastIndexOf('.'));
-}
-
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
