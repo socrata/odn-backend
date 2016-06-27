@@ -108,5 +108,20 @@ describe('/data/v1/constraint', () => {
             });
         });
     });
+
+    it('should generate working urls', () => {
+        return populationUS('constraint=year').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(constraintSchema);
+
+            const promises = response.body.permutations
+                .map(option => get(option.constraintURL));
+            return Promise.all(promises);
+        }).then(responses => {
+            responses.forEach(response => {
+                expect(response).to.have.status(200);
+            });
+        });
+    });
 });
 
