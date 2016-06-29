@@ -63,8 +63,6 @@ describe('/data/v1/availability', () => {
                     }
                 }
             });
-
-            expect(response.body.topics).to.not.have.property('education');
         });
     });
 

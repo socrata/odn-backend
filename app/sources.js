@@ -8,41 +8,29 @@ function trim(tree, path) {
 
     const id = path[0];
     if (path.length === 1) {
-        if (id in tree) return {[id]: tree};
-        return null;
+        const subtree = id in tree ? _.pick(tree, [id]) : null;
+        return subtree;
     }
 
     const subtree = tree[id];
-    const trimmed = _.omit(subtree, ['topics', 'datasets', 'variables']);
+    if (_.isNil(subtree)) return null;
+    const recurseFields = ['topics', 'datasets', 'variables'];
+    const trimmed = _.omit(subtree, recurseFields);
     const subpath = path.slice(1);
-    if ('topics' in subtree) trimmed.topics = trim(subtree.topics, subpath);
-    if ('variables' in subtree) trimmed.variables = trim(subtree.variables, subpath);
-    if ('datasets' in subtree) trimmed.datasets = trim(subtree.datasets, subpath);
 
-    return {[id]: trimmed};
+    let good = false;
+    recurseFields.forEach(field => {
+        if (field in subtree) {
+            const trimmedSubtree = trim(subtree[field], subpath);
+            if (!_.isNil(trimmedSubtree)) {
+                trimmed[field] = trimmedSubtree;
+                good = true;
+            }
+        }
+    });
+
+    return good ? {[id]: trimmed} : null;
 }
-
-/*
-function trim(tree, path) {
-    if (_.isNil(tree)) return tree;
-    if (path.length === 0) return tree;
-
-    const id = path[0];
-    if (!(id in tree)) return null;
-    let subtree = tree[id];
-    if (path.length === 1) return {[id]: subtree};
-
-    const subpath = path.slice(1);
-    if ('topics' in subtree) subtree.topics = trim(subtree.topics, subpath);
-    if ('variables' in subtree) subtree.variables = trim(subtree.variables, subpath);
-    if ('datasets' in subtree) subtree.datasets = trim(subtree.datasets, subpath);
-    if (_.isNil(subtree.topics)) delete subtree.topics;
-    if (_.isNil(subtree.variables)) delete subtree.variables;
-    if (_.isNil(subtree.datasets)) delete subtree.datasets;
-
-    return subtree;
-}
-*/
 
 function mapTree(tree, iteratee, parents) {
     parents = parents || [];
