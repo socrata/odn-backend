@@ -1,4 +1,5 @@
 
+const _ = require('lodash');
 const chakram = require('chakram');
 const get = chakram.get;
 const expect = chakram.expect;
@@ -109,18 +110,27 @@ describe('/data/v1/availability', () => {
         });
     });
 
-    it('should generate working urls', () => {
+    it('should generate working variable urls', () => {
         return availability('?id=0100000US,0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
 
-            const dataset = response.body.topics.demographics.datasets.population;
-            const promises = [dataset, dataset.variables.count, dataset.variables.change]
-                .map(value => get(value.url));
-            return Promise.all(promises);
+            const variableURLs = [];
+            _.forIn(response.body.topics, topic => {
+                _.forIn(topic.datasets, dataset => {
+                    _.forIn(dataset.variables, variable => {
+                        variableURLs.push(variable.url);
+                    });
+                });
+            });
+
+            return Promise.all(variableURLs.map(get));
         }).then(responses => {
             responses.forEach(response => {
                 expect(response).to.have.status(200);
+
+                const ids = response.body.map(_.property('id'));
+                expect(ids).to.have.members(['0100000US', '0400000US53']);
             });
         });
     });

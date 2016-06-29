@@ -4,6 +4,26 @@ const _ = require('lodash');
 const fs = require('fs');
 
 function trim(tree, path) {
+    if (path.length === 0) return tree;
+
+    const id = path[0];
+    if (path.length === 1) {
+        if (id in tree) return {[id]: tree};
+        return null;
+    }
+
+    const subtree = tree[id];
+    const trimmed = _.omit(subtree, ['topics', 'datasets', 'variables']);
+    const subpath = path.slice(1);
+    if ('topics' in subtree) trimmed.topics = trim(subtree.topics, subpath);
+    if ('variables' in subtree) trimmed.variables = trim(subtree.variables, subpath);
+    if ('datasets' in subtree) trimmed.datasets = trim(subtree.datasets, subpath);
+
+    return {[id]: trimmed};
+}
+
+/*
+function trim(tree, path) {
     if (_.isNil(tree)) return tree;
     if (path.length === 0) return tree;
 
@@ -20,8 +40,9 @@ function trim(tree, path) {
     if (_.isNil(subtree.variables)) delete subtree.variables;
     if (_.isNil(subtree.datasets)) delete subtree.datasets;
 
-    return tree;
+    return subtree;
 }
+*/
 
 function mapTree(tree, iteratee, parents) {
     parents = parents || [];
@@ -50,23 +71,14 @@ class Sources {
                     `${_.last(parents).id}.${key}`;
 
                 const augmented = _.assign(value, {id: path});
-                if ('variables' in value) {
+                if ('variables' in value)
                     augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
-                }
-
-
-                if (parents.length > 0) {
-                    const parentNode = _.last(parents);
-
-                    if ('variables' in parentNode) {
-                        if (!('name' in value)) {
-                            augmented.name = key.replace('-', ' ');
-                        }
-                    }
-                }
+                if (!('name' in value))
+                    augmented.name = key.replace('-', ' ');
 
                 return augmented;
             }
+
             return value;
         });
     }
