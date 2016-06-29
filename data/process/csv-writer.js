@@ -2,17 +2,21 @@
 
 const _ = require('lodash');
 const fs = require('fs');
+const stringify = require('csv-stringify');
 
 class CSVWriter {
     constructor(path, fields) {
         this.path = path;
         this.fields = fields;
+
+        this.output = fs.createWriteStream(path);
         this.append(fields);
     }
 
     append(values) {
-        const rowString = values.map(value => `"${value}"`).join(',');
-        fs.appendFileSync(this.path, `${rowString}\n`);
+        stringify([values], (error, data) => {
+            if (_.isNil(error)) this.output.write(data);
+        });
     }
 
     appendObject(object) {
