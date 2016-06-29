@@ -9,15 +9,14 @@ const Dataset = require('./dataset');
 
 const args = process.argv.slice(2);
 
-if (args.length < 3) {
-    console.log('Usage: transpose.js {dataset domain} {nbe dataset fxf} {output file} {optional fields in each row}');
+if (args.length < 3 || args.length > 5) {
+    console.log('Usage: transpose.js {dataset domain} {nbe dataset fxf} {output file} "{optional: fields}" "{optional: ignored variables}"');
     return;
 }
 
 const [domain, fxf, path] = args;
-const fields = args.length === 3 ?
-    ['id', 'name', 'type', 'year'] :
-    args.slice(3);
+const fields = args.length < 4 ? ['id', 'name', 'type', 'year'] : args[3].split(',');
+const ignoredVariables = args.length < 5 ? [] : args[4].split(',');
 
 const dataset = new Dataset(domain, fxf);
 const view = new DatasetView(dataset, {});
@@ -28,7 +27,7 @@ const output = fs.createWriteStream(path);
 
 function writeRow(values) {
     stringify([values], (error, data) => {
-        output.write(data);
+        if (_.isNil(error)) output.write(data);
     });
 }
 
@@ -39,7 +38,8 @@ view.all(rows => {
 
     rows.forEach(row => {
         const fieldValues = fields.map(_.propertyOf(row));
-        const variables = _.xor(fields, _.keys(row));
+        const variables = _.xor(fields, _.keys(row))
+            .filter(variable => !_.includes(ignoredVariables, variable));
 
         variables.forEach(variable => {
             const values = fieldValues.concat([variable, row[variable]]);
