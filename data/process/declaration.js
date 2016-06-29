@@ -24,6 +24,12 @@ function get(tree, path) {
     }
 }
 
+function getDataset(tree, path) {
+    if (path.length === 0) return null;
+    if (path.length === 1) return tree.datasets[path[0]];
+    return getDataset(tree[path[0]], path.slice(1));
+}
+
 class Declaration {
     constructor(json) {
         this.topics = json;
@@ -31,7 +37,7 @@ class Declaration {
 
     getDataset(datasetID) {
         const path = datasetID.split('.');
-        const dataset = get(this.topics, path);
+        const dataset = getDataset(this.topics, path);
         if (_.isNil(dataset)) return null;
         return Dataset.fromJSON(dataset);
     }

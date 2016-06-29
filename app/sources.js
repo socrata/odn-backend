@@ -50,8 +50,20 @@ class Sources {
                     `${_.last(parents).id}.${key}`;
 
                 const augmented = _.assign(value, {id: path});
-                if ('variables' in value)
+                if ('variables' in value) {
                     augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
+                }
+
+
+                if (parents.length > 0) {
+                    const parentNode = _.last(parents);
+
+                    if ('variables' in parentNode) {
+                        if (!('name' in value)) {
+                            augmented.name = key.replace('-', ' ');
+                        }
+                    }
+                }
 
                 return augmented;
             }

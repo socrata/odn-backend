@@ -3,7 +3,7 @@ const chakram = require('chakram');
 const get = chakram.get;
 const expect = chakram.expect;
 
-const availabilitySchema = require('../data/sources/declaration-schema');
+const availabilitySchema = require('../data/process/declaration-schema');
 
 function availability(path) {
     return get(`http://localhost:3001/data/v1/availability/${path}`);
@@ -58,6 +58,50 @@ describe('/data/v1/availability', () => {
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            });
+
+            expect(response.body.topics).to.not.have.property('education');
+        });
+    });
+
+    it('should find population and education expenditure data for washington state', () => {
+        return availability('?id=0400000US53').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response).to.comprise.of.json({
+                'topics': {
+                    'demographics': {
+                        'datasets': {
+                            'population': {}
+                        }
+                    },
+                    'education': {
+                        'datasets': {
+                            'education_expenditures': {}
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    it('should find population and education expenditure data for washington, colorado, and montana', () => {
+        return availability('?id=0400000US53,0400000US08,0400000US30').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response).to.comprise.of.json({
+                'topics': {
+                    'demographics': {
+                        'datasets': {
+                            'population': {}
+                        }
+                    },
+                    'education': {
+                        'datasets': {
+                            'education_expenditures': {}
                         }
                     }
                 }

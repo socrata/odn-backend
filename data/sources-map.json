@@ -21,6 +21,190 @@
                 }
             }
         }
+    },
+
+    "education": {
+        "name": "Education",
+        "datasets": {
+            "education": {
+                "name": "Education",
+                "domain": "odn.data.socrata.com",
+                "fxf": "7mfb-7yvj",
+                "constraints": ["year"],
+                "variables": {
+                    "percent_less_than_9th_grade": {},
+                    "male_percent_associates_degree": {},
+                    "male_percent_bachelors_degree": {},
+                    "male_percent_high_school_graduate_or_higher": {},
+                    "female_percent_high_school_graduate": {},
+                    "percent_graduate_or_professional_degree": {},
+                    "percent_some_college": {},
+                    "male_percent_less_than_9th_grade": {},
+                    "percent_bachelors_degree": {},
+                    "percent_high_school_graduate_or_higher": {},
+                    "female_percent_bachelors_degree_or_higher": {},
+                    "percent_associates_degree": {},
+                    "population": {},
+                    "male_percent_9th_to_12th_grade_no_diploma": {},
+                    "male_percent_some_college": {},
+                    "percent_9th_to_12th_grade_no_diploma": {},
+                    "female_percent_some_college": {},
+                    "percent_bachelors_degree_or_higher": {},
+                    "female_percent_9th_to_12th_grade_no_diploma": {},
+                    "percent_high_school_graduate": {},
+                    "female_percent_associates_degree": {},
+                    "male_percent_high_school_graduate": {},
+                    "female_percent_bachelors_degree": {},
+                    "female_percent_graduate_or_professional_degree": {},
+                    "male_percent_bachelors_degree_or_higher": {},
+                    "total_ranks": {},
+                    "percent_high_school_graduate_or_higher_rank": {},
+                    "female_percent_less_than_9th_grade": {},
+                    "female_percent_high_school_graduate_or_higher": {},
+                    "percent_bachelors_degree_or_higher_rank": {},
+                    "male_percent_graduate_or_professional_degree": {}
+                }
+            },
+
+            "education_expenditures": {
+                "name": "Education Expenditures",
+                "domain": "odn.data.socrata.com",
+                "fxf": "nxzi-u9nr",
+                "constraints": ["year"],
+                "variables": {
+                    "administration-salaries": {},
+                    "capital-expenditures": {},
+                    "capital-expenditures-per-student": {},
+                    "instruction-salaries": {},
+                    "instruction-salaries-per-student": {},
+                    "administration-salaries-per-student": {}
+                }
+            },
+
+            "classroom_statistics": {
+                "name": "Classroom Statistics",
+                "domain": "odn.data.socrata.com",
+                "fxf": "kx62-ayme",
+                "constraints": ["year"],
+                "variables": {
+                    "student-teacher-ratio": {}
+                }
+            }
+        }
+    },
+
+    "jobs": {
+        "name": "Jobs",
+        "datasets": {
+            "earnings": {
+                "name": "Earnings",
+                "domain": "odn.data.socrata.com",
+                "fxf": "j8a6-qa8k",
+                "constraints": ["year"],
+                "variables": {
+                    "female_earners": {},
+                    "female_full_time_median_earnings": {},
+                    "female_median_earnings": {},
+                    "male_earners": {},
+                    "male_full_time_median_earnings": {},
+                    "male_median_earnings": {},
+                    "median_earnings": {},
+                    "median_earnings_bachelor_degree": {},
+                    "median_earnings_graduate_or_professional_degree": {},
+                    "median_earnings_high_school": {},
+                    "median_earnings_less_than_high_school": {},
+                    "median_earnings_some_college_or_associates": {},
+                    "percent_with_earnings_10000_to_14999": {},
+                    "percent_with_earnings_15000_to_24999": {},
+                    "percent_with_earnings_1_to_9999": {},
+                    "percent_with_earnings_25000_to_34999": {},
+                    "percent_with_earnings_35000_to_49999": {},
+                    "percent_with_earnings_50000_to_64999": {},
+                    "percent_with_earnings_65000_to_74999": {},
+                    "percent_with_earnings_75000_to_99999": {},
+                    "percent_with_earnings_over_100000": {},
+                    "population": {},
+                    "ratio_bachelor_to_median": {},
+                    "ratio_female_earners": {},
+                    "ratio_full_time_median_male_to_female_earnings": {},
+                    "ratio_graduate_to_median": {},
+                    "ratio_high_school_to_median": {},
+                    "ratio_less_than_high_school_to_median": {},
+                    "ratio_male_earners": {},
+                    "ratio_median_male_to_female_earnings": {},
+                    "ratio_some_college_or_associates_to_median": {},
+                    "total_earners": {}
+                }
+            },
+
+            "job_proximity": {
+                "name": "Job Proximity",
+                "domain": "odn.data.socrata.com",
+                "fxf": "5pnb-mvzq",
+                "constraints": ["year"],
+                "variables": {
+                    "jobs-prox-idx-mean": {},
+                    "jobs-prox-idx-median": {},
+                    "jobs-prox-idx-stdev": {}
+                }
+            }
+        }
+    },
+
+    "health": {
+        "name": "Health",
+        "datasets": {
+            "environmental_health": {
+                "name": "Environmental Health",
+                "domain": "odn.data.socrata.com",
+                "fxf": "nax7-t6ga",
+                "constraints": ["year"],
+                "variables": {
+                    "env-health-idx-mean": {},
+                    "env-health-idx-median": {},
+                    "env-health-idx-stdev": {}
+                }
+            }
+        }
+    },
+
+    "economy": {
+        "name": "Economy",
+        "datasets": {
+            "gdp": {
+                "name": "Gross Domestic Product",
+                "domain": "odn.data.socrata.com",
+                "fxf": "jm8e-8hhx",
+                "constraints": ["year"],
+                "variables": {
+                    "per_capita_gdp": {},
+                    "per_capita_gdp_percent_change": {}
+                }
+            },
+
+            "consumption": {
+                "name": "Consumption",
+                "domain": "odn.data.socrata.com",
+                "fxf": "skua-q4dv",
+                "constraints": ["year"],
+                "variables": {
+                    "expenditures_percent_change": {},
+                    "personal_consumption_expenditures": {}
+                }
+            },
+
+            "cost_of_living": {
+                "name": "Cost of Living",
+                "domain": "odn.data.socrata.com",
+                "fxf": "t64z-nedn",
+                "constraints": ["year", "component"],
+                "variables": {
+                    "index": {},
+                    "rank": {},
+                    "total_ranks": {}
+                }
+            }
+        }
     }
 }
 
