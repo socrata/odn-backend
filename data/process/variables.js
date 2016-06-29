@@ -17,7 +17,8 @@ if (args.length !== 3) {
 
     const datasetView = new DatasetView(dataset, {
         '$select': 'id,variable',
-        '$group': 'id,variable'
+        '$group': 'id,variable',
+        '$where': 'value IS NOT NULL'
     });
     const csvWriter = new CSVWriter(outputFile, ['id', 'variable']);
 
