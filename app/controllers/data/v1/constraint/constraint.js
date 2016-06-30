@@ -47,10 +47,6 @@ class Constraint {
                         value for ${constraint}`));
             });
 
-            if (_.keys(constraints).length !== dataset.constraints.length - 1)
-                reject(Exception.invalidParam(`ambiguous input. must specify values for
-                    ${_.without(dataset.constraints, constraint).join(', ')}`));
-
             resolve();
         });
     }

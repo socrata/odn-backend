@@ -124,12 +124,6 @@ describe('/data/v1/constraint', () => {
         });
     });
 
-    it('should require that the constraint is not ambiguous', () => {
-        return constraint('economy.cost_of_living.index?constraint=component&id=310M200US42660').then(response => {
-            expect(response).to.have.status(422);
-        });
-    });
-
     it('should not allow constraining by the constraint options we are looking for', () => {
         return constraint('economy.cost_of_living.index?constraint=component&id=310M200US42660&component=Goods').then(response => {
             expect(response).to.have.status(422);
