@@ -102,5 +102,5 @@ class Sources {
     }
 }
 
-module.exports = Sources.fromFile('data/sources-map.json');
+module.exports = Sources.fromFile('data/sources.json');
 
