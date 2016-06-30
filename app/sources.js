@@ -60,8 +60,12 @@ function formatName(id) {
         .replace(/\b\d+\b/g, number => parseInt(number).toLocaleString());
 }
 
+function readJSON(path) {
+    return JSON.parse(fs.readFileSync(path));
+}
+
 class Sources {
-    constructor(json) {
+    constructor(json, attributions) {
         this.topics = mapTree(json, (value, key, parents) => {
             if (!_.includes(['topics', 'datasets', 'variables'], key)) {
                 const path = parents.length === 0 ? key :
@@ -78,8 +82,8 @@ class Sources {
                         augmented.description = '';
 
                     augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
+                    augmented.attributions = value.attributions.map(_.propertyOf(attributions));
                 }
-
 
                 if (!('name' in value))
                     augmented.name = formatName(key);
@@ -116,11 +120,10 @@ class Sources {
         });
     }
 
-    static fromFile(path) {
-        const declarationJSON = JSON.parse(fs.readFileSync(path));
-        return new Sources(declarationJSON);
+    static fromFile(sourcePath, attributionPath) {
+        return new Sources(readJSON(sourcePath), readJSON(attributionPath));
     }
 }
 
-module.exports = Sources.fromFile('data/sources.json');
+module.exports = Sources.fromFile('data/sources.json', 'data/attributions.json');
 

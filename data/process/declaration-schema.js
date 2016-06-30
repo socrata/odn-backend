@@ -12,6 +12,15 @@ module.exports = {
             required: ['id', 'name', 'url']
         },
 
+        attribution: {
+            type: 'object',
+            properties: {
+                name: {type: 'string'},
+                url: {type: 'string'}
+            },
+            required: ['name', 'url']
+        },
+
         dataset: {
             type: 'object',
             properties: {
@@ -24,6 +33,11 @@ module.exports = {
                     items: {type: 'string'}
                 },
                 description: {type: 'string'},
+                attributions: {
+                    type: 'array',
+                    items: {'$ref': '#/definitions/attribution'},
+                    minItems: 1
+                },
                 constraints: {
                     type: 'array',
                     items: {type: 'string'}

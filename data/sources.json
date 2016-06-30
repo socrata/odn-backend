@@ -9,7 +9,8 @@
                     "count": {"name": "Population Count"},
                     "change": {"name": "Population Change"}
                 },
-                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"]
+                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
+                "attributions": ["acs"]
             }
         }
     },
@@ -52,7 +53,8 @@
                     "percent_bachelors_degree_or_higher_rank": {},
                     "male_percent_graduate_or_professional_degree": {}
                 },
-                "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"]
+                "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],
+                "attributions": ["acs"]
             },
 
             "education_expenditures": {
@@ -70,7 +72,8 @@
                     "college budget", "college funding", "college salaries", "university budget", "university funding",
                     "college", "education", "school", "university", "instruction", "teaching", "teacher", "professor",
                     "student", "graduation", "scholastic", "matriculation"],
-                "description": "All expenditures data are in US$. Year values represent the end of a school year; for example, if the school year was 2004-2005, the listed year will be 2005. Normalization is applied against the total student enrollment for that year; for example, the capital expenditures per student takes the total capital expenditures ending in the given school year, and divides by the total enrollees in that given year, with the result rounded to the nearest integer."
+                "description": "All expenditures data are in US$. Year values represent the end of a school year; for example, if the school year was 2004-2005, the listed year will be 2005. Normalization is applied against the total student enrollment for that year; for example, the capital expenditures per student takes the total capital expenditures ending in the given school year, and divides by the total enrollees in that given year, with the result rounded to the nearest integer.",
+                "attributions": ["iesNces"]
             },
 
             "classroom_statistics": {
@@ -79,7 +82,8 @@
                 "variables": {
                     "student-teacher-ratio": {}
                 },
-                "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"]
+                "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],
+                "attributions": ["iesNces"]
             }
         }
     },
@@ -123,7 +127,8 @@
                     "ratio_some_college_or_associates_to_median": {},
                     "total_earners": {}
                 },
-                "searchTerms": ["revenue", "budget", "dividend", "wage", "income", "compensation", "assets", "salary", "earnings"]
+                "searchTerms": ["revenue", "budget", "dividend", "wage", "income", "compensation", "assets", "salary", "earnings"],
+                "attributions": ["acs"]
             },
 
             "job_proximity": {
@@ -135,7 +140,8 @@
                     "jobs-prox-idx-stdev": {}
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
-                "description": "The jobs proximity index quantifies access to employment opportunities in a region. Values are percentile ranked and range from 0 to 100, with higher values corresponding to better access to jobs. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015. <br /><br /> The underlying index quantifies the accessibility of a given residential neighborhood as a function of its distance to all job locations within a census tract, with distance to larger employment centers weighted more heavily. Specifically, a gravity model is used, where the accessibility (Ai) of a given residential block-group is a summary description of the distance to all job locations, with the distance from any single job location positively weighted by the size of employment (job opportunities) at that location and inversely weighted by the labor supply (competition) to that location."
+                "description": "The jobs proximity index quantifies access to employment opportunities in a region. Values are percentile ranked and range from 0 to 100, with higher values corresponding to better access to jobs. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015. <br /><br /> The underlying index quantifies the accessibility of a given residential neighborhood as a function of its distance to all job locations within a census tract, with distance to larger employment centers weighted more heavily. Specifically, a gravity model is used, where the accessibility (Ai) of a given residential block-group is a summary description of the distance to all job locations, with the distance from any single job location positively weighted by the size of employment (job opportunities) at that location and inversely weighted by the labor supply (competition) to that location.",
+                "attributions": ["hud"]
             },
 
             "occupations": {
@@ -150,7 +156,8 @@
                     "total_employed": {},
                     "total_ranks": {}
                 },
-                "searchTerms": ["occupations", "wage", "profession", "business", "work", "job", "profession", "employment", "labor", "avocation"]
+                "searchTerms": ["occupations", "wage", "profession", "business", "work", "job", "profession", "employment", "labor", "avocation"],
+                "attributions": ["acs"]
             }
         }
     },
@@ -166,7 +173,8 @@
                     "env-health-idx-stdev": {}
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
-                "description": "The environmental health hazard exposure index summarizes potential exposure to harmful toxins including carcinogenic, respiratory, and neurological hazards. Values are percentile ranked and range from 0 to 100, with higher values corresponding to less exposure to harmful toxins. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015."
+                "description": "The environmental health hazard exposure index summarizes potential exposure to harmful toxins including carcinogenic, respiratory, and neurological hazards. Values are percentile ranked and range from 0 to 100, with higher values corresponding to less exposure to harmful toxins. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015.",
+                "attributions": ["hud"]
             },
 
             "health_indicators": {
@@ -180,7 +188,8 @@
                     "sample_size": {}
                 },
                 "searchTerms": ["health", "asthma", "arthritis", "cardiac", "cancer", "copd", "diabetes", "disease", "chronic"],
-                "description": "The CDC's Behavioral Risk Factor Surveillance System (BRFSS) is the nation's premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services. Established in 1984 with 15 states, BRFSS now collects data in all 50 states as well as the District of Columbia and three U.S. territories. BRFSS completes more than 400,000 adult interviews each year, making it the largest continuously conducted health survey system in the world."
+                "description": "The CDC's Behavioral Risk Factor Surveillance System (BRFSS) is the nation's premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services. Established in 1984 with 15 states, BRFSS now collects data in all 50 states as well as the District of Columbia and three U.S. territories. BRFSS completes more than 400,000 adult interviews each year, making it the largest continuously conducted health survey system in the world.",
+                "attributions": ["cdc"]
             },
 
             "health": {
@@ -426,7 +435,8 @@
                     "violent_crime_value": {}
                 },
                 "searchTerms": ["health", "fitness", "smoking", "alcohol", "tobacco", "obesity", "tobacco", "exercise", "junk food"],
-                "description": "The Robert Wood Johnson Foundation produces health rankings for states and counties. They explore many aspects of health including quality of life, health behaviors, access to clinical care, socioeconomic factors, and environmental factors."
+                "description": "The Robert Wood Johnson Foundation produces health rankings for states and counties. They explore many aspects of health including quality of life, health behaviors, access to clinical care, socioeconomic factors, and environmental factors.",
+                "attributions": ["rwjf"]
             }
         }
     },
@@ -442,7 +452,8 @@
                     "per_capita_gdp_percent_change": {}
                 },
                 "searchTerms": ["gdp", "gross domestic product", "economy", "production", "revenue", "gross national product", "gnp"],
-                "description": "Gross Domestic Product (GDP) is a measure of the value of all goods and services produced in a region minus the value of the goods and services used up in production. Real GDP is adjusted for changes in the value of money (inflation and deflation) so that values can be compared between years. Data is available for U.S. states and metropolitan areas."
+                "description": "Gross Domestic Product (GDP) is a measure of the value of all goods and services produced in a region minus the value of the goods and services used up in production. Real GDP is adjusted for changes in the value of money (inflation and deflation) so that values can be compared between years. Data is available for U.S. states and metropolitan areas.",
+                "attributions": ["bea"]
             },
 
             "consumption": {
@@ -453,7 +464,8 @@
                     "personal_consumption_expenditures": {}
                 },
                 "searchTerms": ["consumption", "consumer", "household consumption", "goods and services", "personal expenditure", "personal expenses", "pce"],
-                "description": "Personal consumption expenditure is a measure of goods and services purchased by or on behalf of households. Data is available for U.S. states and for the nation as a whole."
+                "description": "Personal consumption expenditure is a measure of goods and services purchased by or on behalf of households. Data is available for U.S. states and for the nation as a whole.",
+                "attributions": ["bea"]
             },
 
             "cost_of_living": {
@@ -466,7 +478,8 @@
                     "total_ranks": {}
                 },
                 "searchTerms": ["cost of living", "rent", "housing", "consumer price index", "expensive", "inexpensive", "housing cost", "home price"],
-                "description": "The cost of living index measures the difference in the price levels of goods and services across regions. The average cost of living index in the U.S. is 100, with higher values corresponding to costlier goods and services. Data is available for U.S. states and metropolitan areas."
+                "description": "The cost of living index measures the difference in the price levels of goods and services across regions. The average cost of living index in the U.S. is 100, with higher values corresponding to costlier goods and services. Data is available for U.S. states and metropolitan areas.",
+                "attributions": ["bea"]
             }
         }
     }

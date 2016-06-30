@@ -1,0 +1,36 @@
+
+{
+    "acs": {
+        "name": "U.S. Census American Community Survey",
+        "url": "https://www.census.gov/programs-surveys/acs/"
+    },
+    "bea": {
+        "name": "U.S. Bureau of Economic Analysis",
+        "url": "http://www.bea.gov/"
+    },
+    "hud": {
+        "name": "U.S. Department of Housing and Urban Development",
+        "url": "http://www.hud.gov/"
+    },
+    "rwjf": {
+        "name": "Robert Wood Johnson Foundation",
+        "url": "http://www.rwjf.org/"
+    },
+    "cdc": {
+        "name": "Centers for Disease Control and Prevention",
+        "url": "http://www.cdc.gov/"
+    },
+    "crimeReports": {
+        "name": "CrimeReports.com",
+        "url": "http://crimereports.socrata.com/"
+    },
+    "iesNces": {
+        "name": "Institute of Education Sciences at National Center for Education Statistics",
+        "url": "http://nces.ed.gov/ccd/elsi"
+    },
+    "hhs": {
+        "name": "U.S. Department of Health and Human Services",
+        "url": "http://www.hhs.gov/"
+    }
+}
+
