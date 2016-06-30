@@ -6,10 +6,10 @@ HOST: http://odn-backend.herokuapp.com/
 The ODN REST API exposes public data and functionality available on OpenDataNetwork.com provided by
 hundreds of government and other public sector agencies.
 In addition to search and autosuggest capabilities in finding datasets, the ODN API exposes detailed
-entity level data which enables data based comparisons across geographical regions such as states, 
+entity level data which enables data based comparisons across geographical regions such as states,
 counties, metropolitan areas, cities and zip codes using highly vetted data providers such as US Census,
 BEA, HUD and others. The ODN API does not duplicate API endpoints or services provided by public sector
-agencies, but rather, returns context relevant pre-populated REST URLs so the caller can access the 
+agencies, but rather, returns context relevant pre-populated REST URLs so the caller can access the
 data directly from the source.
 
 ## Relatives [/related/v1/{relation}{?id}{?limit}]
@@ -64,7 +64,7 @@ For example, region entities are sorted in descending order by population.
 + Request
 
     Get the parent region of Washington state.
-    
+
     - Parameters
         - relation: parent
         - id: 0400000US53
@@ -85,7 +85,7 @@ For example, region entities are sorted in descending order by population.
                 }
             ]
         }
-        
+
 ## Data Availability [/data/v1/availability/{?id}]
 
 Find all of the topics, datasets, and variables that have data
@@ -93,18 +93,18 @@ for all of the given entities.
 
 + Parameters
     + id (required, string, `0100000US,0400000US53`)
-    
+
         Comma separated list of entity IDs.
 
 ### Find all available data for some entities [GET]
 
 + Request
-    
+
     Get variables that have data for both the United States and Washington State.
-    
+
     - Parameters
         - id: 0100000US,0400000US53
-    
+
 + Response 200 (application/json)
 
         {
@@ -139,37 +139,37 @@ for all of the given entities.
             }
           }
         }
-        
+
 ## Data Constraints [/data/v1/constraint/{variable}{?id}{?constraint}]
 
 Get constraints for the given variable and entities.
 
 + Parameters
     + variable (required, string, `demographics.population.count`)
-    
+
         Full ID of the variable to retrieve.
 
     + id (required, string, `0100000US,0400000US53`)
-    
+
         Comma separated list of entity IDs.
-    
+
     + constraint (required, string, `year`)
-    
+
         Constraint to use.
-        
-    
+
+
 ### Get constraint permutations for entities [GET]
 
 + Request
 
     Get all the years that have population count data for the United States
     and Washington state.
-    
+
     - Parameters
         - id: 0100000US,0400000US53
         - variable: demographics.population.count
         - constraint: year
-    
+
 + Response 200 (application/json)
 
         {
@@ -196,3 +196,58 @@ Get constraints for the given variable and entities.
             }
           ]
         }
+
+## Autosuggest [/suggest/v1/{type}{?query}{?limit}]
+
+Suggest objects that match the given query.
+
++ Parameters
+    + type (required, string, `entity`)
+
+        Type of the object to find.
+
+        + Values
+            + `entity`
+            + `category`
+            + `publisher`
+            + `dataset`
+            + `question`
+
+    + query (required, string, `seattle`)
+
+        Query to match.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 1 to 1000.
+
+        + Default: `10`
+
+### Suggest entities [GET]
+
++ Request
+
+    Suggest entities that match "seattle".
+
+    - Parameters
+        - type: entity
+        - query: seattle
+
++ Response 200 (application/json)
+
+        {
+            "entities": [
+                {
+                    "id": "310M200US42660",
+                    "name": "Seattle Metro Area (WA)",
+                    "type": "regions.msa"
+                },
+                {
+                    "id": "1600000US5363000",
+                    "name": "Seattle, WA",
+                    "type": "regions.place"
+                }
+            ]
+        }
+
