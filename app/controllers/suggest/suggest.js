@@ -2,9 +2,6 @@
 
 const AutosuggestDataset = require('./autosuggest-dataset');
 
-const EntityDataset = new AutosuggestDataset('odn.data.socrata.com', '68ht-6puw', 'all',
-        ['id', 'type', 'population'], [['population'], ['desc']]);
-
 class Suggest {
     static entity(query, limit) {
         return EntityDataset.get(query, limit).then(options => {
@@ -33,6 +30,10 @@ class Suggest {
     static dataset(query, limit) {
         return Promise.resolve({});
     }
+}
+
+function get(type, dataset, query, limit, optionFunction) {
+
 }
 
 module.exports = Suggest;

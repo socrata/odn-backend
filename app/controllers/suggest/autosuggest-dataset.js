@@ -7,14 +7,15 @@ const Exception = require('../../controllers/error');
 const Request = require('../../request');
 
 class AutosuggestDataset {
-    constructor(domain, fxf, column, fields, sort) {
+    constructor(domain, fxf, column, fields, sort, transform) {
         this.domain = domain;
         this.fxf = fxf;
         this.column = column;
-        this.fields = fields;
+        this.fields = fields || [];
         this.sorted = _.isNil(sort);
         this.sort = sort || [['text'], ['desc']];
         [this.sortFields, this.sortOrder] = this.sort;
+        this.transform = transform || _.identity;
 
         this.baseURL = `https://${domain}/views/${fxf}/columns/${column}/suggest/`;
 
@@ -22,12 +23,15 @@ class AutosuggestDataset {
 
     get(query, limit) {
         return new Promise((resolve, reject) => {
-            const url = this._getURL(query, this.sorted ? limit * 2 : limit);
+            const url = this._getURL(query, limit);
 
-            return Request.getJSON(url)
-                .then(response => this._decodeOptions(response.options))
-                .then(options => resolve(this._sortOptions(options).slice(0, limit)))
-                .catch(reject);
+            return Request.getJSON(url).then(response => {
+                this._decodeOptions(response.options).then(options => {
+                    options = this._sortOptions(options).slice(0, limit);
+                    options = options.map(this.transform);
+                    resolve({options});
+                }).catch(reject);
+            }).catch(reject);
         });
     }
 

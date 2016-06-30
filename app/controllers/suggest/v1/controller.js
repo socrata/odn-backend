@@ -5,6 +5,7 @@ const _ = require('lodash');
 const Exception = require('../../error');
 const Constants = require('../../../constants');
 const Suggest = require('../suggest');
+const AutosuggestSources = require('../../../../data/autosuggest-sources');
 
 function validateRequest(request) {
     return new Promise((resolve, reject) => {
@@ -35,19 +36,13 @@ function validateRequest(request) {
 }
 
 function suggestPromise(type, query, limit) {
-    if (type === 'entity') {
-        return Suggest.entity(query, limit);
-    } else if (type === 'question') {
-        return Suggest.question(query, limit);
-    } else if (type === 'publisher') {
-        return Suggest.publisher(query, limit);
-    } else if (type === 'category') {
-        return Suggest.category(query, limit);
-    } else if (type === 'dataset') {
-        return Suggest.dataset(query, limit);
+    if (type in AutosuggestSources) {
+        const source = AutosuggestSources[type];
+
+        return source.get(query, limit);
     } else {
         return Promise.reject(Exception.notFound(`suggest type not found: '${type}',
-            must be 'entity', 'question', 'publisher', 'category', or 'dataset'`));
+            must be in ${_.keys(AutosuggestSources).join(', ')}`));
     }
 }
 
@@ -56,6 +51,7 @@ module.exports = (request, response) => {
 
     validateRequest(request).then(([type, query, limit]) => {
         suggestPromise(type, query, limit).then(json => {
+            console.log(json);
             response.json(json);
         }).catch(errorHandler);
     }).catch(errorHandler);

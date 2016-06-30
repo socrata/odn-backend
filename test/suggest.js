@@ -41,7 +41,7 @@ describe('/suggest/v1', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(entitySchema);
             expect(response).to.have.json({
-                "entities": [
+                "options": [
                     {
                         "id": "310M200US42660",
                         "name": "Seattle Metro Area (WA)",
@@ -61,7 +61,7 @@ describe('/suggest/v1', () => {
         return suggest('question?query=california').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(questionSchema);
-            expect(response).to.have.length.above(3);
+            expect(response.body.options).to.have.length.above(3);
         });
     });
 
@@ -95,7 +95,7 @@ describe('/suggest/v1', () => {
         return suggest('category?query=dem').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(categorySchema);
-            expect(response).to.have.lengthOf(1);
+            expect(response.body.options).to.have.lengthOf(1);
         });
     });
 
@@ -103,7 +103,7 @@ describe('/suggest/v1', () => {
         return suggest('publisher?query=data').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(publisherSchema);
-            expect(response).to.have.length.above(0);
+            expect(response.body.options).to.have.length.above(0);
         });
     });
 
@@ -111,7 +111,7 @@ describe('/suggest/v1', () => {
         return suggest('dataset?query=crime').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(datasetSchema);
-            expect(response).to.have.length.above(0);
+            expect(response.body.options).to.have.length.above(0);
         });
     });
 
@@ -119,7 +119,7 @@ describe('/suggest/v1', () => {
         return suggest('entity?query=a&limit=63').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(entitySchema);
-            expect(response).to.have.lengthOf(63);
+            expect(response.body.options).to.have.lengthOf(63);
         });
     });
 });
@@ -138,12 +138,12 @@ const entitySchema = {
     },
     type: 'object',
     properties: {
-        entities: {
+        options: {
             type: 'array',
             etems: {'$ref': '#/definitions/entity'}
         }
     },
-    required: ['entities']
+    required: ['options']
 };
 
 const questionSchema = {
@@ -155,7 +155,7 @@ const questionSchema = {
                 name: {type: 'string'},
                 type: {type: 'string'}
             },
-            required: ['id', 'name', 'type']
+            required: ['id', 'name']
         },
 
         question: {
@@ -170,18 +170,18 @@ const questionSchema = {
     },
     type: 'object',
     properties: {
-        questions: {
+        options: {
             type: 'array',
             items: {'$ref': '#/definitions/question'}
         }
     },
-    required: ['questions']
+    required: ['options']
 };
 
 const categorySchema = {
     type: 'object',
     properties: {
-        categories: {
+        options: {
             type: 'array',
             items: {
                 type: 'object',
@@ -190,13 +190,14 @@ const categorySchema = {
                 }
             }
         }
-    }
+    },
+    required: ['options']
 };
 
 const publisherSchema = {
     type: 'object',
     properties: {
-        publishers: {
+        options: {
             type: 'array',
             items: {
                 type: 'object',
@@ -205,7 +206,8 @@ const publisherSchema = {
                 }
             }
         }
-    }
+    },
+    required: ['options']
 };
 
 const datasetSchema = {
@@ -222,11 +224,11 @@ const datasetSchema = {
     },
     type: 'object',
     properties: {
-        datasets: {
+        options: {
             type: 'array',
             items: {'$ref': '#/definitions/dataset'}
         }
     },
-    required: ['datasets']
+    required: ['options']
 };
 
