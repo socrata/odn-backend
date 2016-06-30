@@ -68,10 +68,19 @@ class Sources {
                     `${_.last(parents).id}.${key}`;
 
                 const augmented = _.assign(value, {id: path});
-                if ('variables' in value && !('domain' in value))
-                    augmented.domain = Constants.ODN_DATA_DOMAIN;
-                if ('variables' in value)
+
+                if ('variables' in value) {
+                    if (!('domain' in value))
+                        augmented.domain = Constants.ODN_DATA_DOMAIN;
+                    if (!('searchTerms' in value))
+                        augmented.searchTerms = [];
+                    if (!('description' in value))
+                        augmented.description = '';
+
                     augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
+                }
+
+
                 if (!('name' in value))
                     augmented.name = formatName(key);
 
