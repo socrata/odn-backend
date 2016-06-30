@@ -17,27 +17,27 @@ describe('/suggest/v1', () => {
     });
 
     it('should not accept a negative limit', () => {
-        return expect(suggest('entity?q=a&limit=-1')).to.have.status(422);
+        return expect(suggest('entity?query=a&limit=-1')).to.have.status(422);
     });
 
     it('should not accept a zero limit', () => {
-        return expect(suggest('entity?q=a&limit=0')).to.have.status(422);
+        return expect(suggest('entity?query=a&limit=0')).to.have.status(422);
     });
 
     it('should not accept a huge limit', () => {
-        return expect(suggest('entity?q=a&limit=50001')).to.have.status(422);
+        return expect(suggest('entity?query=a&limit=50001')).to.have.status(422);
     });
 
     it('should not accept an alphabetical limit', () => {
-        return expect(suggest('entity?q=a&limit=asd')).to.have.status(422);
+        return expect(suggest('entity?query=a&limit=asd')).to.have.status(422);
     });
 
     it('should accept an empty query', () => {
-        return expect(suggest('entity?q=')).to.have.status(200);
+        return expect(suggest('entity?query=')).to.have.status(200);
     });
 
     it('should find entity suggestions for seattle', () => {
-        return suggest('entity?q=seattle').then(response => {
+        return suggest('entity?query=seattle').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(entitySchema);
             expect(response).to.have.json({
@@ -45,12 +45,12 @@ describe('/suggest/v1', () => {
                     {
                         "id": "310M200US42660",
                         "name": "Seattle Metro Area (WA)",
-                        "type": "regions.msa"
+                        "type": "region.msa"
                     },
                     {
                         "id": "1600000US5363000",
                         "name": "Seattle, WA",
-                        "type": "regions.place"
+                        "type": "region.place"
                     }
                 ]
             });
@@ -58,7 +58,7 @@ describe('/suggest/v1', () => {
     });
 
     it('should find questions for california', () => {
-        return suggest('question?q=california').then(response => {
+        return suggest('question?query=california').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(questionSchema);
             expect(response).to.have.length.above(3);
@@ -66,8 +66,8 @@ describe('/suggest/v1', () => {
     });
 
     it('should strip stopwords from queries', () => {
-        const promises = [suggest('question?q=what is the population of texas'),
-            suggest('question?q=population texas')];
+        const promises = [suggest('question?query=what is the population of texas'),
+            suggest('question?query=population texas')];
 
         return Promise.all(promises).then(([withStopwords, withoutStopwords]) => {
             expect(withStopwords).to.have.status(200);
@@ -79,8 +79,8 @@ describe('/suggest/v1', () => {
     });
 
     it('should be case insensitive', () => {
-        const promises = [suggest('question?q=PoPuLatION TEXaS'),
-            suggest('question?q=population texas')];
+        const promises = [suggest('question?query=PoPuLatION TEXaS'),
+            suggest('question?query=population texas')];
 
         return Promise.all(promises).then(([mixedcase, lowercase]) => {
             expect(mixedcase).to.have.status(200);
@@ -92,7 +92,7 @@ describe('/suggest/v1', () => {
     });
 
     it('should find category for dem', () => {
-        return suggest('category?q=dem').then(response => {
+        return suggest('category?query=dem').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(categorySchema);
             expect(response).to.have.lengthOf(1);
@@ -100,7 +100,7 @@ describe('/suggest/v1', () => {
     });
 
     it('should find publisher for data', () => {
-        return suggest('publisher?q=data').then(response => {
+        return suggest('publisher?query=data').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(publisherSchema);
             expect(response).to.have.length.above(0);
@@ -108,7 +108,7 @@ describe('/suggest/v1', () => {
     });
 
     it('should find datasets for crime', () => {
-        return suggest('dataset?q=crime').then(response => {
+        return suggest('dataset?query=crime').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(datasetSchema);
             expect(response).to.have.length.above(0);
@@ -116,7 +116,7 @@ describe('/suggest/v1', () => {
     });
 
     it('should respect the limit parameter', () => {
-        return suggest('entity?q=a&limit=63').then(response => {
+        return suggest('entity?query=a&limit=63').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(entitySchema);
             expect(response).to.have.lengthOf(63);
@@ -140,7 +140,7 @@ const entitySchema = {
     properties: {
         entities: {
             type: 'array',
-            items: {'$ref': '#/definitions/entity'}
+            etems: {'$ref': '#/definitions/entity'}
         }
     },
     required: ['entities']

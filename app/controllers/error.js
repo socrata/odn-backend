@@ -4,7 +4,6 @@ const _ = require('lodash');
 
 const log = require('../log');
 
-
 class Exception {
     constructor(message, statusCode) {
         this.message = message;

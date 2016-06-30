@@ -25,7 +25,12 @@ const Constants = {
     },
 
     RELATED_COUNT_DEFAULT: 10,
-    RELATED_COUNT_MAX: 1000
+    RELATED_COUNT_MAX: 1000,
+
+    SUGGEST_COUNT_DEFAULT: 10,
+    SUGGEST_COUNT_MAX: 1000,
+
+    SUGGEST_SEPARATOR: ':'
 };
 
 module.exports = Constants;
