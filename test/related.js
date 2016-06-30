@@ -129,7 +129,7 @@ describe('/related/v1', () => {
         });
     });
 
-    it('should respect the length parameter', () => {
+    it('should respect the limit parameter', () => {
         return related('child?id=0400000US53&limit=33').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
