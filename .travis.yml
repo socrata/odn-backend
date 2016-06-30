@@ -4,7 +4,7 @@ node_js:
 install:
 - npm install
 script:
-- node app.js & npm run test
+- node app.js & npm test
 services:
 - memcached
 notifications:

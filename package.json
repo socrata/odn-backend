@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/socrata/odn-backend.com#readme",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 5000",
     "server": "nodemon"
   }
 }
