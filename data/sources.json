@@ -14,9 +14,6 @@
                     },
                     "change": {
                         "name": "Population Change"
-                    },
-                    "another": {
-                        "name": "ASD"
                     }
                 }
             }
@@ -178,6 +175,19 @@
                     "env-health-idx-mean": {},
                     "env-health-idx-median": {},
                     "env-health-idx-stdev": {}
+                }
+            },
+
+            "health_indicators": {
+                "name": "Health Indicators",
+                "domain": "odn.data.socrata.com",
+                "fxf": "ph2b-gm84",
+                "constraints": ["year", "question_class", "question_topic", "question", "question_response", "break_out_category", "break_out"],
+                "variables": {
+                    "confidence_limit_high": {},
+                    "confidence_limit_low": {},
+                    "data_value": {},
+                    "sample_size": {}
                 }
             },
 

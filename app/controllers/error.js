@@ -44,7 +44,7 @@ class Exception {
 
         const errorJSON = {
             error: {
-                message: error.message
+                message: error.message.replace(/\n\s*/, ' ')
             },
             statusCode,
             url: request.url

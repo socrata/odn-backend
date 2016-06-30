@@ -108,6 +108,22 @@ describe('/data/v1/availability', () => {
         });
     });
 
+    it('should find health indicator data for south carolina', () => {
+        return availability('?id=0400000US45').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response).to.comprise.of.json({
+                'topics': {
+                    'health': {
+                        'datasets': {
+                            'health_indicators': {}
+                        }
+                    }
+                }
+            });
+        });
+    });
+
     it('should generate working variable urls', () => {
         return availability('?id=0100000US,0400000US53').then(response => {
             expect(response).to.have.status(200);
