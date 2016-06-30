@@ -1,5 +1,7 @@
 
 const Constants = {
+    ODN_DATA_DOMAIN: 'odn.data.socrata.com',
+
     PEERS_URL: 'https://odn-peers.herokuapp.com/peers',
 
     // All dataset URLs should use the NBE FXF.

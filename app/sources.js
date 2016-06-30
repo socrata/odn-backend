@@ -3,6 +3,8 @@
 const _ = require('lodash');
 const fs = require('fs');
 
+const Constants = require('../app/constants');
+
 function trim(tree, path) {
     if (path.length === 0) return tree;
 
@@ -51,6 +53,13 @@ function getPath(id) {
     return id.split('.');
 }
 
+function formatName(id) {
+    return id
+        .replace(/[_-]/g, ' ')
+        .replace(/\b(\w)(\w{3,})/g, (all, first, rest) => `${first.toUpperCase()}${rest}`)
+        .replace(/\b\d+\b/g, number => parseInt(number).toLocaleString());
+}
+
 class Sources {
     constructor(json) {
         this.topics = mapTree(json, (value, key, parents) => {
@@ -59,10 +68,12 @@ class Sources {
                     `${_.last(parents).id}.${key}`;
 
                 const augmented = _.assign(value, {id: path});
+                if ('variables' in value && !('domain' in value))
+                    augmented.domain = Constants.ODN_DATA_DOMAIN;
                 if ('variables' in value)
                     augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
                 if (!('name' in value))
-                    augmented.name = key.replace('-', ' ');
+                    augmented.name = formatName(key);
 
                 return augmented;
             }
