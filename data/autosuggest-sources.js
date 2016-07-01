@@ -26,15 +26,12 @@ const declarations = {
         column: 'question',
         encoded: ['regionName', 'regionID', 'regionPopulation',
                   'vector', 'source', 'variable', 'metric', 'index'],
-        sort: [['population', 'index'], ['desc', 'desc']],
+        sort: [['population', 'index'], ['desc', 'asc']],
         transform: option => {
             return {
                 text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`,
-                variable: [option.fields.source, option.fields.variable].join('.'),
-                entity: {
-                    id: option.fields.regionID,
-                    name: option.fields.regionName,
-                }
+                url: path(['region', option.fields.regionID, option.fields.regionName,
+                           option.fields.vector, option.fields.metric])
             };
         }
     },
@@ -75,6 +72,17 @@ const declarations = {
         }
     }
 };
+
+function urlEscape(string) {
+    return string
+        .replace(/,/g, '')
+        .replace(/[ \/]/g, '_');
+}
+
+function path(elements) {
+    return `http://opendatanetwork.com/${elements.map(urlEscape).join('/')}`;
+}
+
 
 const datasets = _.mapValues(declarations, declaration => {
     return new AutosuggestDataset(declaration.domain, declaration.fxf,
