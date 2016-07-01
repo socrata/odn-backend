@@ -74,7 +74,7 @@ describe('/suggest/v1', () => {
             expect(withStopwords).to.have.schema(questionSchema);
             expect(withoutStopwords).to.have.status(200);
             expect(withoutStopwords).to.have.schema(questionSchema);
-            expect(withStopwords.body).to.equal(withoutStopwords.body);
+            expect(withStopwords.body).to.deep.equal(withoutStopwords.body);
         });
     });
 
@@ -87,7 +87,7 @@ describe('/suggest/v1', () => {
             expect(mixedcase).to.have.schema(questionSchema);
             expect(lowercase).to.have.status(200);
             expect(lowercase).to.have.schema(questionSchema);
-            expect(mixedcase.body).to.equal(lowercase.body);
+            expect(mixedcase.body).to.deep.equal(lowercase.body);
         });
     });
 

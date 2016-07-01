@@ -5,6 +5,7 @@ const _ = require('lodash');
 const Exception = require('../../error');
 const Constants = require('../../../constants');
 const Suggest = require('../suggest');
+const Stopwords = require('../stopwords');
 const AutosuggestSources = require('../../../../data/autosuggest-sources');
 
 function validateRequest(request) {
@@ -50,8 +51,9 @@ module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
     validateRequest(request).then(([type, query, limit]) => {
+        query = Stopwords.strip(query);
+
         suggestPromise(type, query, limit).then(json => {
-            console.log(json);
             response.json(json);
         }).catch(errorHandler);
     }).catch(errorHandler);

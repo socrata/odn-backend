@@ -29,7 +29,7 @@ const declarations = {
         sort: [['population', 'index'], ['desc', 'desc']],
         transform: option => {
             return {
-                text: option.text,
+                text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`,
                 variable: [option.fields.source, option.fields.variable].join('.'),
                 entity: {
                     id: option.fields.regionID,
