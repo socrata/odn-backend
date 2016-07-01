@@ -10,7 +10,7 @@ const declarations = {
         fxf: '68ht-6puw',
         column: 'all',
         encoded: ['id', 'type', 'population'],
-        sort: [['population'], ['desc']],
+        sort: option => -parseFloat(option.fields.population),
         transform: option => {
             return {
                 id: option.fields.id,
@@ -26,7 +26,11 @@ const declarations = {
         column: 'question',
         encoded: ['regionName', 'regionID', 'regionPopulation',
                   'vector', 'source', 'variable', 'metric', 'index'],
-        sort: [['population', 'index'], ['desc', 'asc']],
+        sort: option => {
+            const population = parseFloat(option.fields.regionPopulation);
+            const index = parseFloat(option.fields.index);
+            return -(population - index);
+        },
         transform: option => {
             return {
                 text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`,
@@ -82,7 +86,6 @@ function urlEscape(string) {
 function path(elements) {
     return `http://opendatanetwork.com/${elements.map(urlEscape).join('/')}`;
 }
-
 
 const datasets = _.mapValues(declarations, declaration => {
     return new AutosuggestDataset(declaration.domain, declaration.fxf,

@@ -12,9 +12,8 @@ class AutosuggestDataset {
         this.fxf = fxf;
         this.column = column;
         this.fields = fields || [];
-        this.sorted = _.isNil(sort);
-        this.sort = sort || [['text'], ['desc']];
-        [this.sortFields, this.sortOrder] = this.sort;
+        this.sorted = !_.isNil(sort);
+        this.sort = sort || _.identity;
         this.transform = transform || _.identity;
 
         this.baseURL = `https://${domain}/views/${fxf}/columns/${column}/suggest/`;
@@ -23,7 +22,7 @@ class AutosuggestDataset {
 
     get(query, limit) {
         return new Promise((resolve, reject) => {
-            const url = this._getURL(query, limit);
+            const url = this._getURL(query, this.sorted ? limit * 3 : limit);
 
             return Request.getJSON(url).then(response => {
                 this._decodeOptions(response.options).then(options => {
@@ -42,8 +41,8 @@ class AutosuggestDataset {
     }
 
     _sortOptions(options) {
-        if (this.sorted) return options;
-        return _.orderBy(options, this.sortFields, this.sortOrder);
+        if (!this.sorted) return options;
+        return _.sortBy(options, this.sort);
     }
 
     _decodeOptions(options) {
