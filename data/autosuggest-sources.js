@@ -33,15 +33,26 @@ const declarations = {
             return -(population - index);
         },
         transform: option => {
-            return {
+            const datasetID = option.fields.vector;
+            const topicID = Sources.getTopic(datasetID);
+            let variableID = option.fields.metric;
+
+            const constraints = {};
+
+            if (datasetID === 'occupations') {
+                constraints.occupation = occupationNames[variableID] || variableID;
+                variableID = 'percent_employed';
+            }
+
+            return _.assign({
                 entity: {
                     id: option.fields.regionID,
                     name: option.fields.regionName
                 },
-                text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`,
-                odnURL: path(['region', option.fields.regionID, option.fields.regionName,
-                           option.fields.vector, option.fields.metric])
-            };
+                variable_id: [topicID, datasetID, variableID].join('.'),
+                variable_name: option.fields.variable,
+                text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`
+            }, _.isEmpty(constraints) ? {} : {constraints});
         }
     },
 
@@ -80,6 +91,34 @@ const declarations = {
             };
         }
     }
+};
+
+const occupationNames = {
+	'media': 'Media',
+	'engineering': 'Engineering',
+	'office_and_administration': 'Office and Administration',
+	'health_support': 'Health Support',
+	'sales': 'Sales',
+	'social_sciences': 'Social Sciences',
+	'healthcare': 'Healthcare',
+	'computers_and_math': 'Computers and Math',
+	'repair': 'Repair',
+	'material_moving': 'Material Moving',
+	'construction_and_extraction': 'Construction and Extraction',
+	'fire_fighting': 'Fire Fighting',
+	'social_services': 'Social Services',
+	'production': 'Production',
+	'management': 'Management',
+	'personal_care': 'Personal Care',
+	'education': 'Education',
+	'health_technicians': 'Health Technicians',
+	'transportation': 'Transportation',
+	'law_enforcement': 'Law Enforcement',
+	'janitorial': 'Janitorial',
+	'food_service': 'Food Service',
+	'farming_fishing_forestry': 'Farming, Fishing, Foresty',
+	'legal': 'Legal',
+	'business_and_finance': 'Business and Finance'
 };
 
 function urlEscape(string) {

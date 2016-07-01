@@ -162,10 +162,11 @@ const questionSchema = {
             type: 'object',
             properties: {
                 entity: {'$ref': '#/definitions/entity'},
-                text: {type: 'string'},
-                odnURL: {type: 'string'}
+                variable_id: {type: 'string'},
+                constraints: {type: 'object'},
+                text: {type: 'string'}
             },
-            required: ['entity', 'text', 'odnURL']
+            required: ['entity', 'variable_id', 'text']
         }
     },
     type: 'object',
