@@ -12,10 +12,15 @@ BEA, HUD and others. The ODN API does not duplicate API endpoints or services pr
 agencies, but rather, returns context relevant pre-populated REST URLs so the caller can access the
 data directly from the source.
 
-## Relatives [/related/v1/{relation}{?id}{?limit}]
+## App Tokens
+
+Registering for and including a [Socrata application token](https://dev.socrata.com/docs/app-tokens.html) 
+grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter 
+or the `X-App-Token` HTTP header.
+
+## Relatives [/related/v1/{relation}{?id}{?limit}{?app_token}]
 
 Find entities that are related to one another.
-
 
 The current hierarchy of entities is listed below,
 where "a > b" means that a is a parent of b.
@@ -58,6 +63,11 @@ For example, region entities are sorted in descending order by population.
         Must be an integer from 1 to 1000.
 
         + Default: `10`
+        
+    + app_token (optional, string)
+    
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
 ### Find the relatives of an entity [GET]
 
@@ -68,6 +78,10 @@ For example, region entities are sorted in descending order by population.
     - Parameters
         - relation: parent
         - id: 0400000US53
+        
+    - Headers
+    
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
 
@@ -86,7 +100,7 @@ For example, region entities are sorted in descending order by population.
             ]
         }
 
-## Data Availability [/data/v1/availability/{?id}]
+## Data Availability [/data/v1/availability/{?id}{?app_token}]
 
 Find all of the topics, datasets, and variables that have data
 for all of the given entities.
@@ -95,6 +109,12 @@ for all of the given entities.
     + id (required, string, `0100000US,0400000US53`)
 
         Comma separated list of entity IDs.
+        
+        
+    + app_token (optional, string)
+    
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
 ### Find all available data for some entities [GET]
 
@@ -104,6 +124,10 @@ for all of the given entities.
 
     - Parameters
         - id: 0100000US,0400000US53
+                
+    - Headers
+    
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
 
@@ -140,7 +164,7 @@ for all of the given entities.
           }
         }
 
-## Data Constraints [/data/v1/constraint/{variable}{?id}{?constraint}]
+## Data Constraints [/data/v1/constraint/{variable}{?id}{?constraint}{?app_token}]
 
 Get constraints for the given variable and entities.
 
@@ -155,7 +179,12 @@ Get constraints for the given variable and entities.
 
     + constraint (required, string, `year`)
 
-        Constraint to use.
+        Constraint to use.        
+        
+    + app_token (optional, string)
+    
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
 
 ### Get constraint permutations for entities [GET]
@@ -169,6 +198,10 @@ Get constraints for the given variable and entities.
         - id: 0100000US,0400000US53
         - variable: demographics.population.count
         - constraint: year
+        
+    - Headers
+    
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
 
