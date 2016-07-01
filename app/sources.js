@@ -120,6 +120,10 @@ class Sources {
         });
     }
 
+    getTopic(datasetID) {
+        return _.findKey(this.topics, topic => datasetID in topic.datasets);
+    }
+
     static fromFile(sourcePath, attributionPath) {
         return new Sources(readJSON(sourcePath), readJSON(attributionPath));
     }

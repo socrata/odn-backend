@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const Constants = require('../app/constants');
 const AutosuggestDataset = require('../app/controllers/suggest/autosuggest-dataset');
+const Sources = require('../app/sources');
 
 const declarations = {
     entity: {
@@ -33,8 +34,12 @@ const declarations = {
         },
         transform: option => {
             return {
+                entity: {
+                    id: option.fields.regionID,
+                    name: option.fields.regionName
+                },
                 text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`,
-                url: path(['region', option.fields.regionID, option.fields.regionName,
+                odnURL: path(['region', option.fields.regionID, option.fields.regionName,
                            option.fields.vector, option.fields.metric])
             };
         }

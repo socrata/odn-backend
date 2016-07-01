@@ -148,13 +148,24 @@ const entitySchema = {
 
 const questionSchema = {
     definitions: {
+        entity: {
+            type: 'object',
+            properties: {
+                id: {type: 'string'},
+                name: {type: 'string'},
+                type: {type: 'string'}
+            },
+            required: ['id', 'name']
+        },
+
         question: {
             type: 'object',
             properties: {
+                entity: {'$ref': '#/definitions/entity'},
                 text: {type: 'string'},
-                url: {type: 'string'}
+                odnURL: {type: 'string'}
             },
-            required: ['text', 'url']
+            required: ['entity', 'text', 'odnURL']
         }
     },
     type: 'object',
