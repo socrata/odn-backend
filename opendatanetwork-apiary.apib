@@ -18,7 +18,7 @@ Registering for and including a [Socrata application token](https://dev.socrata.
 grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter 
 or the `X-App-Token` HTTP header.
 
-## Relatives [/related/v1/{relation}{?id}{?limit}{?app_token}]
+## Relatives [/related/v1/{relation}{?entity_id}{?limit}{?app_token}]
 
 Find entities that are related to one another.
 
@@ -53,7 +53,7 @@ For example, region entities are sorted in descending order by population.
             + `sibling`
             + `peer`
 
-    + id (required, string, `0400000US53`)
+    + entity_id (required, string, `0400000US53`)
 
         ID of the target entity.
 
@@ -77,7 +77,7 @@ For example, region entities are sorted in descending order by population.
 
     - Parameters
         - relation: parent
-        - id: 0400000US53
+        - entity_id: 0400000US53
         
     - Headers
     
@@ -88,25 +88,25 @@ For example, region entities are sorted in descending order by population.
         {
             "relatives": [
                 {
-                    "type": "division",
+                    "type": "region.division",
                     "entities": [
                         {
                             "id": "0300000US9",
                             "name": "Pacific Division",
-                            "type": "division"
+                            "type": "region.division"
                         }
                     ]
                 }
             ]
         }
 
-## Data Availability [/data/v1/availability/{?id}{?app_token}]
+## Data Availability [/data/v1/availability/{?entity_id}{?app_token}]
 
 Find all of the topics, datasets, and variables that have data
 for all of the given entities.
 
 + Parameters
-    + id (required, string, `0100000US,0400000US53`)
+    + entity_id (required, string, `0100000US,0400000US53`)
 
         Comma separated list of entity IDs.
         
@@ -123,7 +123,7 @@ for all of the given entities.
     Get variables that have data for both the United States and Washington State.
 
     - Parameters
-        - id: 0100000US,0400000US53
+        - entity_id: 0100000US,0400000US53
                 
     - Headers
     
@@ -137,8 +137,8 @@ for all of the given entities.
               "id": "demographics"
               "name": "Demographics",
               "datasets": {
-                "id": "demographics.population",
                 "population": {
+                  "id": "demographics.population",
                   "name": "Population",
                   "domain": "odn.data.socrata.com",
                   "fxf": "9jg8-ki9x",
@@ -156,7 +156,7 @@ for all of the given entities.
                       "id": "demographics.population.change",
                       "url": "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=change&%24where=id%20in('0100000US'%2C'0400000US53')"
                     }
-                  }
+                  },
                   "url": "https://odn.data.socrata.com/resource/9jg8-ki9x.json"
                 }
               }
@@ -164,7 +164,7 @@ for all of the given entities.
           }
         }
 
-## Data Constraints [/data/v1/constraint/{variable}{?id}{?constraint}{?app_token}]
+## Data Constraints [/data/v1/constraint/{variable}{?entity_id}{?constraint}{?app_token}]
 
 Get constraints for the given variable and entities.
 
@@ -173,7 +173,7 @@ Get constraints for the given variable and entities.
 
         Full ID of the variable to retrieve.
 
-    + id (required, string, `0100000US,0400000US53`)
+    + entity_id (required, string, `0100000US,0400000US53`)
 
         Comma separated list of entity IDs.
 
@@ -195,7 +195,7 @@ Get constraints for the given variable and entities.
     and Washington state.
 
     - Parameters
-        - id: 0100000US,0400000US53
+        - entity_id: 0100000US,0400000US53
         - variable: demographics.population.count
         - constraint: year
         
