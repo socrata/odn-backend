@@ -8,10 +8,10 @@ const constraintSchema = {
         permutation: {
             type: 'object',
             properties: {
-                constraintValue: {type: 'string'},
-                constraintURL: {type: 'string'}
+                constraint_value: {type: 'string'},
+                constraint_url: {type: 'string'}
             },
-            required: ['constraintValue', 'constraintURL']
+            required: ['constraint_value', 'constraint_url']
         }
     },
 
@@ -101,8 +101,8 @@ describe('/data/v1/constraint', () => {
             expect(response).to.comprise.of.json({
                 'permutations': [
                     {
-                        'constraintValue': '2009',
-                        'constraintURL': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US')&year=2009"
+                        'constraint_value': '2009',
+                        'constraint_url': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US')&year=2009"
                     }
                 ]
             });
@@ -115,7 +115,7 @@ describe('/data/v1/constraint', () => {
             expect(response).to.have.schema(constraintSchema);
 
             const promises = response.body.permutations
-                .map(option => get(option.constraintURL));
+                .map(option => get(option.constraint_url));
             return Promise.all(promises);
         }).then(responses => {
             responses.forEach(response => {

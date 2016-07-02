@@ -50,8 +50,8 @@ module.exports = (request, response) => {
                     }, constraints);
 
                     return {
-                        constraintValue: value,
-                        constraintURL: `${variable.url}&${querystring.stringify(params)}`
+                        constraint_value: value,
+                        constraint_url: `${variable.url}&${querystring.stringify(params)}`
                     };
                 });
 
