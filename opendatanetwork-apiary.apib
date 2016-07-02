@@ -14,8 +14,8 @@ data directly from the source.
 
 ## App Tokens
 
-Registering for and including a [Socrata application token](https://dev.socrata.com/docs/app-tokens.html) 
-grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter 
+Registering for and including a [Socrata application token](https://dev.socrata.com/docs/app-tokens.html)
+grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter
 or the `X-App-Token` HTTP header.
 
 ## Relatives [/related/v1/{relation}{?entity_id}{?limit}{?app_token}]
@@ -63,9 +63,9 @@ For example, region entities are sorted in descending order by population.
         Must be an integer from 1 to 1000.
 
         + Default: `10`
-        
+
     + app_token (optional, string)
-    
+
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
         used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
@@ -78,9 +78,9 @@ For example, region entities are sorted in descending order by population.
     - Parameters
         - relation: parent
         - entity_id: 0400000US53
-        
+
     - Headers
-    
+
             X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
@@ -109,10 +109,10 @@ for all of the given entities.
     + entity_id (required, string, `0100000US,0400000US53`)
 
         Comma separated list of entity IDs.
-        
-        
+
+
     + app_token (optional, string)
-    
+
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
         used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
@@ -124,9 +124,9 @@ for all of the given entities.
 
     - Parameters
         - entity_id: 0100000US,0400000US53
-                
+
     - Headers
-    
+
             X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
@@ -179,10 +179,10 @@ Get constraints for the given variable and entities.
 
     + constraint (required, string, `year`)
 
-        Constraint to use.        
-        
+        Constraint to use.
+
     + app_token (optional, string)
-    
+
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
         used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
@@ -198,9 +198,9 @@ Get constraints for the given variable and entities.
         - entity_id: 0100000US,0400000US53
         - variable: demographics.population.count
         - constraint: year
-        
+
     - Headers
-    
+
             X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
@@ -229,3 +229,31 @@ Get constraints for the given variable and entities.
             }
           ]
         }
+
+### Suggest entities [GET]
+
++ Request
+
+    Suggest entities that match "seattle".
+
+    - Parameters
+        - type: entity
+        - query: seattle
+
++ Response 200 (application/json)
+
+        {
+            "entities": [
+                {
+                    "id": "310M200US42660",
+                    "name": "Seattle Metro Area (WA)",
+                    "type": "regions.msa"
+                },
+                {
+                    "id": "1600000US5363000",
+                    "name": "Seattle, WA",
+                    "type": "regions.place"
+                }
+            ]
+        }
+
