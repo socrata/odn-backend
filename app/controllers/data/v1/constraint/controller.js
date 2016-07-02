@@ -15,7 +15,7 @@ module.exports = (request, response) => {
     if (_.isNil(variableID) || variableID === '')
         return errorHandler(Exception.invalidParam('variable required'));
 
-    EntityLookup.byIDs(request.query.id).then(entities => {
+    EntityLookup.byIDs(request.query.entity_id).then(entities => {
         if (entities.length === 0)
             return errorHandler(Exception.invalidParam('at least one id required'));
 
@@ -30,9 +30,9 @@ module.exports = (request, response) => {
 
         if (!_.includes(dataset.constraints, constraint))
             return errorHandler(Exception.notFound(`invalid constraint: ${constraint}.
-                        Must be one of ${dataset.constraints.join(', ')}`));
+                        Must be one of: ${dataset.constraints.join(', ')}`));
 
-        const constraints = _.omit(request.query, ['id', 'constraint']);
+        const constraints = _.omit(request.query, ['entity_id', 'constraint']);
 
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
             const params = _.assign({

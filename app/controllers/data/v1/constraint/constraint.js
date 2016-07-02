@@ -41,7 +41,7 @@ class Constraint {
             _.forIn(constraints, (value, name) => {
                 if (!_.includes(dataset.constraints, name))
                     reject(Exception.notFound(`invalid constraint: ${name}.
-                        Must be one of ${dataset.constraints.join(', ')}`));
+                        Must be one of: ${dataset.constraints.join(', ')}`));
                 if (name === constraint)
                     reject(Exception.invalidParam(`cannot specify a
                         value for ${constraint}`));

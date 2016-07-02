@@ -47,31 +47,31 @@ describe('/related/v1', () => {
     });
 
     it('should not accept an invalid id', () => {
-        return expect(related('parent?id=invalid-id')).to.have.status(404);
+        return expect(related('parent?entity_id=invalid-id')).to.have.status(404);
     });
 
     it('should not accept invalid relation type', () => {
-        return expect(related('invalid-relation?id=0400000US53')).to.have.status(404);
+        return expect(related('invalid-relation?entity_id=0400000US53')).to.have.status(404);
     });
 
     it('should not accept a negative limit', () => {
-        return expect(related('parent?id=0400000US53&limit=-1')).to.have.status(422);
+        return expect(related('parent?entity_id=0400000US53&limit=-1')).to.have.status(422);
     });
 
     it('should not accept a zero limit', () => {
-        return expect(related('parent?id=0400000US53&limit=0')).to.have.status(422);
+        return expect(related('parent?entity_id=0400000US53&limit=0')).to.have.status(422);
     });
 
     it('should not accept a huge limit', () => {
-        return expect(related('parent?id=0400000US53&limit=50001')).to.have.status(422);
+        return expect(related('parent?entity_id=0400000US53&limit=50001')).to.have.status(422);
     });
 
     it('should not accept an alphabetical limit', () => {
-        return expect(related('parent?id=0400000US53&limit=asd')).to.have.status(422);
+        return expect(related('parent?entity_id=0400000US53&limit=asd')).to.have.status(422);
     });
 
     it('should show that the pacific division is a parent of washington', () => {
-        return related('parent?id=0400000US53').then(response => {
+        return related('parent?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.have.json({
@@ -92,7 +92,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that king county, seattle city, and seattle metro are children of washington', () => {
-        return related('child?id=0400000US53').then(response => {
+        return related('child?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
@@ -130,7 +130,7 @@ describe('/related/v1', () => {
     });
 
     it('should respect the limit parameter', () => {
-        return related('child?id=0400000US53&limit=33').then(response => {
+        return related('child?entity_id=0400000US53&limit=33').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             response.body.relatives.forEach(group => {
@@ -140,7 +140,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that california is a sibling of washington', () => {
-        return related('sibling?id=0400000US53').then(response => {
+        return related('sibling?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
@@ -160,7 +160,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that oregon is a peer of washington', () => {
-        return related('peer?id=0400000US53').then(response => {
+        return related('peer?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({
@@ -180,7 +180,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that the united states has no parents', () => {
-        return related('parent?id=0400000US53').then(response => {
+        return related('parent?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json('relatives', []);
@@ -188,7 +188,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that the united states has no peers', () => {
-        return related('parent?id=0400000US53').then(response => {
+        return related('parent?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json('relatives', []);
@@ -196,7 +196,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that the united states has no siblings', () => {
-        return related('parent?id=0400000US53').then(response => {
+        return related('parent?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json('relatives', []);
@@ -204,7 +204,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that seattle has no children', () => {
-        return related('child?id=1600000US5363000').then(response => {
+        return related('child?entity_id=1600000US5363000').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json('relatives', []);
@@ -212,7 +212,7 @@ describe('/related/v1', () => {
     });
 
     it('should show that the new york metro area has many parents', () => {
-        return related('parent?id=310M200US35620').then(response => {
+        return related('parent?entity_id=310M200US35620').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(relatedSchema);
             expect(response).to.comprise.of.json({

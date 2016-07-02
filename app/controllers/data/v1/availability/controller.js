@@ -9,7 +9,7 @@ const Availability = require('./availability');
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
-    EntityLookup.byIDs(request.query.id).then(entities => {
+    EntityLookup.byIDs(request.query.entity_id).then(entities => {
         if (entities.length === 0)
             return errorHandler(Exception.invalidParam('at least one id required'));
 

@@ -38,7 +38,7 @@ function populationYear(path) {
 }
 
 function populationUS(path) {
-    return population(`id=0100000US&${path}`);
+    return population(`entity_id=0100000US&${path}`);
 }
 
 describe('/data/v1/constraint', () => {
@@ -47,43 +47,43 @@ describe('/data/v1/constraint', () => {
     });
 
     it('should reject an invalid topic', () => {
-        return expect(constraint('invalid-variable?id=0100000US&constraint=year')).to.have.status(404);
+        return expect(constraint('invalid-variable?entity_id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject an invalid dataset', () => {
-        return expect(constraint('demographics.invalid-dataset?id=0100000US&constraint=year')).to.have.status(404);
+        return expect(constraint('demographics.invalid-dataset?entity_id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject a valid topic and dataset with no variable', () => {
-        return expect(constraint('demographics.population?id=0100000US&constraint=year')).to.have.status(404);
+        return expect(constraint('demographics.population?entity_id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject an invalid variable', () => {
-        return expect(constraint('demographics.population.invalid-variable?id=0100000US&constraint=year')).to.have.status(404);
+        return expect(constraint('demographics.population.invalid-variable?entity_id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should reject a valid variable followed by something else', () => {
-        return expect(constraint('demographics.population.count.something?id=0100000US&constraint=year')).to.have.status(404);
+        return expect(constraint('demographics.population.count.something?entity_id=0100000US&constraint=year')).to.have.status(404);
     });
 
     it('should not accept an invalid id', () => {
-        return expect(populationYear('id=invalid-id')).to.have.status(404);
+        return expect(populationYear('entity_id=invalid-id')).to.have.status(404);
     });
 
     it('should not accept a valid id followed by an invalid id', () => {
-        return expect(populationYear('id=0100000US,invalid-id')).to.have.status(404);
+        return expect(populationYear('entity_id=0100000US,invalid-id')).to.have.status(404);
     });
 
     it('should not accept an invalid id followed by a valid id', () => {
-        return expect(populationYear('id=0100000US,invalid-id')).to.have.status(404);
+        return expect(populationYear('entity_id=0100000US,invalid-id')).to.have.status(404);
     });
 
     it('should accept two valid ids', () => {
-        return expect(populationYear('id=0100000US,0400000US53')).to.have.status(200);
+        return expect(populationYear('entity_id=0100000US,0400000US53')).to.have.status(200);
     });
 
     it('should accept two valid ids with some white space', () => {
-        return expect(populationYear('id=    0100000US   ,      0400000US53 ')).to.have.status(200);
+        return expect(populationYear('entity_id=    0100000US   ,      0400000US53 ')).to.have.status(200);
     });
 
     it('should require a constraint', () => {
@@ -125,13 +125,13 @@ describe('/data/v1/constraint', () => {
     });
 
     it('should not allow constraining by the constraint options we are looking for', () => {
-        return constraint('economy.cost_of_living.index?constraint=component&id=310M200US42660&component=Goods').then(response => {
+        return constraint('economy.cost_of_living.index?constraint=component&entity_id=310M200US42660&component=Goods').then(response => {
             expect(response).to.have.status(422);
         });
     });
 
     it('should allow constraining by another variable', () => {
-        return constraint('economy.cost_of_living.index?constraint=component&id=310M200US42660&year=2013').then(response => {
+        return constraint('economy.cost_of_living.index?constraint=component&entity_id=310M200US42660&year=2013').then(response => {
             expect(response).to.have.status(200);
         });
     });

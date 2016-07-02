@@ -4,7 +4,6 @@ const _ = require('lodash');
 
 const Exception = require('../../error');
 const Constants = require('../../../constants');
-const Suggest = require('../suggest');
 const Stopwords = require('../stopwords');
 const AutosuggestSources = require('../../../../data/autosuggest-sources');
 
