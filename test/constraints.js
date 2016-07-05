@@ -121,6 +121,8 @@ describe('/data/v1/constraint', () => {
             responses.forEach(response => {
                 expect(response).to.have.status(200);
             });
+        }).catch(error => {
+            console.log(error)
         });
     });
 
