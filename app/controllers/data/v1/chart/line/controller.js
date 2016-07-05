@@ -6,6 +6,7 @@ const EntityLookup = require('../../../../../entity-lookup');
 const Exception = require('../../../../error');
 const Request = require('../../../../../request');
 const Constraint = require('../../constraint/constraint');
+const Forecast = require('./forecast');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -31,14 +32,13 @@ module.exports = (request, response) => {
             return errorHandler(Exception.notFound(`invalid constraint: ${constraint}.
                         Must be one of: ${dataset.constraints.join(', ')}`));
 
-        const constraints = _.omit(request.query, ['entity_id', 'constraint']);
+        const constraints = _.omit(request.query, ['entity_id', 'constraint', 'forecast']);
 
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
-
             const url = Request.buildURL(dataset.url, {
                 variable: _.last(variable.id.split('.')),
                 $where: getIDs(entities),
-                $order: 'id asc'
+                $order: 'id ASC'
             });
 
             Request.getJSON(url).then(data => {
@@ -52,11 +52,20 @@ module.exports = (request, response) => {
                         const values = entityIDs
                             .map(id => _.find(points, {id}) || {})
                             .map(point => point.value || null);
-                        return [constraintValue].concat(values).concat([false]);
+                        return [constraintValue].concat(values).map(parseFloat);
                     })
                     .value();
 
-                response.json({data: [header].concat(r)});
+                const forecastSteps = parseInt(request.query.forecast, 10) || 0;
+
+                const forecast = _(r)
+                    .unzip()
+                    .map(series => series.concat(Forecast.linear(forecastSteps, series)))
+                    .concat([_.times(r.length + forecastSteps, index => index >= r.length)])
+                    .unzip()
+                    .value();
+
+                response.json({data: [header].concat(forecast)});
             }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);

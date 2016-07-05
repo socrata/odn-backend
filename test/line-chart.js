@@ -1,4 +1,5 @@
 
+const _ = require('lodash');
 const chakram = require('chakram');
 const get = chakram.get;
 const expect = chakram.expect;
@@ -79,8 +80,31 @@ describe('/data/v1/chart/line', () => {
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', 'Washington', 'forecast'],
-                    ['2009']
+                    [2009]
                 ]
+            });
+        });
+    });
+
+    it('should default to not forecasting values', () => {
+        return chart('demographics.population.count?entity_id=0400000US53&constraint=year').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(lineChartSchema);
+            _.tail(response.body.data).forEach(row => {
+                expect(_.last(row)).to.be.false;
+            });
+        });
+    });
+
+    it('should respect the forecast parameter', () => {
+        return chart('demographics.population.count?entity_id=0400000US53&constraint=year&forecast=10').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(lineChartSchema);
+            _.tail(response.body.data).forEach((row, index) => {
+                if (index < response.body.data.length - 11)
+                    expect(_.last(row)).to.be.false;
+                else
+                    expect(_.last(row)).to.be.true;
             });
         });
     });
