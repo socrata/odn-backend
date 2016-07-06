@@ -17,7 +17,8 @@ module.exports = {
             type: 'object',
             properties: {
                 name: {type: 'string'},
-                url: {type: 'string'}
+                url: {type: 'string'},
+                source_url: {type: 'string'}
             },
             required: ['name', 'url']
         },

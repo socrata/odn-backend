@@ -129,6 +129,30 @@ describe('/data/v1/availability', () => {
         });
     });
 
+    it('should include attributions with source urls', () => {
+        return availability('?entity_id=0400000US45').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response).to.comprise.of.json({
+                'topics': {
+                    'health': {
+                        'datasets': {
+                            'health_indicators': {
+                                'attributions': [
+                                    {
+                                        'name': 'Centers for Disease Control and Prevention',
+                                        'url': 'http://www.cdc.gov/',
+                                        'source_url': 'http://www.cdc.gov/brfss/'
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    });
+
     it('should generate working variable urls', () => {
         return availability('?entity_id=0100000US,0400000US53').then(response => {
             expect(response).to.have.status(200);
