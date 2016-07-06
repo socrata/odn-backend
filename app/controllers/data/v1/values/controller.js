@@ -2,10 +2,10 @@
 
 const _ = require('lodash');
 
-const EntityLookup = require('../../../../../entity-lookup');
-const Exception = require('../../../../error');
-const Request = require('../../../../../request');
-const Constraint = require('../../constraint/constraint');
+const EntityLookup = require('../../../../entity-lookup');
+const Exception = require('../../../error');
+const Request = require('../../../../request');
+const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
 
 module.exports = (request, response) => {

@@ -5,7 +5,7 @@ const get = chakram.get;
 const expect = chakram.expect;
 
 function chart(path) {
-    return get(`http://localhost:3001/data/v1/chart/line/${path}`);
+    return get(`http://localhost:3001/data/v1/values/${path}`);
 }
 
 function population(path) {
@@ -20,7 +20,7 @@ function populationUS(path) {
     return population(`entity_id=0100000US&${path}`);
 }
 
-describe('/data/v1/chart/line', () => {
+describe('/data/v1/values', () => {
     it('should require a variable', () => {
         return expect(chart('')).to.have.status(404);
     });
