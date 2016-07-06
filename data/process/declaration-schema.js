@@ -7,6 +7,7 @@ module.exports = {
             properties: {
                 id: {type: 'string'},
                 name: {type: 'string'},
+                description: {type: 'string'},
                 url: {type: 'string'}
             },
             required: ['id', 'name', 'url']
