@@ -57,6 +57,14 @@ describe('/suggest/v1', () => {
         });
     });
 
+    it('should rank washington state as the best entity suggestion for washington', () => {
+        return suggest('entity?query=washington').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(entitySchema);
+            expect(response.body.options[0].id).to.equal('0400000US53');
+        });
+    });
+
     it('should find questions for california', () => {
         return suggest('question?query=california').then(response => {
             expect(response).to.have.status(200);
@@ -162,10 +170,11 @@ const questionSchema = {
             type: 'object',
             properties: {
                 entity: {'$ref': '#/definitions/entity'},
-                text: {type: 'string'},
-                odnURL: {type: 'string'}
+                variable_id: {type: 'string'},
+                constraints: {type: 'object'},
+                text: {type: 'string'}
             },
-            required: ['entity', 'text', 'odnURL']
+            required: ['entity', 'variable_id', 'text']
         }
     },
     type: 'object',

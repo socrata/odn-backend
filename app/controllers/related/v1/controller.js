@@ -11,7 +11,7 @@ const Relatives = require('../relatives');
 function validateRequest(request) {
     return new Promise((resolve, reject) => {
         const relation = request.params.relation;
-        const id = request.query.id;
+        const id = request.query.entity_id;
         const limitString = _.isNil(request.query.limit) ?
             Constants.RELATED_COUNT_DEFAULT : request.query.limit;
 

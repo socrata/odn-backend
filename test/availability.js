@@ -16,27 +16,27 @@ describe('/data/v1/availability', () => {
     });
 
     it('should not accept an invalid id', () => {
-        return expect(availability('?id=invalid-id')).to.have.status(404);
+        return expect(availability('?entity_id=invalid-id')).to.have.status(404);
     });
 
     it('should not accept a valid id followed by an invalid id', () => {
-        return expect(availability('?id=0100000US,invalid-id')).to.have.status(404);
+        return expect(availability('?entity_id=0100000US,invalid-id')).to.have.status(404);
     });
 
     it('should not accept an invalid id followed by a valid id', () => {
-        return expect(availability('?id=0100000US,invalid-id')).to.have.status(404);
+        return expect(availability('?entity_id=0100000US,invalid-id')).to.have.status(404);
     });
 
     it('should accept two valid ids', () => {
-        return expect(availability('?id=0100000US,0400000US53')).to.have.status(200);
+        return expect(availability('?entity_id=0100000US,0400000US53')).to.have.status(200);
     });
 
     it('should accept two valid ids with some white space', () => {
-        return expect(availability('?id=    0100000US   ,      0400000US53 ')).to.have.status(200);
+        return expect(availability('?entity_id=    0100000US   ,      0400000US53 ')).to.have.status(200);
     });
 
     it('should find available data for the united states and washington state', () => {
-        return availability('?id=0100000US,0400000US53').then(response => {
+        return availability('?entity_id=0100000US,0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
             expect(response).to.comprise.of.json({
@@ -67,7 +67,7 @@ describe('/data/v1/availability', () => {
     });
 
     it('should find population and education expenditure data for washington state', () => {
-        return availability('?id=0400000US53').then(response => {
+        return availability('?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
             expect(response).to.comprise.of.json({
@@ -88,7 +88,7 @@ describe('/data/v1/availability', () => {
     });
 
     it('should find population and education expenditure data for washington, colorado, and montana', () => {
-        return availability('?id=0400000US53,0400000US08,0400000US30').then(response => {
+        return availability('?entity_id=0400000US53,0400000US08,0400000US30').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
             expect(response).to.comprise.of.json({
@@ -109,7 +109,7 @@ describe('/data/v1/availability', () => {
     });
 
     it('should find health indicator data for south carolina', () => {
-        return availability('?id=0400000US45').then(response => {
+        return availability('?entity_id=0400000US45').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
             expect(response).to.comprise.of.json({
@@ -125,7 +125,7 @@ describe('/data/v1/availability', () => {
     });
 
     it('should generate working variable urls', () => {
-        return availability('?id=0100000US,0400000US53').then(response => {
+        return availability('?entity_id=0100000US,0400000US53').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
 
