@@ -13,7 +13,7 @@ module.exports = {
             required: ['id', 'name', 'url']
         },
 
-        attribution: {
+        source: {
             type: 'object',
             properties: {
                 name: {type: 'string'},
@@ -35,9 +35,9 @@ module.exports = {
                     items: {type: 'string'}
                 },
                 description: {type: 'string'},
-                attributions: {
+                sources: {
                     type: 'array',
-                    items: {'$ref': '#/definitions/attribution'},
+                    items: {'$ref': '#/definitions/source'},
                     minItems: 1
                 },
                 constraints: {

@@ -129,7 +129,7 @@ describe('/data/v1/availability', () => {
         });
     });
 
-    it('should include attributions with source urls', () => {
+    it('should include sources with source urls', () => {
         return availability('?entity_id=0400000US45').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
@@ -138,7 +138,7 @@ describe('/data/v1/availability', () => {
                     'health': {
                         'datasets': {
                             'health_indicators': {
-                                'attributions': [
+                                'sources': [
                                     {
                                         'name': 'Centers for Disease Control and Prevention',
                                         'url': 'http://www.cdc.gov/',

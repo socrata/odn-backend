@@ -82,10 +82,10 @@ class Sources {
                         augmented.description = '';
 
                     augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
-                    augmented.attributions = value.attributions.map(attribution => {
-                        if (_.isArray(attribution))
-                            return _.assign({}, attributions[attribution[0]], {source_url: attribution[1]});
-                        return attributions[attribution];
+                    augmented.sources = value.sources.map(source => {
+                        if (_.isArray(source))
+                            return _.assign({}, attributions[source[0]], {source_url: source[1]});
+                        return attributions[source];
                     });
                 }
 
