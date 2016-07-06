@@ -44,20 +44,13 @@ function getConstraints(request, dataset) {
         const constraints = _.omit(request.query, ['variable', 'entity_id']);
 
         _.keys(constraints).forEach(constraint => {
-            if (!_.contains(dataset.constraints, constraint))
+            if (!_.includes(dataset.constraints, constraint))
                 reject(Exception.notFound(`invalid constraint: ${constraint}`));
         });
 
         resolve(constraints);
     });
 }
-
-function get(entities) {
-    return {
-        $where: `id in ${entities.map(_.property('id'))}`
-    };
-}
-
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -69,12 +62,15 @@ module.exports = (request, response) => {
             return errorHandler(Exception.invalidParam('must specify a dataset or variable'));
 
         getConstraints(request, dataset).then(constraints => {
-            const specified = [entities.length > 0, variables.length > 0]
-                .concat(dataset.constraints.map(constraint => constraint in constraints));
+            const constraintsSpecified = dataset.constraints.map(constraint => {
+                return [constraint, constraint in constraints];
+            });
+            const specified = [['id', entities.length == 1],
+                               ['variable', variables.length == 1]].concat(constraintsSpecified);
 
-            if (_.filter(specified, _.negate(_.identity)).length > 1)
+            if (_.filter(specified, _.negate(_.last)).length > 1)
                 return errorHandler(Exception.invalidParam(
-                    `must specify values for all but one of:
+                    `must specify singluar values for all but one of:
                     ${['entity_id', 'variable'].concat(dataset.constraints).join(', ')}`));
 
             let queries = [];
@@ -82,11 +78,18 @@ module.exports = (request, response) => {
             if (variables.length > 0) queries.push(whereVariables(variables));
             const $where = queries.join(' AND ');
 
-            const params = _.assign({}, constraints, {$where});
-            const url = Request.buildURL(dataset.url, params);
-            console.log(url);
+            const unspecified = _.first(_.find(specified, _.negate(_.last)));
 
-            response.json({});
+            const params = _.assign({}, constraints, {
+                $where: queries.join(' AND '),
+                $select: [unspecified, 'value'].join(',')
+            });
+            const url = Request.buildURL(dataset.url, params);
+
+            Request.getJSON(url).then(data => {
+                const frame = data.map(row => [row[unspecified], parseFloat(row.value)]);
+                response.json(frame);
+            }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
