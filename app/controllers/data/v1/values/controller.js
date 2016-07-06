@@ -5,74 +5,112 @@ const _ = require('lodash');
 const EntityLookup = require('../../../../entity-lookup');
 const Exception = require('../../../error');
 const Request = require('../../../../request');
+const Sources = require('../../../../sources');
 const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
+
+function getVariables(request) {
+    return new Promise((resolve, reject) => {
+        const variableString = request.query.variable;
+        if (_.isNil(variableString) || variableString === '')
+            return resolve([null, null, []]);
+
+        const variableIDs = variableString.split(',');
+        const tree = Sources.searchMany(variableIDs);
+
+        if (_.isNil(tree))
+            return reject(Exception.notFound(`variables not found: ${variableIDs}`));
+        if (_.size(tree) > 1)
+            return reject(Exception.invalidParam(`variables cannot span multiple topics: ${variableIDs}`));
+
+        const topic = _.head(_.values(tree));
+
+        if (_.size(topic.datasets) > 1)
+            return reject(Exception.invalidParam(`variables cannot span multiple datasets: ${variableIDs}`));
+
+        const dataset =  _.head(_.values(topic.datasets));
+        const variables = _.values(dataset.variables);
+
+        resolve([topic, dataset, variables]);
+    });
+}
+
+function getEntities(request) {
+    return EntityLookup.byIDs(request.query.entity_id);
+}
+
+function getConstraints(request, dataset) {
+    return new Promise((resolve, reject) => {
+        const constraints = _.omit(request.query, ['variable', 'entity_id']);
+
+        _.keys(constraints).forEach(constraint => {
+            if (!_.contains(dataset.constraints, constraint))
+                reject(Exception.notFound(`invalid constraint: ${constraint}`));
+        });
+
+        resolve(constraints);
+    });
+}
+
+function get(entities) {
+    return {
+        $where: `id in ${entities.map(_.property('id'))}`
+    };
+}
+
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
-    const variableID = request.params.variable;
-    if (_.isNil(variableID) || variableID === '')
-        return errorHandler(Exception.invalidParam('variable required'));
+    Promise.all([getVariables(request), getEntities(request)])
+        .then(([[topic, dataset, variables], entities]) => {
 
-    EntityLookup.byIDs(request.query.entity_id).then(entities => {
-        if (entities.length === 0)
-            return errorHandler(Exception.invalidParam('at least one id required'));
+        if (_.isNil(dataset))
+            return errorHandler(Exception.invalidParam('must specify a dataset or variable'));
 
-        const [dataset, variable] = Constraint.parseID(entities, variableID);
-        if (_.some([dataset, variable], _.isNil))
-            return errorHandler(Exception.notFound(`invalid variable id: ${variableID}`));
+        getConstraints(request, dataset).then(constraints => {
+            const specified = [entities.length > 0, variables.length > 0]
+                .concat(dataset.constraints.map(constraint => constraint in constraints));
 
-        const constraint = request.query.constraint;
-        if (_.isNil(constraint) || constraint === '')
-            return errorHandler(Exception.invalidParam(`constraint required.
-                        Must be one of ${dataset.constraints.join(', ')}`));
+            if (_.filter(specified, _.negate(_.identity)).length > 1)
+                return errorHandler(Exception.invalidParam(
+                    `must specify values for all but one of:
+                    ${['entity_id', 'variable'].concat(dataset.constraints).join(', ')}`));
 
-        if (!_.includes(dataset.constraints, constraint))
-            return errorHandler(Exception.notFound(`invalid constraint: ${constraint}.
-                        Must be one of: ${dataset.constraints.join(', ')}`));
+            let queries = [];
+            if (entities.length > 0) queries.push(whereEntities(entities));
+            if (variables.length > 0) queries.push(whereVariables(variables));
+            const $where = queries.join(' AND ');
 
-        const constraints = _.omit(request.query, ['entity_id', 'constraint', 'forecast']);
+            const params = _.assign({}, constraints, {$where});
+            const url = Request.buildURL(dataset.url, params);
+            console.log(url);
 
-        Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
-            const url = Request.buildURL(dataset.url, {
-                variable: _.last(variable.id.split('.')),
-                $where: getIDs(entities),
-                $order: 'id ASC'
-            });
-
-            Request.getJSON(url).then(data => {
-                const entityIDs = entities.map(_.property('id'));
-
-                const header = [constraint].concat(entities.map(_.property('name'))).concat('forecast');
-                const r = _(data)
-                    .groupBy(_.property(constraint))
-                    .toPairs()
-                    .map(([constraintValue, points]) => {
-                        const values = entityIDs
-                            .map(id => _.find(points, {id}) || {})
-                            .map(point => point.value || null);
-                        return [constraintValue].concat(values).map(parseFloat);
-                    })
-                    .value();
-
-                const forecastSteps = parseInt(request.query.forecast, 10) || 0;
-
-                const forecast = _(r)
-                    .unzip()
-                    .map(series => series.concat(Forecast.linear(forecastSteps, series)))
-                    .concat([_.times(r.length + forecastSteps, index => index >= r.length)])
-                    .unzip()
-                    .value();
-
-                response.json({data: [header].concat(forecast)});
-            }).catch(errorHandler);
+            response.json({});
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
-function getIDs(entities) {
-    const entityIDs = entities.map(entity => entity.id);
-    return `id in(${entityIDs.map(id => `'${id}'`).join(',')})`;
+function quote(string) {
+    return `'${string}'`;
+}
+
+function whereIn(name, options) {
+    return `${name} in (${options.map(quote).join(',')})`;
+}
+
+function whereEntities(entities) {
+    if (entities.length === 0) return [];
+    return whereIn('id', entities.map(_.property('id')));
+}
+
+function variableID(variable) {
+    return _.last(variable.id.split('.'));
+}
+
+function whereVariables(variables) {
+    if (variables.length === 0) return [];
+    return whereIn('variable', variables.map(variableID));
+
 }
 
