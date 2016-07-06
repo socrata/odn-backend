@@ -52,6 +52,9 @@ function getConstraints(request, dataset) {
     });
 }
 
+/**
+ * Specify any number of entities
+ */
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
@@ -65,30 +68,45 @@ module.exports = (request, response) => {
             const constraintsSpecified = dataset.constraints.map(constraint => {
                 return [constraint, constraint in constraints];
             });
-            const specified = [['id', entities.length == 1],
-                               ['variable', variables.length == 1]].concat(constraintsSpecified);
+            const specified = [['variable', variables.length == 1]].concat(constraintsSpecified);
 
             if (_.filter(specified, _.negate(_.last)).length > 1)
                 return errorHandler(Exception.invalidParam(
                     `must specify singluar values for all but one of:
-                    ${['entity_id', 'variable'].concat(dataset.constraints).join(', ')}`));
+                    ${specified.map(_.first).join(', ')}`));
 
             let queries = [];
             if (entities.length > 0) queries.push(whereEntities(entities));
             if (variables.length > 0) queries.push(whereVariables(variables));
             const $where = queries.join(' AND ');
 
-            const unspecified = _.first(_.find(specified, _.negate(_.last)));
+            const unspecified = _.first(_.find(specified, _.negate(_.last))) || 'variable';
 
             const params = _.assign({}, constraints, {
                 $where: queries.join(' AND '),
-                $select: [unspecified, 'value'].join(',')
+                $select: ['id', 'value', unspecified].join(','),
+                $order: `${unspecified}, id`
             });
+
             const url = Request.buildURL(dataset.url, params);
 
             Request.getJSON(url).then(data => {
-                const frame = data.map(row => [row[unspecified], parseFloat(row.value)]);
-                response.json(frame);
+                const ids = _.uniq(data.map(_.property('id')));
+                const header = [unspecified].concat(ids);
+
+                const frame = _(data)
+                    .groupBy(unspecified)
+                    .toPairs()
+                    .map(([value, entities]) => {
+                        return [value].concat(ids.map(id => {
+                            const entity = _.find(entities, {id});
+                            if (_.isNil(entity)) return null;
+                            return entity.value;
+                        }));
+                    })
+                    .value();
+
+                response.json([header].concat(frame));
             }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
