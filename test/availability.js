@@ -129,6 +129,15 @@ describe('/data/v1/availability', () => {
         });
     });
 
+    it('should not include search terms for datasets', () => {
+        return availability('?entity_id=0400000US53').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response.body.topics.demographics.datasets.population)
+                .to.not.have.keys('searchTerms');
+        });
+    });
+
     it('should include sources with source urls', () => {
         return availability('?entity_id=0400000US45').then(response => {
             expect(response).to.have.status(200);

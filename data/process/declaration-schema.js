@@ -30,10 +30,6 @@ module.exports = {
                 name: {type: 'string'},
                 domain: {type: 'string'},
                 fxf: {type: 'string'},
-                searchTerms: {
-                    type: 'array',
-                    items: {type: 'string'}
-                },
                 description: {type: 'string'},
                 sources: {
                     type: 'array',
@@ -51,7 +47,7 @@ module.exports = {
                     }
                 }
             },
-            required: ['id', 'name', 'domain', 'fxf', 'constraints', 'variables', 'searchTerms', 'description']
+            required: ['id', 'name', 'domain', 'fxf', 'constraints', 'variables', 'description']
         },
 
         topic: {

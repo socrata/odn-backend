@@ -124,6 +124,14 @@ class Sources {
         });
     }
 
+    mapDatasets(tree, iteratee) {
+        return mapTree(tree, (value, key, parents) => {
+            if ('variables' in value)
+                return iteratee(value, key, parents);
+            return value;
+        });
+    }
+
     getTopic(datasetID) {
         return _.findKey(this.topics, topic => datasetID in topic.datasets);
     }
