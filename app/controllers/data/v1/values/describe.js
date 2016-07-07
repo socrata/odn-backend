@@ -9,28 +9,48 @@ class Describe {
         return new Promise((resolve, reject) => {
             if (entities.length === 0) return resolve({});
 
-            const variables = _.values(dataset.variables);
+            const descriptions = rows
+                .map(getData(dataset, entities, constraints, unspecified))
+                .map(describe);
 
-            if (unspecified === 'variable') {
-                const descriptions = rows
-                    .map(_.curry(getEntityAndVariable)(entities)(variables))
-                    .map(_.curry(describe)(constraints));
-
-                resolve({
-                    description: descriptions.join(' ')
-                });
-            } else {
-                resolve({});
-            }
+            resolve({
+                description: descriptions.join(' ')
+            });
         });
     }
 }
 
-function describe(constraints, row) {
-    const {variable, entity, value} = row;
+function getData(dataset, entities, constraints, unspecified) {
+    const variables = _.values(dataset.variables);
+
+    if (unspecified === 'variable') {
+        return row => {
+            return {
+                constraints,
+                value: row.value,
+                entity: _.find(entities, {id: row.id}),
+                variable: _.find(variables, variable => {
+                    return _.last(variable.id.split('.')) === row.variable;
+                })
+            };
+        };
+    } else {
+        return row => {
+            return {
+                constraints: _.pick(row, dataset.constraints),
+                value: row.value,
+                entity: _.find(entities, {id: row.id}),
+                variable: variables[0]
+            };
+        };
+    }
+}
+
+function describe(row) {
+    const {variable, entity, value, constraints} = row;
     const formattedValue = format(variable.type)(value);
 
-    return `The ${variable.name} of ${entity.name} is ${formattedValue}${describeConstraints(constraints)}.`;
+    return `The ${variable.name} of ${entity.name} was ${formattedValue}${describeConstraints(constraints)}.`;
 }
 
 function describeConstraints(constraints) {
@@ -58,16 +78,6 @@ function englishJoin(elements) {
     } else {
         return englishJoin([elements.slice(0, 2).join(', ')].concat(elements.slice(2)));
     }
-}
-
-function getEntityAndVariable(entities, variables, row) {
-    return {
-        value: row.value,
-        entity: _.find(entities, {id: row.id}),
-        variable: _.find(variables, variable => {
-            return _.last(variable.id.split('.')) === row.variable;
-        })
-    };
 }
 
 module.exports = Describe;
