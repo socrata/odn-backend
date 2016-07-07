@@ -301,3 +301,57 @@ Retrieve values in the ODN.
             [2009,6465755]
         ]
 
+
+## Autosuggest [/suggest/v1/{type}{?query}{?limit}]
+
+Suggest objects that match the given query.
+
++ Parameters
+    + type (required, string, `entity`)
+
+        Type of the object to find.
+
+        + Values
+            + `entity`
+            + `category`
+            + `publisher`
+            + `dataset`
+            + `question`
+
+    + query (required, string, `seattle`)
+
+        Query to match.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 1 to 1000.
+
+        + Default: `10`
+
+### Suggest entities [GET]
+
++ Request
+
+    Suggest entities that match "seattle".
+
+    - Parameters
+        - type: entity
+        - query: seattle
+
++ Response 200 (application/json)
+
+        {
+            "entities": [
+                {
+                    "id": "310M200US42660",
+                    "name": "Seattle Metro Area (WA)",
+                    "type": "regions.msa"
+                },
+                {
+                    "id": "1600000US5363000",
+                    "name": "Seattle, WA",
+                    "type": "regions.place"
+                }
+            ]
+        }
