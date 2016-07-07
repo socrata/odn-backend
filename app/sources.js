@@ -68,34 +68,38 @@ class Sources {
     constructor(json, attributions) {
         this.topics = mapTree(json, (value, key, parents) => {
             if (!_.includes(['topics', 'datasets', 'variables'], key)) {
-                const path = parents.length === 0 ? key :
-                    `${_.last(parents).id}.${key}`;
-
-                const augmented = _.assign(value, {id: path});
-
-                if ('variables' in value) {
-                    if (!('domain' in value))
-                        augmented.domain = Constants.ODN_DATA_DOMAIN;
-                    if (!('searchTerms' in value))
-                        augmented.searchTerms = [];
-                    if (!('description' in value))
-                        augmented.description = '';
-
-                    augmented.url = `https://${value.domain}/resource/${value.fxf}.json`;
-                    augmented.sources = value.sources.map(source => {
-                        if (_.isArray(source))
-                            return _.assign({}, attributions[source[0]], {source_url: source[1]});
-                        return attributions[source];
-                    });
-                }
+                value.id = parents.length === 0 ? key : `${_.last(parents).id}.${key}`;
 
                 if (!('name' in value))
-                    augmented.name = formatName(key);
-
-                return augmented;
+                    value.name = formatName(key);
             }
 
             return value;
+        });
+
+        this.topics = this.mapDatasets(this.topics, dataset => {
+            if (!('domain' in dataset))
+                dataset.domain = Constants.ODN_DATA_DOMAIN;
+            if (!('searchTerms' in dataset))
+                dataset.searchTerms = [];
+            if (!('description' in dataset))
+                dataset.description = '';
+
+            dataset.url = `https://${dataset.domain}/resource/${dataset.fxf}.json`;
+            dataset.sources = dataset.sources.map(source => {
+                if (_.isArray(source))
+                    return _.assign({}, attributions[source[0]], {source_url: source[1]});
+                return attributions[source];
+            });
+
+            return dataset;
+        });
+
+        this.topics = this.mapVariables(this.topics, variable => {
+            if (!('type' in variable))
+                variable.type = 'number';
+
+            return variable;
         });
     }
 

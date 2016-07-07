@@ -8,9 +8,10 @@ module.exports = {
                 id: {type: 'string'},
                 name: {type: 'string'},
                 description: {type: 'string'},
-                url: {type: 'string'}
+                url: {type: 'string'},
+                type: {type: 'string'}
             },
-            required: ['id', 'name', 'url']
+            required: ['id', 'name', 'url', 'type']
         },
 
         source: {

@@ -26,92 +26,121 @@
                 "constraints": ["year"],
                 "variables": {
                     "percent_less_than_9th_grade": {
+                        "type": "percent",
                         "name": "percent of people who did not finish the 9th grade"
                     },
                     "male_percent_associates_degree": {
+                        "type": "percent",
                         "name": "percent of males with an associates degree"
                     },
                     "male_percent_bachelors_degree": {
+                        "type": "percent",
                         "name": "percent of males with a bachelor's degree"
                     },
                     "male_percent_high_school_graduate_or_higher": {
+                        "type": "percent",
 						"name": "percent of males with at least a high school diploma"
 					},
                     "female_percent_high_school_graduate": {
+                        "type": "percent",
 						"name": "percent of females who graduated high school"
 					},
                     "percent_graduate_or_professional_degree": {
+                        "type": "percent",
 						"name": "percent of people with a graduate or professional degree"
 					},
                     "percent_some_college": {
+                        "type": "percent",
 						"name": "percent of people with some college education"
 					},
                     "male_percent_less_than_9th_grade": {
+                        "type": "percent",
 						"name": "percent of males who did not finish the 9th grade"
 					},
                     "percent_bachelors_degree": {
+                        "type": "percent",
 						"name": "percent of people with a bachelor's degree"
 					},
                     "percent_high_school_graduate_or_higher": {
+                        "type": "percent",
 						"name": "percent of people with at least a high school diploma"
 					},
                     "female_percent_bachelors_degree_or_higher": {
+                        "type": "percent",
 						"name": "percent of females with at least a bachelor's degree"
 					},
                     "percent_associates_degree": {
+                        "type": "percent",
 						"name": "percent of people with an associate's degree"
 					},
                     "population": {},
                     "male_percent_9th_to_12th_grade_no_diploma": {
+                        "type": "percent",
 						"name": "percent of males with some high school education but no diploma"
 					},
                     "male_percent_some_college": {
+                        "type": "percent",
 						"name": "percent of males with some college education"
 					},
                     "percent_9th_to_12th_grade_no_diploma": {
+                        "type": "percent",
 						"name": "percent of people with some high school education but no diploma"
 					},
                     "female_percent_some_college": {
+                        "type": "percent",
 						"name": "percent of females with some college education"
 					},
                     "percent_bachelors_degree_or_higher": {
+                        "type": "percent",
 						"name": "percent of people with at least a bachelor's degree"
 					},
                     "female_percent_9th_to_12th_grade_no_diploma": {
+                        "type": "percent",
 						"name": "percent of females with some high school education but no diploma"
 					},
                     "percent_high_school_graduate": {
+                        "type": "percent",
 						"name": "percent of people who graduated high school"
 					},
                     "female_percent_associates_degree": {
+                        "type": "percent",
 						"name": "percent of females with an associate's degree"
 					},
                     "male_percent_high_school_graduate": {
+                        "type": "percent",
 						"name": "percent of males who graduated high school"
 					},
                     "female_percent_bachelors_degree": {
+                        "type": "percent",
 						"name": "percent of females with a bachelor's degree"
 					},
                     "female_percent_graduate_or_professional_degree": {
+                        "type": "percent",
 						"name": "percent of females with a graduate or professional degree"
 					},
                     "male_percent_bachelors_degree_or_higher": {
+                        "type": "percent",
 						"name": "percent of males with at least a bachelor's degree"
 					},
                     "total_ranks": {},
                     "percent_high_school_graduate_or_higher_rank": {
+                        "type": "rank",
 						"name": "ranking of high school graduation rate"
 					},
                     "female_percent_less_than_9th_grade": {
+                        "type": "percent",
 						"name": "percent of females who did not finish the 9th grade"
 					},
                     "female_percent_high_school_graduate_or_higher": {
+                        "type": "percent",
 						"name": "percent of females with at least a high school diploma"
 					},
                     "percent_bachelors_degree_or_higher_rank": {
+                        "type": "rank",
 						"name": "ranking of college graduation rate"
 					},
                     "male_percent_graduate_or_professional_degree": {
+                        "type": "percent",
                         "name": "percent of males with a graduate or professional degree"
                     }
                 },
@@ -123,12 +152,24 @@
                 "fxf": "nxzi-u9nr",
                 "constraints": ["year"],
                 "variables": {
-                    "administration-salaries": {},
-                    "capital-expenditures": {},
-                    "capital-expenditures-per-student": {},
-                    "instruction-salaries": {},
-                    "instruction-salaries-per-student": {},
-                    "administration-salaries-per-student": {}
+                    "administration-salaries": {
+                        "type": "dollar"
+                    },
+                    "capital-expenditures": {
+                        "type": "dollar"
+                    },
+                    "capital-expenditures-per-student": {
+						"type": "dollar"
+					},
+                    "instruction-salaries": {
+						"type": "dollar"
+					},
+                    "instruction-salaries-per-student": {
+						"type": "dollar"
+					},
+                    "administration-salaries-per-student": {
+                        "type": "dollar"
+                    }
                 },
                 "searchTerms": ["school budget", "school funding", "school construction", "teacher salaries", "university salaries",
                     "college budget", "college funding", "college salaries", "university budget", "university funding",
@@ -157,26 +198,64 @@
                 "constraints": ["year"],
                 "variables": {
                     "female_earners": {},
-                    "female_full_time_median_earnings": {},
-                    "female_median_earnings": {},
+                    "female_full_time_median_earnings": {
+                        "type": "dollar"
+                    },
+                    "female_median_earnings": {
+                        "type": "dollar"
+                    },
                     "male_earners": {},
-                    "male_full_time_median_earnings": {},
-                    "male_median_earnings": {},
-                    "median_earnings": {},
-                    "median_earnings_bachelor_degree": {},
-                    "median_earnings_graduate_or_professional_degree": {},
-                    "median_earnings_high_school": {},
-                    "median_earnings_less_than_high_school": {},
-                    "median_earnings_some_college_or_associates": {},
-                    "percent_with_earnings_10000_to_14999": {},
-                    "percent_with_earnings_15000_to_24999": {},
-                    "percent_with_earnings_1_to_9999": {},
-                    "percent_with_earnings_25000_to_34999": {},
-                    "percent_with_earnings_35000_to_49999": {},
-                    "percent_with_earnings_50000_to_64999": {},
-                    "percent_with_earnings_65000_to_74999": {},
-                    "percent_with_earnings_75000_to_99999": {},
-                    "percent_with_earnings_over_100000": {},
+                    "male_full_time_median_earnings": {
+						"type": "dollar"
+					},
+                    "male_median_earnings": {
+						"type": "dollar"
+					},
+                    "median_earnings": {
+						"type": "dollar"
+					},
+                    "median_earnings_bachelor_degree": {
+						"type": "dollar"
+					},
+                    "median_earnings_graduate_or_professional_degree": {
+						"type": "dollar"
+					},
+                    "median_earnings_high_school": {
+						"type": "dollar"
+					},
+                    "median_earnings_less_than_high_school": {
+						"type": "dollar"
+					},
+                    "median_earnings_some_college_or_associates": {
+						"type": "dollar"
+					},
+                    "percent_with_earnings_10000_to_14999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_15000_to_24999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_1_to_9999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_25000_to_34999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_35000_to_49999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_50000_to_64999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_65000_to_74999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_75000_to_99999": {
+						"type": "percent"
+					},
+                    "percent_with_earnings_over_100000": {
+						"type": "percent"
+					},
                     "population": {},
                     "ratio_bachelor_to_median": {},
                     "ratio_female_earners": {},
@@ -197,9 +276,15 @@
                 "fxf": "5pnb-mvzq",
                 "constraints": ["year"],
                 "variables": {
-                    "jobs-prox-idx-mean": {},
-                    "jobs-prox-idx-median": {},
-                    "jobs-prox-idx-stdev": {}
+                    "jobs-prox-idx-mean": {
+						"name": "mean job proximity index"
+					},
+                    "jobs-prox-idx-median": {
+						"name": "median job proximity index"
+					},
+                    "jobs-prox-idx-stdev": {
+                        "name": "job proximity index standard deviation"
+                    }
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
                 "description": "The jobs proximity index quantifies access to employment opportunities in a region. Values are percentile ranked and range from 0 to 100, with higher values corresponding to better access to jobs. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015. <br /><br /> The underlying index quantifies the accessibility of a given residential neighborhood as a function of its distance to all job locations within a census tract, with distance to larger employment centers weighted more heavily. Specifically, a gravity model is used, where the accessibility (Ai) of a given residential block-group is a summary description of the distance to all job locations, with the distance from any single job location positively weighted by the size of employment (job opportunities) at that location and inversely weighted by the labor supply (competition) to that location.",
@@ -211,9 +296,13 @@
                 "constraints": ["year", "occupation"],
                 "variables": {
                     "employed": {},
-                    "employed_rank": {},
+                    "employed_rank": {
+                        "type": "rank"
+                    },
                     "percent_employed": {},
-                    "percent_employed_rank": {},
+                    "percent_employed_rank": {
+                        "type": "rank"
+                    },
                     "population": {},
                     "total_employed": {},
                     "total_ranks": {}
@@ -230,9 +319,15 @@
                 "fxf": "nax7-t6ga",
                 "constraints": ["year"],
                 "variables": {
-                    "env-health-idx-mean": {},
-                    "env-health-idx-median": {},
-                    "env-health-idx-stdev": {}
+                    "env-health-idx-mean": {
+						"name": "mean environmental health index"
+					},
+                    "env-health-idx-median": {
+						"name": "median environmental health index"
+					},
+                    "env-health-idx-stdev": {
+						"name": "environmental health index standard deviation"
+					}
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
                 "description": "The environmental health hazard exposure index summarizes potential exposure to harmful toxins including carcinogenic, respiratory, and neurological hazards. Values are percentile ranked and range from 0 to 100, with higher values corresponding to less exposure to harmful toxins. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015.",
@@ -510,8 +605,14 @@
                 "fxf": "jm8e-8hhx",
                 "constraints": ["year"],
                 "variables": {
-                    "per_capita_gdp": {},
-                    "per_capita_gdp_percent_change": {}
+                    "per_capita_gdp": {
+						"name": "GDP per capita",
+                        "type": "dollar"
+					},
+                    "per_capita_gdp_percent_change": {
+						"name": "annual change in GDP",
+                        "type": "percent"
+					}
                 },
                 "searchTerms": ["gdp", "gross domestic product", "economy", "production", "revenue", "gross national product", "gnp"],
                 "description": "Gross Domestic Product (GDP) is a measure of the value of all goods and services produced in a region minus the value of the goods and services used up in production. Real GDP is adjusted for changes in the value of money (inflation and deflation) so that values can be compared between years. Data is available for U.S. states and metropolitan areas.",
@@ -522,8 +623,13 @@
                 "fxf": "skua-q4dv",
                 "constraints": ["year"],
                 "variables": {
-                    "expenditures_percent_change": {},
-                    "personal_consumption_expenditures": {}
+                    "expenditures_percent_change": {
+                        "name": "annual change in personal consumption expenditures",
+                        "type": "percent"
+                    },
+                    "personal_consumption_expenditures": {
+                        "type": "dollar"
+                    }
                 },
                 "searchTerms": ["consumption", "consumer", "household consumption", "goods and services", "personal expenditure", "personal expenses", "pce"],
                 "description": "Personal consumption expenditure is a measure of goods and services purchased by or on behalf of households. Data is available for U.S. states and for the nation as a whole.",
@@ -535,8 +641,12 @@
                 "fxf": "t64z-nedn",
                 "constraints": ["year", "component"],
                 "variables": {
-                    "index": {},
-                    "rank": {},
+                    "index": {
+                        "name": "cost of living index"
+                    },
+                    "rank": {
+                        "type": "rank"
+                    },
                     "total_ranks": {}
                 },
                 "searchTerms": ["cost of living", "rent", "housing", "consumer price index", "expensive", "inexpensive", "housing cost", "home price"],
