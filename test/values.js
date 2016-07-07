@@ -67,7 +67,7 @@ describe('/data/v1/values', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.json([
                 ['variable', '0100000US'],
-                ['count', '311536594']
+                ['count', 311536594]
             ]);
         });
     });

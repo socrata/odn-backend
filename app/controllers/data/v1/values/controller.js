@@ -122,8 +122,7 @@ function getFrame(unspecified, json) {
             return [value].concat(ids.map(id => {
                 const entity = _.find(entities, {id});
                 if (_.isNil(entity)) return null;
-                // TODO parseFloat
-                return entity.value;
+                return parseFloat(entity.value) || entity.value;
             }));
         })
         .value();
