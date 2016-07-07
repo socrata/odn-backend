@@ -45,30 +45,36 @@ describe('/data/v1/values', () => {
     it('should allow specifying just a variable', () => {
         return values('variable=demographics.population.change').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['year', '0100000US', '0200000US1'],
-                [2009]
-            ]);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['year', '0100000US', '0200000US1'],
+                    [2009]
+                ]
+            });
         });
     });
 
     it('should allow specifying a variable and year but no entities', () => {
         return values('variable=demographics.population.change&year=2013').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['variable']
-            ]);
-            expect(response.body).to.have.lengthOf(2);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['variable']
+                ]
+            });
+            expect(response.body.data).to.have.lengthOf(2);
         });
     });
 
     it('should allow specifying a variable, year, and entity', () => {
         return values('variable=demographics.population.count&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.have.json([
-                ['variable', '0100000US'],
-                ['count', 311536594]
-            ]);
+            expect(response).to.have.json({
+                data: [
+                    ['variable', '0100000US'],
+                    ['count', 311536594]
+                ]
+            });
         });
     });
 
@@ -81,35 +87,41 @@ describe('/data/v1/values', () => {
     it('should get all occupations for a given year', () => {
         return values('variable=jobs.occupations.employed&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['occupation', '0100000US'],
-                ['Business and Finance'],
-                ['Computers and Math'],
-                ['Construction and Extraction'],
-                ['Education'],
-                ['Engineering']
-            ]);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['occupation', '0100000US'],
+                    ['Business and Finance'],
+                    ['Computers and Math'],
+                    ['Construction and Extraction'],
+                    ['Education'],
+                    ['Engineering']
+                ]
+            });
         });
     });
 
     it('should get all years for a given occupation', () => {
         return values('variable=jobs.occupations.employed&occupation=Food Service&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['year', '0100000US'],
-                [2013]
-            ]);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['year', '0100000US'],
+                    [2013]
+                ]
+            });
         });
     });
 
     it('should allow specifying multiple variables if all constraints are fixed', () => {
         return values('variable=education.education&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['variable', '0100000US'],
-                ['percent_high_school_graduate'],
-                ['percent_high_school_graduate_or_higher']
-            ]);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['variable', '0100000US'],
+                    ['percent_high_school_graduate'],
+                    ['percent_high_school_graduate_or_higher']
+                ]
+            });
         });
     });
 
@@ -122,14 +134,16 @@ describe('/data/v1/values', () => {
     it('should get population count for all years in washington state', () => {
         return values('variable=demographics.population.count&entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['year', '0400000US53'],
-                [2009],
-                [2010],
-                [2011],
-                [2012],
-                [2013]
-            ]);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['year', '0400000US53'],
+                    [2009],
+                    [2010],
+                    [2011],
+                    [2012],
+                    [2013]
+                ]
+            });
         });
     });
 
@@ -166,30 +180,37 @@ describe('/data/v1/values', () => {
     it('should accept a zero forecast parameter and not forecast anything', () => {
         return values('variable=demographics.population.count&entity_id=0100000US&forecast=0').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['year', '0100000US']
-            ]);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['year', '0100000US']
+                ]
+            });
         });
     });
 
     it('should forecast population data', () => {
         return values('variable=demographics.population.count&entity_id=0100000US&forecast=3').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.comprise.of.json([
-                ['year', 'forecast', '0100000US'],
-                [2009, false],
-                [2010, false],
-                [2011, false],
-                [2012, false],
-                [2013, false],
-                [2014, true],
-                [2015, true],
-                [2016, true]
-            ]);
-            expect(response.body).to.have.lengthOf(9);
+            expect(response).to.comprise.of.json({
+                data: [
+                    ['year', 'forecast', '0100000US'],
+                    [2009, false],
+                    [2010, false],
+                    [2011, false],
+                    [2012, false],
+                    [2013, false],
+                    [2014, true],
+                    [2015, true],
+                    [2016, true]
+                ],
+                forecast_info: {
+                    algorithm_name: 'linear'
+                }
+            });
+            expect(response.body.data).to.have.lengthOf(9);
 
             // make sure it predicts increasing population
-            const values = _.tail(response.body).map(_.last);
+            const values = _.tail(response.body.data).map(_.last);
             expect(values).to.deep.equal(_.sortBy(values));
         });
     });

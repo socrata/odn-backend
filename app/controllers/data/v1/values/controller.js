@@ -109,7 +109,7 @@ module.exports = (request, response) => {
                     .then(Request.getJSON)
                     .then(_.partial(getFrame, unspecified))
                     .then(_.partial(getForecast, request))
-                    .then(frame => response.json(frame))
+                    .then(data => response.json(data))
                     .catch(errorHandler);
             }).catch(errorHandler);
         }).catch(errorHandler);
@@ -132,7 +132,7 @@ function getFrame(unspecified, json) {
         })
         .value();
 
-    return Promise.resolve([header].concat(frame));
+    return Promise.resolve({data: [header].concat(frame)});
 }
 
 function getForecast(request, frame) {
@@ -140,16 +140,17 @@ function getForecast(request, frame) {
         .then(_.partial(forecast, frame));
 }
 
-function forecast(frame, steps) {
+function forecast(response, steps) {
+    const frame = response.data;
     return new Promise((resolve, reject) => {
-        if (steps === 0) return resolve(frame);
+        if (steps === 0) return resolve(response);
 
         const header = _.first(frame);
         if (header[0] === 'variable')
             return reject(invalid('cannot forecast data for multiple variables'));
 
         const body = _.tail(frame);
-        if (body.length === 0) return resolve(frame);
+        if (body.length === 0) return resolve(response);
         if (!_.isNumber(body[0][0]))
             return reject(invalid('cannot forecast data for a non-numerical type'));
 
@@ -161,8 +162,12 @@ function forecast(frame, steps) {
             .unzip()
             .value();
         const forecastFrame = [forecastHeader].concat(forecastBody);
+        const forecastInfo = {
+            algorithm_name: 'linear',
+            algorithm_url: 'https://en.wikipedia.org/wiki/Extrapolation#Linear_extrapolation'
+        };
 
-        resolve(forecastFrame);
+        resolve(_.assign(response, {data: forecastFrame, forecast_info: forecastInfo}));
     });
 }
 
