@@ -4,7 +4,11 @@ const _ = require('lodash');
 
 const EntityLookup = require('../../../../entity-lookup');
 const Exception = require('../../../error');
+const invalid = Exception.invalidParam;
+const notFound = Exception.notFound;
+
 const Request = require('../../../../request');
+const Constants = require('../../../../constants');
 const Sources = require('../../../../sources');
 const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
@@ -19,14 +23,14 @@ function getDataset(request) {
         const tree = Sources.searchMany(variableIDs);
 
         if (_.isNil(tree))
-            return reject(Exception.notFound(`variables not found: ${variableIDs}`));
+            return reject(notFound(`variables not found: ${variableIDs}`));
         if (_.size(tree) > 1)
-            return reject(Exception.invalidParam(`variables cannot span multiple topics: ${variableIDs}`));
+            return reject(invalid(`variables cannot span multiple topics: ${variableIDs}`));
 
         const topic = _.head(_.values(tree));
 
         if (_.size(topic.datasets) > 1)
-            return reject(Exception.invalidParam(`variables cannot span multiple datasets: ${variableIDs}`));
+            return reject(invalid(`variables cannot span multiple datasets: ${variableIDs}`));
 
         const dataset =  _.head(_.values(topic.datasets));
         const variables = _.values(dataset.variables);
@@ -41,11 +45,11 @@ function getEntities(request) {
 
 function getConstraints(request, dataset) {
     return new Promise((resolve, reject) => {
-        const constraints = _.omit(request.query, ['variable', 'entity_id']);
+        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast']);
 
         _.keys(constraints).forEach(constraint => {
             if (!_.includes(dataset.constraints, constraint))
-                reject(Exception.notFound(`invalid constraint: ${constraint}`));
+                reject(notFound(`invalid constraint: ${constraint}`));
         });
 
         resolve(constraints);
@@ -59,17 +63,17 @@ function getUnspecified(dataset, constraints) {
     return new Promise((resolve, reject) => {
         const variables = _.values(dataset.variables);
         if (variables.length === 0)
-            return reject(Exception.invalidParam('must specify at least one variable'));
+            return reject(invalid('must specify at least one variable'));
 
         const unspecifiedConstraints = dataset.constraints.filter(constraint => {
             return !(constraint in constraints);
         });
 
-        if (unspecifiedConstraints.length > 1) return reject(Exception.invalidParam(
+        if (unspecifiedConstraints.length > 1) return reject(invalid(
             `must specify values for all but one of: {unspecifiedConstraints.join(', ')}`));
 
         if (variables.length > 1 && unspecifiedConstraints.length !== 0)
-            return reject(Exception.invalidParam(`To retrieve a values for multiple variables,
+            return reject(invalid(`To retrieve a values for multiple variables,
                 specify values for all constraints: ${unspecifiedConstraints.join(', ')}`));
 
         if (variables.length > 1 || unspecifiedConstraints.length === 0)
@@ -97,13 +101,14 @@ module.exports = (request, response) => {
     Promise.all([getDataset(request), getEntities(request)]).then(([dataset, entities]) => {
 
         if (_.isNil(dataset))
-            return errorHandler(Exception.invalidParam('must specify a variable'));
+            return errorHandler(invalid('must specify a variable'));
 
         getConstraints(request, dataset).then(constraints => {
             getUnspecified(dataset, constraints).then(unspecified => {
                 getValuesURL(dataset, constraints, entities, unspecified)
                     .then(Request.getJSON)
                     .then(_.partial(getFrame, unspecified))
+                    .then(_.partial(getForecast, request))
                     .then(frame => response.json(frame))
                     .catch(errorHandler);
             }).catch(errorHandler);
@@ -119,7 +124,7 @@ function getFrame(unspecified, json) {
         .groupBy(unspecified)
         .toPairs()
         .map(([value, entities]) => {
-            return [value].concat(ids.map(id => {
+            return [parseFloat(value) || value].concat(ids.map(id => {
                 const entity = _.find(entities, {id});
                 if (_.isNil(entity)) return null;
                 return parseFloat(entity.value) || entity.value;
@@ -128,6 +133,56 @@ function getFrame(unspecified, json) {
         .value();
 
     return Promise.resolve([header].concat(frame));
+}
+
+function getForecast(request, frame) {
+    return getForecastSteps(request)
+        .then(_.partial(forecast, frame));
+}
+
+function forecast(frame, steps) {
+    return new Promise((resolve, reject) => {
+        if (steps === 0) return resolve(frame);
+
+        const header = _.first(frame);
+        if (header[0] === 'variable')
+            return reject(invalid('cannot forecast data for multiple variables'));
+
+        const body = _.tail(frame);
+        if (body.length === 0) return resolve(frame);
+        if (!_.isNumber(body[0][0]))
+            return reject(invalid('cannot forecast data for a non-numerical type'));
+
+        const forecastHeader = header.concat(['forecast']);
+        const forecastBody = _(body)
+            .unzip()
+            .map(series => series.concat(Forecast.linear(steps, series)))
+            .concat([_.times(body.length + steps, index => index >= body.length)])
+            .unzip()
+            .value();
+        const forecastFrame = [forecastHeader].concat(forecastBody);
+
+        resolve(forecastFrame);
+    });
+}
+
+function getForecastSteps(request) {
+    return new Promise((resolve, reject) => {
+        const forecast = request.query.forecast;
+
+        if (_.isNil(forecast))
+            return resolve(0);
+
+        const forecastNumber = parseInt(forecast, 10);
+        if (isNaN(forecastNumber))
+            return reject(invalid(`forecast parameter must be a positive integer: ${forecast}`));
+        if (forecastNumber < 0)
+            return reject(invalid('forecast parameter cannot be negative'));
+        if (forecastNumber > Constants.FORECAST_STEPS_MAX)
+            return reject(invalid(`forecast parameter cannot be greater than ${Constants.FORECAST_STEPS_MAX}`));
+
+        resolve(forecastNumber);
+    });
 }
 
 function getValuesURL(dataset, constraints, entities, unspecified) {

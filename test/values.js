@@ -47,7 +47,7 @@ describe('/data/v1/values', () => {
             expect(response).to.have.status(200);
             expect(response).to.comprise.of.json([
                 ['year', '0100000US', '0200000US1'],
-                ['2009']
+                [2009]
             ]);
         });
     });
@@ -97,7 +97,7 @@ describe('/data/v1/values', () => {
             expect(response).to.have.status(200);
             expect(response).to.comprise.of.json([
                 ['year', '0100000US'],
-                ['2013']
+                [2013]
             ]);
         });
     });
@@ -124,12 +124,73 @@ describe('/data/v1/values', () => {
             expect(response).to.have.status(200);
             expect(response).to.comprise.of.json([
                 ['year', '0400000US53'],
-                ['2009'],
-                ['2010'],
-                ['2011'],
-                ['2012'],
-                ['2013']
+                [2009],
+                [2010],
+                [2011],
+                [2012],
+                [2013]
             ]);
+        });
+    });
+
+    it('should not be able to forecast multiple variables', () => {
+        return values('variable=demographics.population&entity_id=0100000US&forecast=4').then(response => {
+            expect(response).to.have.status(422);
+        });
+    });
+
+    it('should not be able to forecast a non-numerical type', () => {
+        return values('variable=jobs.occupations.employed&entity_id=0100000US&year=2013&forecast=4').then(response => {
+            expect(response).to.have.status(422);
+        });
+    });
+
+    it('should not accept a non-numerical forecast parameter', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&forecast=asd').then(response => {
+            expect(response).to.have.status(422);
+        });
+    });
+
+    it('should not accept a negative forecast parameter', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&forecast=-1').then(response => {
+            expect(response).to.have.status(422);
+        });
+    });
+
+    it('should not accept a huge forecast parameter', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&forecast=100').then(response => {
+            expect(response).to.have.status(422);
+        });
+    });
+
+    it('should accept a zero forecast parameter and not forecast anything', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&forecast=0').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.comprise.of.json([
+                ['year', '0100000US']
+            ]);
+        });
+    });
+
+    it('should forecast population data', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&forecast=3').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.comprise.of.json([
+                ['year', 'forecast', '0100000US'],
+                [2009, false],
+                [2010, false],
+                [2011, false],
+                [2012, false],
+                [2013, false],
+                [2014, true],
+                [2015, true],
+                [2016, true]
+            ]);
+            expect(response.body).to.have.lengthOf(9);
+
+            // make sure it predicts increasing population
+            const values = _.tail(response.body).map(_.last);
+            expect(values).to.deep.equal(_.sortBy(values));
         });
     });
 });
