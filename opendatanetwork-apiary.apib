@@ -247,7 +247,7 @@ Get constraints for the given variable and entities.
 
 ## Values [/data/v1/values{?variable}{?entity_id}{?forecast}{?describe}]
 
-Retrieve values in the ODN.
+Retrieve values from the ODN.
 
 + Parameters
 
@@ -277,30 +277,78 @@ Retrieve values in the ODN.
 
 + Request
 
+    Get the annual populations of the United States and Washington and
+    forecast 3 years into the future.
+
     - Parameters
-        - entity_id: 0400000US53
+        - entity_id: 0100000US,0400000US53
         - variable: demographics.population.count
-        - forecast: 2
+        - forecast: 3
 
 + Response 200 (application/json)
 
-        [
-            {"id":"0400000US53","name":"Washington","type":"region.state","value":"6819579","variable":"demographics.population.count","year":"2013"},
-            {"id":"0400000US53","name":"Washington","type":"region.state","value":"6738714","variable":"demographics.population.count","year":"2012"},
-            {"id":"0400000US53","name":"Washington","type":"region.state","value":"6652845","variable":"demographics.population.count","year":"2011"},
-            {"id":"0400000US53","name":"Washington","type":"region.state","value":"6561297","variable":"demographics.population.count","year":"2010"},
-            {"id":"0400000US53","name":"Washington","type":"region.state","value":"6465755","variable":"demographics.population.count","year":"2009"}
-        ]
-
-        [
-            ["year", "0400000US53"],
-            [2013,6819579],
-            [2012,6738714],
-            [2011,6652845],
-            [2010,6561297],
-            [2009,6465755]
-        ]
-
+        {
+            "data": [
+                [
+                    "year",
+                    "0100000US",
+                    "0400000US53",
+                    "forecast"
+                ],
+                [
+                    2009,
+                    301461533,
+                    6465755,
+                    false
+                ],
+                [
+                    2010,
+                    303965272,
+                    6561297,
+                    false
+                ],
+                [
+                    2011,
+                    306603772,
+                    6652845,
+                    false
+                ],
+                [
+                    2012,
+                    309138711,
+                    6738714,
+                    false
+                ],
+                [
+                    2013,
+                    311536594,
+                    6819579,
+                    false
+                ],
+                [
+                    2014,
+                    314055359.25,
+                    6908035,
+                    true
+                ],
+                [
+                    2015,
+                    316574124.5,
+                    6996491,
+                    true
+                ],
+                [
+                    2016,
+                    319092889.75,
+                    7084947,
+                    true
+                ]
+            ],
+            "forecast_info": {
+                "algorithm_name": "linear",
+                "algorithm_url": "https://en.wikipedia.org/wiki/Extrapolation#Linear_extrapolation"
+            }
+        }
 
 ## Autosuggest [/suggest/v1/{type}{?query}{?limit}]
 
