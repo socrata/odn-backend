@@ -74,7 +74,7 @@ describe('/data/v1/values', () => {
                     ['variable', '0100000US'],
                     ['count', 311536594]
                 ],
-                description: "The population of United States is 311536594 for the year of 2013."
+                description: "The population of United States is 311,536,594 for the year of 2013."
             });
         });
     });

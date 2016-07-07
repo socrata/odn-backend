@@ -2,12 +2,12 @@
 
 const _ = require('lodash');
 
+const format = require('./format');
+
 class Describe {
-    // entity, variable, value, constraints
     static describe(dataset, entities, constraints, unspecified, rows) {
         return new Promise((resolve, reject) => {
             if (entities.length === 0) return resolve({});
-
 
             const variables = _.values(dataset.variables);
 
@@ -28,8 +28,9 @@ class Describe {
 
 function describe(constraints, row) {
     const {variable, entity, value} = row;
+    const formattedValue = format(variable.type)(value);
 
-    return `The ${variable.name} of ${entity.name} is ${value}${describeConstraints(constraints)}.`;
+    return `The ${variable.name} of ${entity.name} is ${formattedValue}${describeConstraints(constraints)}.`;
 }
 
 function describeConstraints(constraints) {
