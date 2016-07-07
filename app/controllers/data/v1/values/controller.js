@@ -13,7 +13,7 @@ function getDataset(request) {
     return new Promise((resolve, reject) => {
         const variableString = request.query.variable;
         if (_.isNil(variableString) || variableString === '')
-            return resolve([null, null, []]);
+            return resolve(null);
 
         const variableIDs = variableString.split(',');
         const tree = Sources.searchMany(variableIDs);
@@ -52,21 +52,31 @@ function getConstraints(request, dataset) {
     });
 }
 
-function getUnspecified(dataset, constraints, entities) {
-    const unspecifiedConstraints = _.xor(dataset.constraints, _.keys(constraints));
-    const constraintsSpecified = dataset.constraints.map(constraint => {
-        return [constraint, constraint in constraints];
+/**
+ * Finds the unspecified parameter or 'variable' if all parameters are specified.
+ */
+function getUnspecified(dataset, constraints) {
+    return new Promise((resolve, reject) => {
+        const variables = _.values(dataset.variables);
+        if (variables.length === 0)
+            return reject(Exception.invalidParam('must specify at least one variable'));
+
+        const unspecifiedConstraints = dataset.constraints.filter(constraint => {
+            return !(constraint in constraints);
+        });
+
+        if (unspecifiedConstraints.length > 1) return reject(Exception.invalidParam(
+            `must specify values for all but one of: {unspecifiedConstraints.join(', ')}`));
+
+        if (variables.length > 1 && unspecifiedConstraints.length !== 0)
+            return reject(Exception.invalidParam(`To retrieve a values for multiple variables,
+                specify values for all constraints: ${unspecifiedConstraints.join(', ')}`));
+
+        if (variables.length > 1 || unspecifiedConstraints.length === 0)
+            return resolve('variable');
+
+        return resolve(unspecifiedConstraints[0]);
     });
-    const specified = [['variable', dataset.variables.length == 1]].concat(constraintsSpecified);
-
-    if (_.filter(specified, _.negate(_.last)).length > 1)
-        return Promise.reject(Exception.invalidParam(
-            `must specify singluar values for all but one of:
-            ${specified.map(_.first).join(', ')}`));
-
-    const unspecified = _.first(_.find(specified, _.negate(_.last))) || 'variable';
-
-    return Promise.resolve(unspecified);
 }
 
 /**
@@ -87,10 +97,10 @@ module.exports = (request, response) => {
     Promise.all([getDataset(request), getEntities(request)]).then(([dataset, entities]) => {
 
         if (_.isNil(dataset))
-            return errorHandler(Exception.invalidParam('must specify a dataset or variable'));
+            return errorHandler(Exception.invalidParam('must specify a variable'));
 
         getConstraints(request, dataset).then(constraints => {
-            getUnspecified(dataset, constraints, entities).then(unspecified => {
+            getUnspecified(dataset, constraints).then(unspecified => {
                 getValuesURL(dataset, constraints, entities, unspecified)
                     .then(Request.getJSON)
                     .then(_.partial(getFrame, unspecified))
@@ -112,6 +122,7 @@ function getFrame(unspecified, json) {
             return [value].concat(ids.map(id => {
                 const entity = _.find(entities, {id});
                 if (_.isNil(entity)) return null;
+                // TODO parseFloat
                 return entity.value;
             }));
         })
@@ -123,7 +134,7 @@ function getFrame(unspecified, json) {
 function getValuesURL(dataset, constraints, entities, unspecified) {
     let queries = [];
     if (entities.length > 0) queries.push(whereEntities(entities));
-    const variables = dataset.variables;
+    const variables = _.values(dataset.variables);
     if (variables.length > 0) queries.push(whereVariables(variables));
     const $where = queries.join(' AND ');
 
