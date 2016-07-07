@@ -54,12 +54,10 @@ describe('/data/v1/availability', () => {
                                 'variables': {
                                     'count': {
                                         'id': 'demographics.population.count',
-                                        'name': 'Population Count',
                                         'url': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')",
                                     },
                                     'change': {
                                         'id': 'demographics.population.change',
-                                        'name': 'Population Change',
                                         'description': 'Percent change from the previous year'
                                     }
                                 }

@@ -12,6 +12,7 @@ const Constants = require('../../../../constants');
 const Sources = require('../../../../sources');
 const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
+const Describe = require('./describe');
 
 function getDataset(request) {
     return new Promise((resolve, reject) => {
@@ -106,11 +107,15 @@ module.exports = (request, response) => {
         getConstraints(request, dataset).then(constraints => {
             getUnspecified(dataset, constraints).then(unspecified => {
                 getValuesURL(dataset, constraints, entities, unspecified)
-                    .then(Request.getJSON)
-                    .then(_.partial(getFrame, unspecified))
-                    .then(_.partial(getForecast, request))
-                    .then(data => response.json(data))
-                    .catch(errorHandler);
+                    .then(Request.getJSON).then(rows => {
+                    const descriptionPromise = Describe.describe(dataset, entities, constraints, unspecified, rows);
+                    const framePromise = getFrame(unspecified, rows)
+                        .then(_.partial(getForecast, request));
+
+                    Promise.all([descriptionPromise, framePromise]).then(([description, frame]) => {
+                        response.json(_.assign(frame, description));
+                    }).catch(errorHandler);
+                }).catch(errorHandler);
             }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
