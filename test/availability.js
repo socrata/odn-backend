@@ -54,8 +54,11 @@ describe('/data/v1/availability', () => {
                                 'variables': {
                                     'count': {
                                         'id': 'demographics.population.count',
-                                        'name': 'Population Count',
-                                        'url': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')"
+                                        'url': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')",
+                                    },
+                                    'change': {
+                                        'id': 'demographics.population.change',
+                                        'description': 'Percent change from the previous year'
                                     }
                                 }
                             }
@@ -117,6 +120,39 @@ describe('/data/v1/availability', () => {
                     'health': {
                         'datasets': {
                             'health_indicators': {}
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    it('should not include search terms for datasets', () => {
+        return availability('?entity_id=0400000US53').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response.body.topics.demographics.datasets.population)
+                .to.not.have.keys('searchTerms');
+        });
+    });
+
+    it('should include sources with source urls', () => {
+        return availability('?entity_id=0400000US45').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(availabilitySchema);
+            expect(response).to.comprise.of.json({
+                'topics': {
+                    'health': {
+                        'datasets': {
+                            'health_indicators': {
+                                'sources': [
+                                    {
+                                        'name': 'Centers for Disease Control and Prevention',
+                                        'url': 'http://www.cdc.gov/',
+                                        'source_url': 'http://www.cdc.gov/brfss/'
+                                    }
+                                ]
+                            }
                         }
                     }
                 }

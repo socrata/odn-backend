@@ -29,8 +29,9 @@ const Constants = {
 
     SUGGEST_COUNT_DEFAULT: 10,
     SUGGEST_COUNT_MAX: 1000,
+    SUGGEST_SEPARATOR: ':',
 
-    SUGGEST_SEPARATOR: ':'
+    FORECAST_STEPS_MAX: 20
 };
 
 module.exports = Constants;

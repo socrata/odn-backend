@@ -32,6 +32,10 @@ class Availability {
             return _.assign(variable, {url});
         });
 
+        topics = Sources.mapDatasets(topics, dataset => {
+            return _.omit(dataset, 'searchTerms');
+        });
+
         return topics;
     }
 }

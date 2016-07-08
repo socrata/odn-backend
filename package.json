@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "compression": "1.6.2",
+    "cors": "2.7.1",
     "crypto": "0.0.3",
     "express": "4.14.0",
     "lodash": "4.13.1",
     "memjs": "0.10.0",
+    "numeral": "1.5.3",
     "querystring": "0.2.0",
     "request-promise": "3.0.0",
     "winston": "2.2.0"

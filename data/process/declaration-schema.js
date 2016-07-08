@@ -7,16 +7,19 @@ module.exports = {
             properties: {
                 id: {type: 'string'},
                 name: {type: 'string'},
-                url: {type: 'string'}
+                description: {type: 'string'},
+                url: {type: 'string'},
+                type: {type: 'string'}
             },
-            required: ['id', 'name', 'url']
+            required: ['id', 'name', 'url', 'type']
         },
 
-        attribution: {
+        source: {
             type: 'object',
             properties: {
                 name: {type: 'string'},
-                url: {type: 'string'}
+                url: {type: 'string'},
+                source_url: {type: 'string'}
             },
             required: ['name', 'url']
         },
@@ -28,14 +31,10 @@ module.exports = {
                 name: {type: 'string'},
                 domain: {type: 'string'},
                 fxf: {type: 'string'},
-                searchTerms: {
-                    type: 'array',
-                    items: {type: 'string'}
-                },
                 description: {type: 'string'},
-                attributions: {
+                sources: {
                     type: 'array',
-                    items: {'$ref': '#/definitions/attribution'},
+                    items: {'$ref': '#/definitions/source'},
                     minItems: 1
                 },
                 constraints: {
@@ -49,7 +48,7 @@ module.exports = {
                     }
                 }
             },
-            required: ['id', 'name', 'domain', 'fxf', 'constraints', 'variables', 'searchTerms', 'description']
+            required: ['id', 'name', 'domain', 'fxf', 'constraints', 'variables', 'description']
         },
 
         topic: {
