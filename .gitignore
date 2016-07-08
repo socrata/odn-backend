@@ -11,4 +11,5 @@ node_modules
 *.jar
 *.sij
 *.sh
+*.geojson
 
