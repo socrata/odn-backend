@@ -110,7 +110,6 @@ for all of the given entities.
 
         Comma separated list of entity IDs.
 
-
     + app_token (optional, string)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
@@ -245,7 +244,7 @@ Get constraints for the given variable and entities.
           ]
         }
 
-## Values [/data/v1/values{?variable}{?entity_id}{?forecast}{?describe}]
+## Values [/data/v1/values{?variable}{?entity_id}{?forecast}{?describe}{?app_token}]
 
 Retrieve values from the ODN.
 
@@ -273,6 +272,11 @@ Retrieve values from the ODN.
 
         + Default `false`
 
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
 ### Get values [GET]
 
 + Request
@@ -284,6 +288,10 @@ Retrieve values from the ODN.
         - entity_id: 0100000US,0400000US53
         - variable: demographics.population.count
         - forecast: 3
+   
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
 
@@ -350,7 +358,7 @@ Retrieve values from the ODN.
             }
         }
 
-## Autosuggest [/suggest/v1/{type}{?query}{?limit}]
+## Autosuggest [/suggest/v1/{type}{?query}{?limit}{?app_token}]
 
 Suggest objects that match the given query.
 
@@ -377,6 +385,11 @@ Suggest objects that match the given query.
 
         + Default: `10`
 
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
 ### Suggest entities [GET]
 
 + Request
@@ -386,6 +399,10 @@ Suggest objects that match the given query.
     - Parameters
         - type: entity
         - query: seattle
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
 
 + Response 200 (application/json)
 
