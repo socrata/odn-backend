@@ -2,10 +2,12 @@
 
 const compression = require('compression');
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 
 app.use(compression());
+app.use(cors());
 
 app.set('json spaces', 4);
 
