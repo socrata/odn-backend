@@ -22,7 +22,9 @@ class AutosuggestDataset {
 
     get(query, limit) {
         return new Promise((resolve, reject) => {
-            const url = this._getURL(query, this.sorted ? limit * 10 : limit);
+            const newLimit = this.sorted && Constants.SUGGEST_COUNT_SORTED > limit ?
+                Constants.SUGGEST_COUNT_SORTED : limit;
+            const url = this._getURL(query, newLimit);
 
             return Request.getJSON(url).then(response => {
                 this._decodeOptions(response.options).then(options => {
