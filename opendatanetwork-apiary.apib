@@ -244,31 +244,53 @@ Get constraints for the given variable and entities.
           ]
         }
 
-## Data Values [/data/v1/values{?variable}{?entity_id}{?forecast}{?describe}{?app_token}]
+## Data Values [/data/v1/values{?variable}{?entity_id}{?constraint}{?forecast}{?describe}{?app_token}]
 
 Retrieve the values for available data about entities.
 
 + Parameters
 
-    + variable (optional, string, `demographics.population.count`)
+    + variable (required, string, `demographics.population.count`)
 
         Comma separated list of variable IDs.
         Defaults to retrieving all variables.
+        It is also possible to pass in a topic such as
+        `demographics`, or a dataset such as `demographics.population`,
+        which would both be equivalent to specifying
+        `demographics.population.count` and `demographics.population.change`.
+        Note that only variables in the same dataset are allowed.
 
     + entity_id (optional, string, `0100000US,0400000US53`)
 
         Comma separated list of entity IDs.
         Defaults to retrieving all entities.
+        Note that since there is currently no results pagination,
+        retrieving values for all entities may produce incomplete results.
 
+    + constraint (optional, string)
+    
+        To retrieve values for multiple variables, values must be specified
+        for every constraint in the dataset. For example, to get all of the variables
+        in the `jobs.occupations` dataset, we would need to specify values
+        for both `year` and `occupation` by setting passing `year=2013` and
+        `occupation=Engineering`.
+        
     + forecast (optional, number)
 
         Number of steps to forecast.
+        Must be an integer between 0 and 20.
+        Forecasts are produced using linear extrapolation
+        on the data. They are only available when retrieving
+        data for a single variable across many numerical
+        constraint options.
 
         + Default `0`
 
     + describe (optional, boolean)
 
         Whether or not to produce a description of the data.
+        Set to `true` to produce a description.
+        Descriptions are not available if no entities are specified.
 
         + Default `false`
 
@@ -288,6 +310,7 @@ Retrieve the values for available data about entities.
         - entity_id: 0100000US,0400000US53
         - variable: demographics.population.count
         - forecast: 3
+        - describe: true
    
     - Headers
 
