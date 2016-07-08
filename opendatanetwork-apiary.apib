@@ -449,7 +449,7 @@ interaction where suggestions are provided as a user types.
         
 ## Maps [/data/v1/map/{variable}{?entity_type}{?bounds}{?scale}{?constraint}{?app_token}]
 
-Retrieve geographical data joined with values for a single variable.
+Retrieve GeoJSON to build a map. 
 
 + Parameters
 
@@ -504,18 +504,20 @@ Retrieve geographical data joined with values for a single variable.
 + Response 200 (application/json)
 
         {
-            "data": [
+            "type": "FeatureCollection",
+            "features": [
                 {
-                    "entity": {
+                    "type": "Feature",
+                    "geometry": {
+                    "type": "MultiPolygon",
+                    "coordinates": [...],
+                    "properties": {
                         "id": "0400000US53",
                         "name": "Washington",
-                        "type": "region.state"
-                    },
-                    "geometry": {
-                        "type":"MultiPolygon",
-                        "coordinates": [[[[-122.33164,48.020556]...]]]
-                    },
-                    "value": 7062638
+                        "type": "region.state",
+                        "scale": 500000
+                        "value": 6982610
+                    }
                 }
             ]
         }
