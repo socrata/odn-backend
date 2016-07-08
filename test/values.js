@@ -73,8 +73,7 @@ describe('/data/v1/values', () => {
                 data: [
                     ['variable', '0100000US'],
                     ['count', 311536594]
-                ],
-                description: "The population of United States was 311,536,594 for the year of 2013."
+                ]
             });
         });
     });
@@ -213,6 +212,31 @@ describe('/data/v1/values', () => {
             // make sure it predicts increasing population
             const values = _.tail(response.body.data).map(_.last);
             expect(values).to.deep.equal(_.sortBy(values));
+        });
+    });
+
+    it('should default to not describing the data', () => {
+        return values('variable=demographics.population&entity_id=0100000US&year=2013').then(response => {
+            expect(response).to.have.status(200);
+            expect(response.body).to.not.have.keys('description');
+        });
+    });
+
+    it('should not describe the data if the describe parameter is set to false', () => {
+        return values('variable=demographics.population&entity_id=0100000US&year=2013&describe=false').then(response => {
+            expect(response).to.have.status(200);
+            expect(response.body).to.not.have.keys('description');
+        });
+    });
+
+    it('should describe the data if the describe parameter is set to true', () => {
+        return values('variable=demographics.population&entity_id=0100000US&year=2013&describe=true').then(response => {
+            expect(response).to.have.status(200);
+            expect(response.body).to.have.all.keys(['data', 'description']);
+            expect(response.body.description).to.have.string('United States');
+            expect(response.body.description).to.have.string('population');
+            expect(response.body.description).to.have.string('annual population change');
+            expect(response.body.description).to.have.string('2013');
         });
     });
 });

@@ -46,7 +46,7 @@ function getEntities(request) {
 
 function getConstraints(request, dataset) {
     return new Promise((resolve, reject) => {
-        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast']);
+        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast', 'describe']);
 
         _.keys(constraints).forEach(constraint => {
             if (!_.includes(dataset.constraints, constraint))
@@ -108,7 +108,7 @@ module.exports = (request, response) => {
             getUnspecified(dataset, constraints).then(unspecified => {
                 getValuesURL(dataset, constraints, entities, unspecified)
                     .then(Request.getJSON).then(rows => {
-                    const descriptionPromise = Describe.describe(dataset, entities, constraints, unspecified, rows);
+                    const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
                     const framePromise = getFrame(unspecified, rows)
                         .then(_.partial(getForecast, request));
 
@@ -120,6 +120,12 @@ module.exports = (request, response) => {
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
+
+function getDescription(request, dataset, entities, constraints, unspecified, rows) {
+    if (request.query.describe === 'true')
+        return Describe.describe(dataset, entities, constraints, unspecified, rows);
+    return Promise.resolve({});
+}
 
 function getFrame(unspecified, json) {
     const ids = _.uniq(json.map(_.property('id')));
