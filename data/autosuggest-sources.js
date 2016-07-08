@@ -2,7 +2,7 @@
 const _ = require('lodash');
 
 const Constants = require('../app/constants');
-const AutosuggestDataset = require('../app/controllers/suggest/autosuggest-dataset');
+const AutosuggestDataset = require('../app/suggest/autosuggest-dataset');
 const Sources = require('../app/sources');
 
 const declarations = {

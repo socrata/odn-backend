@@ -6,7 +6,7 @@ const querystring = require('querystring');
 const memjs = require('memjs');
 const crypto = require('crypto');
 
-const Exception = require('./controllers/error');
+const Exception = require('./error');
 const Constants = require('./constants');
 
 const cache = memjs.Client.create(null, Constants.CACHE_OPTIONS);

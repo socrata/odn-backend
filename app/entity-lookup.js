@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const Constants = require('./constants');
 const Request = require('./request');
-const Exception = require('./controllers/error');
+const Exception = require('./error');
 
 class EntityLookup {
     static byID(id) {

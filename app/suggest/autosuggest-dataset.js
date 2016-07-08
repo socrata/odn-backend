@@ -2,9 +2,9 @@
 
 const _ = require('lodash');
 
-const Constants = require('../../constants');
-const Exception = require('../../controllers/error');
-const Request = require('../../request');
+const Constants = require('../constants');
+const Exception = require('../error');
+const Request = require('../request');
 
 class AutosuggestDataset {
     constructor(domain, fxf, column, fields, sort, transform) {

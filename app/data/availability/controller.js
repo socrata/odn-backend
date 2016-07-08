@@ -2,8 +2,8 @@
 
 const _ = require('lodash');
 
-const EntityLookup = require('../../../../entity-lookup');
-const Exception = require('../../../error');
+const EntityLookup = require('../../entity-lookup');
+const Exception = require('../../error');
 const Availability = require('./availability');
 
 module.exports = (request, response) => {

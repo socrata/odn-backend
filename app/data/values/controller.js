@@ -2,14 +2,14 @@
 
 const _ = require('lodash');
 
-const EntityLookup = require('../../../../entity-lookup');
-const Exception = require('../../../error');
+const EntityLookup = require('../../entity-lookup');
+const Exception = require('../../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 
-const Request = require('../../../../request');
-const Constants = require('../../../../constants');
-const Sources = require('../../../../sources');
+const Request = require('../../request');
+const Constants = require('../../constants');
+const Sources = require('../../sources');
 const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
 const Describe = require('./describe');

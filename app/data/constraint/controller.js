@@ -3,9 +3,9 @@
 const _ = require('lodash');
 const querystring = require('querystring');
 
-const EntityLookup = require('../../../../entity-lookup');
-const Exception = require('../../../error');
-const Request = require('../../../../request');
+const EntityLookup = require('../../entity-lookup');
+const Exception = require('../../error');
+const Request = require('../../request');
 const Constraint = require('./constraint');
 
 module.exports = (request, response) => {

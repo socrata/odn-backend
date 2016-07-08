@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const Exception = require('../../../error');
+const Exception = require('../../error');
 const invalid = Exception.invalidParam;
 
 const format = require('./format');

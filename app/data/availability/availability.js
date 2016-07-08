@@ -2,9 +2,9 @@
 
 const _ = require('lodash');
 
-const Constants = require('../../../../constants');
-const Request = require('../../../../request');
-const Sources = require('../../../../sources');
+const Constants = require('../../constants');
+const Request = require('../../request');
+const Sources = require('../../sources');
 
 class Availability {
     static get(entities) {

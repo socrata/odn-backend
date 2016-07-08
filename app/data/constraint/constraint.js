@@ -3,7 +3,7 @@
 const _ = require('lodash');
 
 const Availability = require('../availability/availability');
-const Exception = require('../../../error');
+const Exception = require('../../error');
 
 function getDataset(tree, path) {
     if (_.isNil(path) || _.isNil(tree) || path.length === 0) return null;
