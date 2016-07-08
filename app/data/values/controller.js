@@ -135,15 +135,22 @@ function getFrame(unspecified, json) {
         .groupBy(unspecified)
         .toPairs()
         .map(([value, entities]) => {
-            return [parseFloat(value) || value].concat(ids.map(id => {
+            return [parseNumber(value)].concat(ids.map(id => {
                 const entity = _.find(entities, {id});
                 if (_.isNil(entity)) return null;
-                return parseFloat(entity.value) || entity.value;
+                return parseNumber(entity.value);
             }));
         })
         .value();
 
     return Promise.resolve({data: [header].concat(frame)});
+}
+
+// Parses the value as a number if possible.
+function parseNumber(value) {
+    const asNumber = parseFloat(value);
+    if (isNaN(asNumber)) return value;
+    return asNumber;
 }
 
 function getForecast(request, frame) {

@@ -55,6 +55,10 @@ describe('/data/v1/values', () => {
                     [2009]
                 ]
             });
+            const values = _(response.body.data).tail().flatten().value();
+            values.forEach(value => {
+                expect(value).to.be.a('number');
+            });
         });
     });
 
