@@ -29,8 +29,7 @@ const Constants = {
 
     SUGGEST_COUNT_DEFAULT: 5,
     SUGGEST_COUNT_MAX: 100,
-    // Maximum number of results to pull down for sorting
-    // of suggest results.
+    // Maximum number of results to pull down for sorting of suggest results.
     SUGGEST_COUNT_SORTED: 100,
     SUGGEST_SEPARATOR: ':',
 

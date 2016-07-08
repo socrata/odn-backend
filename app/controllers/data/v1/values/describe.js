@@ -1,13 +1,16 @@
 'use strict';
 
 const _ = require('lodash');
+const Exception = require('../../../error');
+const invalid = Exception.invalidParam;
 
 const format = require('./format');
 
 class Describe {
     static describe(dataset, entities, constraints, unspecified, rows) {
         return new Promise((resolve, reject) => {
-            if (entities.length === 0) return resolve({});
+            if (entities.length === 0) return reject(invalid(
+                'must specify entities to get a description'));
 
             const descriptions = rows
                 .map(getData(dataset, entities, constraints, unspecified))
