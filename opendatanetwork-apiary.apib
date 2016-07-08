@@ -504,20 +504,27 @@ Retrieve GeoJSON to build a map.
 + Response 200 (application/json)
 
         {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "geometry": {
-                    "type": "MultiPolygon",
-                    "coordinates": [...],
-                    "properties": {
-                        "id": "0400000US53",
-                        "name": "Washington",
-                        "type": "region.state",
-                        "scale": 500000
-                        "value": 6982610
+            "summary_statistics": {
+                "minimum": 570134,
+                "average": 6061914.615384615385,
+                "maximum": 37659181
+            },
+            "geojson": {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                        "type": "MultiPolygon",
+                        "coordinates": [...],
+                        "properties": {
+                            "id": "0400000US53",
+                            "name": "Washington",
+                            "type": "region.state",
+                            "scale": 500000
+                            "value": 6982610
+                        }
                     }
-                }
-            ]
+                ]
+            }
         }
