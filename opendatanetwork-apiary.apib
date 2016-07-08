@@ -445,3 +445,77 @@ interaction where suggestions are provided as a user types.
                 }
             ]
         }
+        
+        
+## Maps [/data/v1/map/{variable}{?entity_type}{?bounds}{?scale}{?constraint}{?app_token}]
+
+Retrieve geographical data joined with values for a single variable.
+
++ Parameters
+
+    + variable (required, string, `demographics.population.count`)
+
+        A single variable ID. 
+
+    + entity_type (required, string, `region.state`)
+
+        Type of entity to retrieve. 
+        Must be a geographical entity. 
+
+    + scale (required, number)
+    
+        Scale of the geometry to retrieve where smaller is more detailed.
+    
+    + bounds (required, string, `47.5998951,-122.33707,47.5942794,-122.3270522`)
+    
+        Comma separated bounds of the area to search in the following order:
+        + latitude of NW point
+        + longitude of NW point
+        + latitude of SE point
+        + longitude of SE point
+    
+    + constraint (optional, string)
+        
+        Values must be specified for each constraint in the dataset.
+        For example, to generate map data for `demographics.population.count`,
+        you must specify a value for `year` by passing `year=2013`.
+        
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get map data [GET]
+
++ Request
+
+    Generate map data for state population.
+
+    - Parameters
+        - variable: demographics.population.count
+        - entity_type: region.state
+        - year: 2013
+        - scale: 500000
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+            
++ Response 200 (application/json)
+
+        {
+            "data": [
+                {
+                    "entity": {
+                        "id": "0400000US53",
+                        "name": "Washington",
+                        "type": "region.state"
+                    },
+                    "geometry": {
+                        "type":"MultiPolygon",
+                        "coordinates": [[[[-122.33164,48.020556]...]]]
+                    },
+                    "value": 7062638
+                }
+            ]
+        }
