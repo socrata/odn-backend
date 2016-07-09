@@ -9,8 +9,6 @@ const app = express();
 app.use(compression());
 app.use(cors());
 
-app.set('json spaces', 4);
-
 app.get('/', require('./app/home'));
 app.get('/related/v1/:relation', require('./app/related/controller'));
 app.get('/data/v1/availability', require('./app/data/availability/controller'));
