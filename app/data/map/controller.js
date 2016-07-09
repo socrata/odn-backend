@@ -8,24 +8,56 @@ const Sources = require('../../sources');
 const Constants = require('../../constants');
 const Request = require('../../request');
 
+// Mapping from session to IDs of entities that have already been delivered.
+const sessions = {};
+
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
-    const promises = [getDataset, getEntityType, getScale, getBounds, getConstraints]
+    const promises = [getDataset, getEntityType, getScale, getBounds, getConstraints, getSession]
         .map(func => func.call(this, request));
 
-    Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints]) => {
-        const valuesPromise = getEntitiesInBounds(entityType, scale, bounds)
-            .then(_.curry(getDataChunked)(dataset)(constraints));
-        const geodataPromise = getGeodata(entityType, scale, bounds);
+    Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints, session]) => {
+        getEntitiesInBounds(entityType, scale, bounds).then(ids => {
+            ids = filterIDs(ids, session);
+            markSent(ids, session);
 
-        Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
-            geojson = joinGeoWithData(geojson, values);
+            const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
 
-            response.json({geojson});
+            const valuesPromise = getDataChunked(dataset, constraints, idGroups);
+            const geodataPromise = getGeodataChunked(scale, idGroups);
+
+            Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
+                geojson = joinGeoWithData(geojson, values);
+
+                response.json({geojson});
+            }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
+
+// Filters out IDs that have already been sent in the session.
+function filterIDs(ids, session) {
+    if (!_.isNil(session) && session in sessions) {
+        const alreadySent = sessions[session];
+        return ids.filter(id => !alreadySent.has(id));
+    } else {
+        return ids;
+    }
+}
+
+// Mark the given entites as sent during the session.
+function markSent(ids, session) {
+    if (_.isNil(session)) return;
+
+    if (!(session in sessions)) {
+        sessions[session] = new Set();
+    }
+
+    ids.forEach(id => {
+        sessions[session].add(id);
+    });
+}
 
 function getEntitiesInBounds(entityType, scale, bounds) {
     const params = _.assign(getGeoParams(entityType, scale, bounds), {
@@ -63,8 +95,7 @@ function joinGeoWithData(geojson, data) {
     return geojson;
 }
 
-function getDataChunked(dataset, constraints, ids) {
-    const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
+function getDataChunked(dataset, constraints, idGroups) {
     const promises = idGroups.map(_.curry(getData)(dataset)(constraints));
 
     return Promise.all(promises).then(responses => {
@@ -85,6 +116,8 @@ function getData(dataset, constraints, ids) {
 }
 
 function chunkIDs(ids, maximumLength) {
+    ids.sort();
+
     let length = 0;
     let group = 0;
 
@@ -108,11 +141,35 @@ function quote(string) {
     return `'${string}'`;
 }
 
-function getGeodata(entityType, scale, bounds) {
-    const params = _.assign(getGeoParams(entityType, scale, bounds), {
-        $select: `id,name,simplify_preserve_topology(the_geom, 0.05) as the_geom`,
+function getGeodataChunked(scale, idGroups) {
+    if (idGroups.length === 0) {
+        return Promise.resolve({
+            type: 'FeatureCollection',
+            features: []
+        });
+    }
+
+    const promises = idGroups.map(_.curry(getGeodata)(scale));
+
+    return Promise.all(promises).then(responses => {
+        return Promise.resolve(mergeDeep(responses));
     });
-    const url = Request.buildURL(`${Constants.GEO_URL}.geojson`, params);
+}
+
+function mergeDeep(objects) {
+    return _.mergeWith.apply(this, objects.concat({}).concat(mergeArrays));
+}
+
+function mergeArrays(a, b) {
+    if (_.isArray(a) && _.isArray(b)) return a.concat(b);
+    return a;
+}
+
+function getGeodata(scale, ids) {
+    const url = Request.buildURL(`${Constants.GEO_URL}.geojson`, {
+        $where: whereIn('id', ids),
+        $select: `id,name,simplify_preserve_topology(the_geom, 0.05) as the_geom`
+    });
 
     return Request.getJSON(url);
 }
@@ -169,11 +226,15 @@ function getScale(request) {
     return Promise.resolve(scale);
 }
 
+function getSession(request) {
+    return Promise.resolve(request.query.session);
+}
+
 function getBounds(request) {
     return Promise.resolve(request.query.bounds);
 }
 
 function getConstraints(request) {
-    return _.omit(request.query, ['bounds', 'entity_type', 'scale']);
+    return _.omit(request.query, ['bounds', 'entity_type', 'scale', 'session']);
 }
 
