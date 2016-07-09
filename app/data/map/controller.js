@@ -14,26 +14,39 @@ module.exports = (request, response) => {
     const promises = [getDataset, getEntityType, getScale, getBounds, getConstraints]
         .map(func => func.call(this, request));
 
-    console.time('validation');
     Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints]) => {
-        console.timeEnd('validation');
-        console.time('geodata');
+        const valuesPromise = getEntitiesInBounds(entityType, scale, bounds)
+            .then(_.curry(getDataChunked)(dataset)(constraints));
+        const geodataPromise = getGeodata(entityType, scale, bounds);
 
-        getGeodata(entityType, scale, bounds).then(geojson => {
-            console.timeEnd('geodata');
-            console.time('data');
+        Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
+            geojson = joinGeoWithData(geojson, values);
 
-            const ids = getIDs(geojson);
-
-            getDataChunked(dataset, constraints, ids).then(data => {
-                console.timeEnd('data');
-                geojson = joinGeoWithData(geojson, data);
-
-                response.json({geojson});
-            }).catch(errorHandler);
+            response.json({geojson});
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
+
+function getEntitiesInBounds(entityType, scale, bounds) {
+    const params = _.assign(getGeoParams(entityType, scale, bounds), {
+        $select: 'id'
+    });
+    const url = Request.buildURL(`${Constants.GEO_URL}.json`, params);
+
+    return Request.getJSON(url).then(response => {
+        return Promise.resolve(response.map(_.property('id')));
+    });
+}
+
+function getGeoParams(entityType, scale, bounds) {
+    return _.assign({
+        scale,
+        type: entityType,
+        $limit: 50000
+    }, _.isNil(bounds) ? {} : {
+        $where: intersects('the_geom', bounds)
+    });
+}
 
 function joinGeoWithData(geojson, data) {
     const idToValue = _(data)
@@ -95,19 +108,11 @@ function quote(string) {
     return `'${string}'`;
 }
 
-function getIDs(geojson) {
-    return geojson.features.map(feature => feature.properties.id);
-}
-
 function getGeodata(entityType, scale, bounds) {
-    const url = Request.buildURL(Constants.GEO_URL, _.assign({
-        scale,
-        type: entityType,
+    const params = _.assign(getGeoParams(entityType, scale, bounds), {
         $select: `id,name,simplify_preserve_topology(the_geom, 0.05) as the_geom`,
-        $limit: 50000
-    }, _.isNil(bounds) ? {} : {
-        $where: intersects('the_geom', bounds)
-    }));
+    });
+    const url = Request.buildURL(`${Constants.GEO_URL}.geojson`, params);
 
     return Request.getJSON(url);
 }
