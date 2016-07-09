@@ -34,7 +34,9 @@ const Constants = {
     SUGGEST_COUNT_SORTED: 100,
     SUGGEST_SEPARATOR: ':',
 
-    FORECAST_STEPS_MAX: 20
+    FORECAST_STEPS_MAX: 20,
+
+    MAX_URL_LENGTH: 2000
 };
 
 module.exports = Constants;

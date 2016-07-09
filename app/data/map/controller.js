@@ -15,19 +15,90 @@ module.exports = (request, response) => {
         .map(func => func.call(this, request));
 
     Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints]) => {
-        getGeodata(entityType, scale, bounds).then(data => {
-            response.json({geojson: data});
+        getGeodata(entityType, scale, bounds).then(geojson => {
+            const ids = getIDs(geojson);
+
+            getDataChunked(dataset, constraints, ids).then(data => {
+                geojson = joinGeoWithData(geojson, data);
+
+                response.json({geojson});
+            }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
+function joinGeoWithData(geojson, data) {
+    const idToValue = _(data)
+        .keyBy('id')
+        .mapValues(_.property('value'))
+        .value();
+
+    geojson.features = geojson.features
+        .filter(feature => feature.properties.id in idToValue);
+
+    geojson.features
+        .forEach(feature => feature.properties.value = idToValue[feature.properties.id]);
+
+    return geojson;
+}
+
+function getDataChunked(dataset, constraints, ids) {
+    const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
+    const promises = idGroups.map(_.curry(getData)(dataset)(constraints));
+
+    return Promise.all(promises).then(responses => {
+        return Promise.resolve(_.flatten(responses));
+    });
+}
+
+function getData(dataset, constraints, ids) {
+    const variable = _.first(_.values(dataset.variables));
+
+    const url = Request.buildURL(dataset.url, _.assign({
+        variable: _.last(variable.id.split('.')),
+        $where: whereIn('id', ids),
+        $select: 'id,value'
+    }, constraints));
+
+    return Request.getJSON(url);
+}
+
+function chunkIDs(ids, maximumLength) {
+    let length = 0;
+    let group = 0;
+
+    return _(ids).groupBy(id => {
+        if (length + id.length > maximumLength) {
+            length = id.length;
+            group++;
+            return group;
+        } else {
+            length += id.length;
+            return group;
+        }
+    }).values().value();
+}
+
+function whereIn(name, options) {
+    return `${name} in (${options.map(quote).join(',')})`;
+}
+
+function quote(string) {
+    return `'${string}'`;
+}
+
+function getIDs(geojson) {
+    return geojson.features.map(feature => feature.properties.id);
+}
+
 function getGeodata(entityType, scale, bounds) {
-    const params = {
+    const url = Request.buildURL(Constants.GEO_URL, _.assign({
         scale,
-        type: entityType,
+        type: entityType
+    }, _.isNil(bounds) ? {} : {
         $where: intersects('the_geom', bounds)
-    };
-    const url = Request.buildURL(Constants.GEO_URL, params);
+    }));
+
     return Request.getJSON(url);
 }
 
@@ -66,11 +137,21 @@ function getDataset(request) {
 }
 
 function getEntityType(request) {
-    return Promise.resolve(request.query.entity_type);
+    const entityType = request.query.entity_type;
+
+    if (_.isNil(entityType) || entityType === '')
+        return Promise.reject(invalid('parameter entity_type required'));
+
+    return Promise.resolve(entityType);
 }
 
 function getScale(request) {
-    return Promise.resolve(request.query.scale);
+    const scale = request.query.scale;
+
+    if (_.isNil(scale) || scale === '')
+        return Promise.reject(invalid('parameter scale required'));
+
+    return Promise.resolve(scale);
 }
 
 function getBounds(request) {
