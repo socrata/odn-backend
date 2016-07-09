@@ -14,11 +14,19 @@ module.exports = (request, response) => {
     const promises = [getDataset, getEntityType, getScale, getBounds, getConstraints]
         .map(func => func.call(this, request));
 
+    console.time('validation');
     Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints]) => {
+        console.timeEnd('validation');
+        console.time('geodata');
+
         getGeodata(entityType, scale, bounds).then(geojson => {
+            console.timeEnd('geodata');
+            console.time('data');
+
             const ids = getIDs(geojson);
 
             getDataChunked(dataset, constraints, ids).then(data => {
+                console.timeEnd('data');
                 geojson = joinGeoWithData(geojson, data);
 
                 response.json({geojson});
@@ -94,7 +102,9 @@ function getIDs(geojson) {
 function getGeodata(entityType, scale, bounds) {
     const url = Request.buildURL(Constants.GEO_URL, _.assign({
         scale,
-        type: entityType
+        type: entityType,
+        $select: `id,name,simplify_preserve_topology(the_geom, 0.05) as the_geom`,
+        $limit: 50000
     }, _.isNil(bounds) ? {} : {
         $where: intersects('the_geom', bounds)
     }));
