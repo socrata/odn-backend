@@ -8,6 +8,7 @@ const Constants = {
     RELATIVES_URL: 'https://odn.data.socrata.com/resource/dc4t-zwj5.json',
     ENTITY_URL: 'https://odn.data.socrata.com/resource/kksg-4m3m.json',
     VARIABLE_URL: 'https://odn.data.socrata.com/resource/sutp-685r.json',
+    GEO_URL: 'https://odn.data.socrata.com/resource/riih-utcz.geojson',
 
     TIMEOUT_MS: 5000,
     CACHE_OPTIONS: {
