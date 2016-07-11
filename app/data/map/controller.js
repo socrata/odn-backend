@@ -19,9 +19,11 @@ module.exports = (request, response) => {
 
     Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints, session]) => {
         getEntitiesInBounds(entityType, scale, bounds).then(ids => {
+            console.log(ids);
             ids = filterIDs(ids, session);
             markSent(ids, session);
 
+            console.log(ids);
             const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
 
             const valuesPromise = getDataChunked(dataset, constraints, idGroups);
@@ -60,23 +62,18 @@ function markSent(ids, session) {
 }
 
 function getEntitiesInBounds(entityType, scale, bounds) {
-    const params = _.assign(getGeoParams(entityType, scale, bounds), {
-        $select: 'id'
+    const params = _.assign({
+        $select: 'id',
+        type: entityType,
+        $limit: 50000,
+        scale: 500000
+    }, _.isNil(bounds) ? {} : {
+        $where: intersects('the_geom', bounds)
     });
     const url = Request.buildURL(`${Constants.GEO_URL}.json`, params);
 
     return Request.getJSON(url).then(response => {
         return Promise.resolve(response.map(_.property('id')));
-    });
-}
-
-function getGeoParams(entityType, scale, bounds) {
-    return _.assign({
-        scale,
-        type: entityType,
-        $limit: 50000
-    }, _.isNil(bounds) ? {} : {
-        $where: intersects('the_geom', bounds)
     });
 }
 
@@ -166,12 +163,19 @@ function mergeArrays(a, b) {
 }
 
 function getGeodata(scale, ids) {
+    const simplificationAmount = Math.pow((-1/2), scale);
+
     const url = Request.buildURL(`${Constants.GEO_URL}.geojson`, {
+        scale: 500000,
         $where: whereIn('id', ids),
-        $select: `id,name,simplify_preserve_topology(the_geom, 0.05) as the_geom`
+        $select: `id,name,${simplify('the_geom', simplificationAmount)}`
     });
 
     return Request.getJSON(url);
+}
+
+function simplify(column, amount) {
+    return `simplify_preserve_topology(${column}, ${amount}) as ${column}`;
 }
 
 function intersects(column, bounds) {
