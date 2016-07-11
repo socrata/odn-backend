@@ -447,7 +447,7 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Create a new map [/data/v1/map/new/{variable}{?entity_id}{?constraint}{?app_token}]
+## Create a new map [/data/v1/map/new{?variable}{?entity_id}{?constraint}{?app_token}]
 
 Create a new map with the given entities.
 Returns a bounding box of the given entities,
@@ -509,7 +509,7 @@ Note that session IDs will expire after 24 hours.
         }
 
 
-## Maps [/data/v1/map/values/{variable}{?entity_type}{?bounds}{?scale}{?constraint}{?app_token}]
+## Maps [/data/v1/map/values{?session_id}{?bounds}{?zoom_level}{?app_token}]
 
 Retrieve GeoJSON to build a map. 
 
