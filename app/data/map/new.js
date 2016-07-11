@@ -83,6 +83,7 @@ function getSummaryStatistics(dataset, constraints, entityType) {
             return Promise.reject(notFound(`no data found for variable ${variable.id}
                 with entity type ${entityType}`));
 
+        response = _.mapValues(response, parseFloat);
         return Promise.resolve(response);
     });
 }
