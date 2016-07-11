@@ -8,27 +8,27 @@ const invalid = Exception.invalidParam;
 const Sources = require('../../sources');
 const Constants = require('../../constants');
 const Request = require('../../request');
-
-// Mapping from session to IDs of entities that have already been delivered.
-const sessions = {};
+const SessionManager = require('./session-manager');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
-    const promises = [getDataset, getEntityType, getScale, getBounds, getConstraints, getSession]
-        .map(func => func.call(this, request));
+    Promise.all([
+        getSession(request),
+        getZoomLevel(request),
+        getBounds(request)
+    ]).then(([session, zoomLevel, bounds]) => {
+        // TODO object destructuring?
+        const entityType = session.entityType;
+        const dataset = session.dataset;
+        const constraints = session.constraints;
 
-    Promise.all(promises).then(([dataset, entityType, scale, bounds, constraints, session]) => {
-        getEntitiesInBounds(entityType, scale, bounds).then(ids => {
-            console.log(ids);
-            ids = filterIDs(ids, session);
-            markSent(ids, session);
-
-            console.log(ids);
+        getEntitiesInBounds(entityType, bounds).then(ids => {
+            ids = session.notSent(ids, zoomLevel);
             const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
 
             const valuesPromise = getDataChunked(dataset, constraints, idGroups);
-            const geodataPromise = getGeodataChunked(scale, idGroups);
+            const geodataPromise = getGeodataChunked(zoomLevel, idGroups);
 
             Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
                 geojson = joinGeoWithData(geojson, values);
@@ -39,39 +39,15 @@ module.exports = (request, response) => {
     }).catch(errorHandler);
 };
 
-// Filters out IDs that have already been sent in the session.
-function filterIDs(ids, session) {
-    if (!_.isNil(session) && session in sessions) {
-        const alreadySent = sessions[session];
-        return ids.filter(id => !alreadySent.has(id));
-    } else {
-        return ids;
-    }
-}
-
-// Mark the given entites as sent during the session.
-function markSent(ids, session) {
-    if (_.isNil(session)) return;
-
-    if (!(session in sessions)) {
-        sessions[session] = new Set();
-    }
-
-    ids.forEach(id => {
-        sessions[session].add(id);
-    });
-}
-
-function getEntitiesInBounds(entityType, scale, bounds) {
-    const params = _.assign({
+function getEntitiesInBounds(entityType, bounds) {
+    const url = Request.buildURL(`${Constants.GEO_URL}.json`, _.assign({
         $select: 'id',
         type: entityType,
         $limit: 50000,
         scale: 500000
     }, _.isNil(bounds) ? {} : {
         $where: intersects('the_geom', bounds)
-    });
-    const url = Request.buildURL(`${Constants.GEO_URL}.json`, params);
+    }));
 
     return Request.getJSON(url).then(response => {
         return Promise.resolve(response.map(_.property('id')));
@@ -139,7 +115,7 @@ function quote(string) {
     return `'${string}'`;
 }
 
-function getGeodataChunked(scale, idGroups) {
+function getGeodataChunked(zoomLevel, idGroups) {
     if (idGroups.length === 0) {
         return Promise.resolve({
             type: 'FeatureCollection',
@@ -147,7 +123,7 @@ function getGeodataChunked(scale, idGroups) {
         });
     }
 
-    const promises = idGroups.map(_.curry(getGeodata)(scale));
+    const promises = idGroups.map(_.curry(getGeodata)(zoomLevel));
 
     return Promise.all(promises).then(responses => {
         return Promise.resolve(mergeDeep(responses));
@@ -163,8 +139,8 @@ function mergeArrays(a, b) {
     return a;
 }
 
-function getGeodata(scale, ids) {
-    const simplificationAmount = Math.pow((-1/2), scale);
+function getGeodata(zoomLevel, ids) {
+    const simplificationAmount = Math.pow(1/2, zoomLevel);
 
     const url = Request.buildURL(`${Constants.GEO_URL}.geojson`, {
         scale: 500000,
@@ -194,49 +170,31 @@ function boundsToPolygon(bounds) {
     return `'POLYGON((${coordinates}))'`;
 }
 
-function getDataset(request) {
-    return new Promise((resolve, reject) => {
-        const path = request.params.variable;
-        const tree = Sources.search(path);
+function getZoomLevel(request) {
+    const zoomLevel = request.query.zoom_level;
 
-        if (_.isNil(tree))
-            return reject(notFound(`variable not found: ${path}`));
+    if (_.isNil(zoomLevel) || zoomLevel === '')
+        return Promise.reject(invalid('parameter zoom_level required'));
 
-        const topic = _.first(_.values(tree));
-
-        if (_.size(topic.datasets) !== 1)
-            return reject(invalid(`path to variable required: ${path}`));
-
-        const dataset = _.first(_.values(topic.datasets));
-
-        resolve(dataset);
-    });
-}
-
-function getEntityType(request) {
-    const entityType = request.query.entity_type;
-
-    if (_.isNil(entityType) || entityType === '')
-        return Promise.reject(invalid('parameter entity_type required'));
-
-    return Promise.resolve(entityType);
-}
-
-function getScale(request) {
-    const scale = request.query.scale;
-
-    if (_.isNil(scale) || scale === '')
-        return Promise.reject(invalid('parameter scale required'));
-
-    return Promise.resolve(scale);
+    return Promise.resolve(zoomLevel);
 }
 
 function getSession(request) {
-    return Promise.resolve(request.query.session);
+    const sessionID = request.query.session_id;
+
+    if (_.isNil(sessionID) || sessionID === '')
+        return Promise.reject(invalid('parameter session_id required'));
+
+    return SessionManager.get(sessionID);
 }
 
 function getBounds(request) {
-    return Promise.resolve(request.query.bounds);
+    const bounds = request.query.bounds;
+
+    if (_.isNil(bounds) || bounds === '')
+        return Promise.reject(invalid('parameter bounds required'));
+
+    return Promise.resolve(bounds);
 }
 
 function getConstraints(request) {
