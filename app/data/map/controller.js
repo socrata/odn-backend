@@ -1,3 +1,4 @@
+'use strict';
 
 const _ = require('lodash');
 
@@ -154,7 +155,7 @@ function getGeodataChunked(scale, idGroups) {
 }
 
 function mergeDeep(objects) {
-    return _.mergeWith.apply(this, objects.concat({}).concat(mergeArrays));
+    return _.mergeWith.apply({}, objects.concat({}).concat(mergeArrays));
 }
 
 function mergeArrays(a, b) {

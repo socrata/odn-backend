@@ -36,7 +36,10 @@ const Constants = {
 
     FORECAST_STEPS_MAX: 20,
 
-    MAX_URL_LENGTH: 2000
+    MAX_URL_LENGTH: 2000,
+
+    // map sessions expire after 24 hours
+    MAP_SESSION_EXPIRE: 24 * 60 * 60 * 1000
 };
 
 module.exports = Constants;
