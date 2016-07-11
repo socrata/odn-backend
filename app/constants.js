@@ -39,7 +39,9 @@ const Constants = {
     MAX_URL_LENGTH: 2000,
 
     // map sessions expire after 24 hours
-    MAP_SESSION_EXPIRE: 24 * 60 * 60 * 1000
+    MAP_SESSION_EXPIRE: 24 * 60 * 60 * 1000,
+    MAP_ZOOM_MIN: 0,
+    MAP_ZOOM_MAX: 18
 };
 
 module.exports = Constants;

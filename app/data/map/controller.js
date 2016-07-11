@@ -160,8 +160,8 @@ function intersects(column, bounds) {
 }
 
 function boundsToPolygon(bounds) {
-    const [nwlat, nwlong, swlat, swlong] = bounds.split(',');
-    const coords =  [nwlat, nwlong, nwlat, swlong, swlat, swlong, swlat, nwlong, nwlat, nwlong];
+    const [nwlat, nwlong, selat, selong] = bounds;
+    const coords =  [nwlat, nwlong, nwlat, selong, selat, selong, selat, nwlong, nwlat, nwlong];
     const coordinates = _.chunk(coords, 2)
         .map(_.reverse)
         .map(coordinates => coordinates.join(' '))
@@ -171,10 +171,19 @@ function boundsToPolygon(bounds) {
 }
 
 function getZoomLevel(request) {
-    const zoomLevel = request.query.zoom_level;
+    let zoomLevel = request.query.zoom_level;
 
     if (_.isNil(zoomLevel) || zoomLevel === '')
         return Promise.reject(invalid('parameter zoom_level required'));
+    if (zoomLevel < Constants.MAP_ZOOM_MIN)
+        return Promise.reject(invalid(`zoom_level cannot be less than ${Constants.MAP_ZOOM_MIN}`));
+    if (zoomLevel > Constants.MAP_ZOOM_MAX)
+        return Promise.reject(invalid(`zoom_level cannot be greater than ${Constants.MAP_ZOOM_MAX}`));
+
+    zoomLevel = parseInt(zoomLevel, 10);
+
+    if (isNaN(zoomLevel))
+        return Promise.reject(invalid(`zoom_level must be an integer`));
 
     return Promise.resolve(zoomLevel);
 }
@@ -194,10 +203,13 @@ function getBounds(request) {
     if (_.isNil(bounds) || bounds === '')
         return Promise.reject(invalid('parameter bounds required'));
 
-    return Promise.resolve(bounds);
-}
+    const [nwlat, nwlong, selat, selong] = bounds.split(',').map(parseFloat);
+    if (_.isNil(nwlat) || _.isNil(nwlong) || _.isNil(selat) || _.isNil(selong) ||
+        Math.abs(nwlat) > 90 || Math.abs(nwlong) > 180 ||
+        Math.abs(selat) > 90 || Math.abs(selong) > 180 ||
+        nwlat < selat || nwlong > selong)
+        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
 
-function getConstraints(request) {
-    return _.omit(request.query, ['bounds', 'entity_type', 'scale', 'session']);
+    return Promise.resolve([nwlat, nwlong, selat, selong]);
 }
 

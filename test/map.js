@@ -52,6 +52,11 @@ describe('/data/v1/map', () => {
                 .to.have.status(422);
         });
 
+        it('should not allow invalid constraints', () => {
+            return expect(newMap('entity_id=0400000US53&variable=demographics.population.count&year=2013&invali=invalid'))
+                .to.have.status(422);
+        });
+
         it('should reject two regions of different types', () => {
             return expect(newMap('entity_id=0400000US53,0100000US&variable=demographics.population.count&year=2013'))
                 .to.have.status(422);
@@ -61,10 +66,10 @@ describe('/data/v1/map', () => {
             let response, sessionID;
 
             before(() => {
-                response = newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013');
-
-                response.then(response => {
+                response = newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
+                    expect(response).to.have.status(200);
                     sessionID = response.body.session_id;
+                    return Promise.resolve(response);
                 });
 
                 return response;
@@ -93,12 +98,13 @@ describe('/data/v1/map', () => {
 
                 before(() => {
                     return response.then(response => {
-                        valuesResponse = map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=6`);
-                        valuesResponse.then(resp => {
+                        return map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=6`).then(resp => {
+                            expect(resp).to.have.status(200);
+                            valuesResponse = resp;
                             names = resp.body.geojson.features
                                 .map(feature => feature.properties.name);
+                            return resp;
                         });
-                        return valuesResponse;
                     });
                 });
 
@@ -136,8 +142,10 @@ describe('/data/v1/map', () => {
 
         before(() => {
             return newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
+                expect(response).to.have.status(200);
                 response = response;
                 sessionID = response.body.session_id;
+                return response;
             });
         });
 
@@ -180,11 +188,6 @@ describe('/data/v1/map', () => {
                 .to.have.status(422);
         });
 
-        it('should reject a non-integer zoom level', () => {
-            return expect(map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=5.6`))
-                .to.have.status(422);
-        });
-
         it('should reject a single number as bounds', () => {
             return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=50`))
                 .to.have.status(422);
@@ -202,6 +205,11 @@ describe('/data/v1/map', () => {
 
         it('should reject more than two coordinates as bounds', () => {
             return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=50,50,60,60,10`))
+                .to.have.status(422);
+        });
+
+        it('should reject invalid coordinates as bounds', () => {
+            return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=1000,50,60,60`))
                 .to.have.status(422);
         });
 

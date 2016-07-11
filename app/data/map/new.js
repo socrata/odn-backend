@@ -22,16 +22,18 @@ module.exports = (request, response) => {
     ]).then(([entities, dataset, constraints]) => {
         const entityType = entities[0].type;
 
-        Promise.all([
-            getSessionID(dataset, constraints, entityType),
-            getBoundingBox(entities),
-            getSummaryStatistics(dataset, constraints, entityType)
-        ]).then(([sessionID, boundingBox, summaryStats]) => {
-            response.json({
-                session_id: sessionID,
-                bounds: boundingBox,
-                summary_statistics: summaryStats
-            });
+        checkConstraints(dataset, constraints).then(() => {
+            Promise.all([
+                getSessionID(dataset, constraints, entityType),
+                getBoundingBox(entities),
+                getSummaryStatistics(dataset, constraints, entityType)
+            ]).then(([sessionID, boundingBox, summaryStats]) => {
+                response.json({
+                    session_id: sessionID,
+                    bounds: boundingBox,
+                    summary_statistics: summaryStats
+                });
+            }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
@@ -144,5 +146,20 @@ function getDataset(request) {
 
 function getConstraints(request) {
     return _.omit(request.query, ['entity_id', 'variable', 'app_token']);
+}
+
+function checkConstraints(dataset, constraints) {
+    const constraintNames = _.keys(constraints);
+    const missing = _.difference(dataset.constraints, constraintNames);
+
+    if (missing.length !== 0)
+        return Promise.reject(invalid(`must specify values for constraints: ${missing}`));
+
+    const unknown = _.difference(constraintNames, dataset.constraints);
+
+    if (unknown.length !== 0)
+        return Promise.reject(invalid(`invalid constraint: ${unknown}`));
+
+    return Promise.resolve();
 }
 
