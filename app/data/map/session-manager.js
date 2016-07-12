@@ -3,35 +3,30 @@
 const Constants = require('../../constants');
 const Exception = require('../../error');
 const notFound = Exception.notFound;
+const Session = require('./session');
+const cache = require('../../cache');
 
 class SessionManager {
-    constructor() {
-        this.sessions = {};
+    static add(session) {
+        return cache.setJSON(cacheKey(session.id), session).then(() => {
+            return Promise.resolve(session.id);
+        });
     }
 
-    add(session) {
-        const id = this.generateID();
-        this.sessions[id] = session;
-        setTimeout(() => this.remove(id), Constants.MAP_SESSION_EXPIRE);
-        return id;
-    }
-
-    remove(sessionID) {
-        delete this.sessions[sessionID];
-    }
-
-    get(sessionID) {
-        if (sessionID in this.sessions)
-            return Promise.resolve(this.sessions[sessionID]);
-        return Promise.reject(notFound(`session id not found: ${sessionID}`));
-    }
-
-    generateID() {
-        const id = Math.random().toString(36).substr(2);
-        if (id in this.sessions) return this.generateID();
-        return id;
+    static get(sessionID) {
+        return cache.getJSON(cacheKey(sessionID)).then(value => {
+            const {dataset, constraints, entityType} = value;
+            const session = new Session(dataset, constraints, entityType, sessionID);
+            return Promise.resolve(session);
+        }).catch(error => {
+            return Promise.reject(notFound(`session id not found: ${sessionID}`));
+        });
     }
 }
 
-module.exports = new SessionManager();
+function cacheKey(sessionID) {
+    return `session${sessionID}`;
+}
+
+module.exports = SessionManager;
 

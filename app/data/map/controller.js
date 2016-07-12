@@ -23,10 +23,10 @@ module.exports = (request, response) => {
         const dataset = session.dataset;
         const constraints = session.constraints;
 
-        getEntitiesInBounds(entityType, bounds).then(ids => {
-            ids = session.notSent(ids, zoomLevel);
-            const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
+        getEntitiesInBounds(entityType, bounds)
+            .then(ids => session.notSent(ids, zoomLevel)).then(ids => {
 
+            const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
             const valuesPromise = getDataChunked(dataset, constraints, idGroups);
             const geodataPromise = getGeodataChunked(zoomLevel, idGroups);
 

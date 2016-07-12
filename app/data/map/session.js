@@ -1,11 +1,14 @@
 'use strict';
 
+const cache = require('../../cache');
+const Constants = require('../../constants');
+
 class Session {
-    constructor(dataset, constraints, entityType) {
+    constructor(dataset, constraints, entityType, id) {
         this.dataset = dataset;
         this.constraints = constraints;
         this.entityType = entityType;
-        this.sentIDs = {};
+        this.id = id || generateID();
     }
 
     /**
@@ -13,14 +16,33 @@ class Session {
      * and marks them as sent.
      */
     notSent(ids, zoomLevel) {
-        if (!(zoomLevel in this.sentIDs))
-            this.sentIDs[zoomLevel] = new Set();
+        const key = this.cacheKey(zoomLevel);
 
-        const alreadySent = this.sentIDs[zoomLevel];
-        const notSent = ids.filter(id => !alreadySent.has(id));
-        notSent.forEach(id => alreadySent.add(id));
-        return notSent;
+        return cache.get(key).then(alreadySent => {
+            const alreadySentSet = new Set(alreadySent.split(' '));
+            const notSent = ids.filter(id => !alreadySentSet.has(id));
+
+            cache.append(key, ` ${notSent.join(' ')}`).catch(error => {
+                console.error(error);
+            });
+
+            return Promise.resolve(notSent);
+        }).catch(error => {
+            cache.set(key, ids.join(' ')).catch(error => {
+                console.error(error);
+            });
+
+            return Promise.resolve(ids);
+        });
     }
+
+    cacheKey(zoomLevel) {
+        return `session${this.id}zoom${zoomLevel}`;
+    }
+}
+
+function generateID() {
+    return Math.random().toString(36).substr(2);
 }
 
 module.exports = Session;
