@@ -25,7 +25,7 @@ module.exports = (request, response) => {
 
             const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
             const valuesPromise = getDataChunked(dataset, constraints, idGroups);
-            const geodataPromise = getGeodataChunked(zoomLevel, idGroups);
+            const geodataPromise = getGeodataChunked(entityType, zoomLevel, idGroups);
 
             Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
                 geojson = joinGeoWithData(geojson, values);
@@ -36,12 +36,15 @@ module.exports = (request, response) => {
     }).catch(errorHandler);
 };
 
+function getGeoURL(entityType) {
+    return Constants.GEO_URLS[entityType];
+}
+
 function getEntitiesInBounds(entityType, bounds) {
-    const url = Request.buildURL(`${Constants.GEO_URL}.json`, _.assign({
+    const url = Request.buildURL(`${getGeoURL(entityType)}.json`, _.assign({
         $select: 'id',
         type: entityType,
-        $limit: 50000,
-        scale: 500000
+        $limit: 50000
     }, _.isNil(bounds) ? {} : {
         $where: intersects('the_geom', bounds)
     }));
@@ -112,7 +115,7 @@ function quote(string) {
     return `'${string}'`;
 }
 
-function getGeodataChunked(zoomLevel, idGroups) {
+function getGeodataChunked(entityType, zoomLevel, idGroups) {
     if (idGroups.length === 0) {
         return Promise.resolve({
             type: 'FeatureCollection',
@@ -120,7 +123,7 @@ function getGeodataChunked(zoomLevel, idGroups) {
         });
     }
 
-    const promises = idGroups.map(_.curry(getGeodata)(zoomLevel));
+    const promises = idGroups.map(_.curry(getGeodata)(entityType)(zoomLevel));
 
     return Promise.all(promises).then(responses => {
         return Promise.resolve(mergeDeep(responses));
@@ -136,11 +139,10 @@ function mergeArrays(a, b) {
     return a;
 }
 
-function getGeodata(zoomLevel, ids) {
+function getGeodata(entityType, zoomLevel, ids) {
     const simplificationAmount = Math.pow(1/2, zoomLevel);
 
-    const url = Request.buildURL(`${Constants.GEO_URL}.geojson`, {
-        scale: 500000,
+    const url = Request.buildURL(`${getGeoURL(entityType)}.geojson`, {
         $where: whereIn('id', ids),
         $select: `id,name,${simplify('the_geom', simplificationAmount)}`
     });

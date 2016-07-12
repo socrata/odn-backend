@@ -22,10 +22,13 @@ module.exports = (request, response) => {
     ]).then(([entities, dataset, constraints]) => {
         const entityType = entities[0].type;
 
+        if (!(entityType in Constants.GEO_URLS))
+            return Promise.reject(notFound(`no geodata for entity of type: ${entityType}`));
+
         checkConstraints(dataset, constraints).then(() => {
             Promise.all([
                 getSessionID(dataset, constraints, entityType),
-                getBoundingBox(entities),
+                getBoundingBox(entities, entityType),
                 getSummaryStatistics(dataset, constraints, entityType)
             ]).then(([sessionID, boundingBox, summaryStats]) => {
                 response.json({
@@ -43,9 +46,9 @@ function getSessionID(dataset, constraints, entityType) {
     return SessionManager.add(session);
 }
 
-function getBoundingBox(entities) {
+function getBoundingBox(entities, entityType) {
     const ids = entities.map(_.property('id'));
-    const url = Request.buildURL(`${Constants.GEO_URL}.json`, {
+    const url = Request.buildURL(`${Constants.GEO_URLS[entityType]}.json`, {
         $where: whereIn('id', ids),
         $select: 'extent(the_geom)'
     });

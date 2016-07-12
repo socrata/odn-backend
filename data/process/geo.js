@@ -6,74 +6,37 @@ const fs = require('fs');
 const datasets = [
     {
         type: 'region.nation',
-        fxf: 'bewf-qis3',
-        scale: 20000000
+        fxf: 'ab4i-wwsg'
     },
     {
         type: 'region.region',
-        fxf: 'f4kj-dmer',
-        scale: 20000000
+        fxf: 'f4xa-tzst'
     },
     {
         type: 'region.division',
-        fxf: 'az5s-azsw',
-        scale: 20000000
+        fxf: 'p9dy-zxg9'
     },
     {
         type: 'region.state',
-        fxf: 'q2rn-fknh',
-        scale: 20000000
+        fxf: '5v4d-yhq3'
     },
     {
         type: 'region.county',
-        fxf: 'anby-7igw',
-        scale: 20000000
+        fxf: '4kuh-5sfh'
     },
     {
         type: 'region.msa',
-        fxf: 'sp25-9inc',
-        scale: 20000000
-    },
-    {
-        type: 'region.nation',
-        fxf: 'ab4i-wwsg',
-        scale: 500000
-    },
-    {
-        type: 'region.region',
-        fxf: 'f4xa-tzst',
-        scale: 500000
-    },
-    {
-        type: 'region.division',
-        fxf: 'p9dy-zxg9',
-        scale: 500000
-    },
-    {
-        type: 'region.state',
-        fxf: '5v4d-yhq3',
-        scale: 500000
-    },
-    {
-        type: 'region.county',
-        fxf: '4kuh-5sfh',
-        scale: 500000
-    },
-    {
-        type: 'region.msa',
-        fxf: 'uvy9-3xfi',
-        scale: 500000
+        fxf: 'uvy9-3xfi'
     }
 ];
 
 function getGeodata(dataset) {
-    const {type, fxf, scale} = dataset;
+    const {type, fxf} = dataset;
     const url = `https://odn.data.socrata.com/resource/${fxf}.geojson?$limit=50000`;
 
     return getJSON(url).then(geojson => {
         geojson.features.forEach(feature => {
             feature.properties = {
-                scale,
                 type,
                 id: feature.properties.affgeoid,
                 name: feature.properties.name,

@@ -8,7 +8,17 @@ const Constants = {
     RELATIVES_URL: 'https://odn.data.socrata.com/resource/dc4t-zwj5.json',
     ENTITY_URL: 'https://odn.data.socrata.com/resource/kksg-4m3m.json',
     VARIABLE_URL: 'https://odn.data.socrata.com/resource/sutp-685r.json',
-    GEO_URL: 'https://odn.data.socrata.com/resource/riih-utcz',
+    GEO_URL: 'https://odn.data.socrata.com/resource/j4v5-7652',
+    GEO_URLS: {
+        'region.nation': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.division': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.region': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.state': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.county': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.msa': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.place': 'https://odn.data.socrata.com/resource/b7ai-sdak',
+        'region.zip_code': 'https://odn.data.socrata.com/resource/w2ee-t9ut'
+    },
 
     TIMEOUT_MS: 5000,
     CACHE_OPTIONS: {

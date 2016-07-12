@@ -7,6 +7,7 @@
     "cors": "2.7.1",
     "crypto": "0.0.3",
     "express": "4.14.0",
+    "geojson-merge": "0.1.0",
     "lodash": "4.13.1",
     "memjs": "0.10.0",
     "numeral": "1.5.3",
@@ -24,7 +25,8 @@
     "csv": "1.1.0",
     "jshint": "2.9.2",
     "mocha": "2.5.3",
-    "nodemon": "1.9.2"
+    "nodemon": "1.9.2",
+    "ogr2ogr": "0.5.1"
   },
   "repository": {
     "type": "git",
