@@ -380,72 +380,6 @@ Retrieve the values for available data about entities.
                 "algorithm_url": "https://en.wikipedia.org/wiki/Extrapolation#Linear_extrapolation"
             }
         }
-
-## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}]
-
-Suggests entities like geographical regions, questions, datasets, publishers and categories
-that match the given query prefix or full phrase. Useful for building autosuggest style query 
-interaction where suggestions are provided as a user types.
-
-+ Parameters
-    + type (required, string, `entity`)
-
-        Type of the object to find.
-
-        + Values
-            + `entity`
-            + `category`
-            + `publisher`
-            + `dataset`
-            + `question`
-
-    + query (required, string, `seattl`)
-
-        Query to match.
-
-    + limit (optional, number)
-
-        Maximum number of results to return.
-        Must be an integer from 1 to 100.
-
-        + Default: `5`
-
-    + app_token (optional, string)
-
-        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
-
-### Get suggestions [GET]
-
-+ Request
-
-    Suggest entities that match "seattl".
-
-    - Parameters
-        - type: entity
-        - query: seattl
-
-    - Headers
-
-            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
-
-+ Response 200 (application/json)
-
-        {
-            "entities": [
-                {
-                    "id": "310M200US42660",
-                    "name": "Seattle Metro Area (WA)",
-                    "type": "regions.msa"
-                },
-                {
-                    "id": "1600000US5363000",
-                    "name": "Seattle, WA",
-                    "type": "regions.place"
-                }
-            ]
-        }
-        
         
 ## Map Creation [/data/v1/map/new{?variable}{?entity_id}{?constraint}{?app_token}]
 
@@ -574,4 +508,69 @@ regions like states, counties, cities, or zip codes.
                     }
                 ]
             }
+        }
+        
+## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}]
+
+Suggests entities like geographical regions, questions, datasets, publishers and categories
+that match the given query prefix or full phrase. Useful for building autosuggest style query 
+interaction where suggestions are provided as a user types.
+
++ Parameters
+    + type (required, string, `entity`)
+
+        Type of the object to find.
+
+        + Values
+            + `entity`
+            + `category`
+            + `publisher`
+            + `dataset`
+            + `question`
+
+    + query (required, string, `seattl`)
+
+        Query to match.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 1 to 100.
+
+        + Default: `5`
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get suggestions [GET]
+
++ Request
+
+    Suggest entities that match "seattl".
+
+    - Parameters
+        - type: entity
+        - query: seattl
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+
++ Response 200 (application/json)
+
+        {
+            "entities": [
+                {
+                    "id": "310M200US42660",
+                    "name": "Seattle Metro Area (WA)",
+                    "type": "regions.msa"
+                },
+                {
+                    "id": "1600000US5363000",
+                    "name": "Seattle, WA",
+                    "type": "regions.place"
+                }
+            ]
         }
