@@ -52,7 +52,6 @@ function getBoundingBox(entities, entityType) {
         $where: whereIn('id', ids),
         $select: 'extent(the_geom)'
     });
-    console.log(url);
 
     return Request.getJSON(url).then(response => {
         response = response[0];

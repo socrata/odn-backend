@@ -126,6 +126,46 @@ describe('/data/v1/map', () => {
             });
         });
 
+        it('should work for the 98122 ZIP code', () => {
+            return expect(newMap('entity_id=8600000US98122&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for Seattle, WA', () => {
+            return expect(newMap('entity_id=1600000US5363000&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for King County, WA', () => {
+            return expect(newMap('entity_id=0500000US53033&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for the Seattle Metro Area', () => {
+            return expect(newMap('entity_id=310M200US42660&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for Washington State', () => {
+            return expect(newMap('entity_id=0400000US53&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for the Pacific Division', () => {
+            return expect(newMap('entity_id=0300000US9&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for the West Region', () => {
+            return expect(newMap('entity_id=0200000US4&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
+        it('should work for the United States', () => {
+            return expect(newMap('entity_id=0100000US&variable=demographics.population.count&year=2013'))
+                .to.have.status(200);
+        });
+
         it('should return unique session ids', () => {
             const path = 'entity_id=0400000US53&variable=demographics.population.count&year=2013';
             const promises = _.times(10, () => newMap(path));
