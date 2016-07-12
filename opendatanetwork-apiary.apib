@@ -447,14 +447,13 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Create a new map [/data/v1/map/new{?variable}{?entity_id}{?constraint}{?app_token}]
+## Map Creation [/data/v1/map/new{?variable}{?entity_id}{?constraint}{?app_token}]
 
-Create a new map with the given entities.
-Returns a bounding box of the given entities,
-summary statistics of the variable across all entities of the same type,
-and a session ID that can be used to retrieve map data.
-
-Note that session IDs will expire after 24 hours.
+Create a new map representing the specified geographical entities.
+Returns a bounding box containing the given entities geographical boundaries,
+summary statistics of the variable across all entities of the same type (e.g.
+states, counties, etc.), and a session ID used to efficiently retrieve map 
+data. Note: session IDs expire after 24 hours.
 
 + Parameters
 
@@ -465,7 +464,7 @@ Note that session IDs will expire after 24 hours.
     + entity_id (required, string, `0400000US53,0400000US08`)
 
         A comma separated list of entity IDs.
-        Entities must have the same type.
+        Entities must have the same type and represent geographical regions.
 
     + constraint (optional, string)
         
@@ -509,17 +508,17 @@ Note that session IDs will expire after 24 hours.
         }
 
 
-## Maps [/data/v1/map/values{?session_id}{?bounds}{?zoom_level}{?app_token}]
+## Map Data [/data/v1/map/values{?session_id}{?bounds}{?zoom_level}{?app_token}]
 
-Retrieve GeoJSON to build a map. 
+Retrieves GeoJSON map data including variable values and polygon boundaries for geographical 
+regions like states, counties, cities, or zip codes.
 
 + Parameters
 
     + session_id (required, string)
     
         Unique session ID from the `map/new` endpoint.
-        This is used to keep track of the data that has 
-        already been sent.
+        Used to track previously sent data for increased efficiency.
 
     + zoom_level (required, number)
     
