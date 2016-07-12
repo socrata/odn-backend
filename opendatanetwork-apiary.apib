@@ -445,3 +445,134 @@ interaction where suggestions are provided as a user types.
                 }
             ]
         }
+        
+        
+## Create a new map [/data/v1/map/new{?variable}{?entity_id}{?constraint}{?app_token}]
+
+Create a new map with the given entities.
+Returns a bounding box of the given entities,
+summary statistics of the variable across all entities of the same type,
+and a session ID that can be used to retrieve map data.
+
+Note that session IDs will expire after 24 hours.
+
++ Parameters
+
+    + variable (required, string, `demographics.population.count`)
+
+        A single variable ID. 
+
+    + entity_id (required, string, `0400000US53,0400000US08`)
+
+        A comma separated list of entity IDs.
+        Entities must have the same type.
+
+    + constraint (optional, string)
+        
+        Values must be specified for each constraint in the dataset.
+        For example, to generate map data for `demographics.population.count`,
+        you must specify a value for `year` by passing `year=2013`.
+        
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Create a map [GET]
+
++ Request
+
+    Create a map to show the population of Washington and Colorado in 2013.
+
+    - Parameters
+        - variable: demographics.population.count
+        - entity_id: region.state
+        - year: 2013
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+            
++ Response 200 (application/json)
+
+        {
+            "session_id": "rhzpyxdvq56cc9cbg3ssb57b9",
+            "summary_statistics": {
+                "minimum": 570134,
+                "average": 6061914.615384615385,
+                "maximum": 37659181
+            },
+            "bounds": [
+                [40.712, -74.227],
+                [40.774, -74.125]
+            ]
+        }
+
+
+## Maps [/data/v1/map/values{?session_id}{?bounds}{?zoom_level}{?app_token}]
+
+Retrieve GeoJSON to build a map. 
+
++ Parameters
+
+    + session_id (required, string)
+    
+        Unique session ID from the `map/new` endpoint.
+        This is used to keep track of the data that has 
+        already been sent.
+
+    + zoom_level (required, number)
+    
+        Zoom level of the map.
+        Geometries are automatically simplified based on this zoom level.
+        
+    + bounds (optional, string, `47.5998951,-122.33707,47.5942794,-122.3270522`)
+    
+        Comma separated bounds of the area to search in the following order:
+        + latitude of NW point
+        + longitude of NW point
+        + latitude of SE point
+        + longitude of SE point
+        
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get map data [GET]
+
++ Request
+
+    Generate map data for state population.
+
+    - Parameters
+        - session_id: rhzpyxdvq56cc9cbg3ssb57b9
+        - bounds: 47.5998951,-122.33707,47.5942794,-122.3270522
+        - zoom_level: 6
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+            
++ Response 200 (application/json)
+
+        {
+            "geojson": {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                        "type": "MultiPolygon",
+                        "coordinates": [...],
+                        "properties": {
+                            "id": "0400000US53",
+                            "name": "Washington",
+                            "type": "region.state",
+                            "scale": 500000
+                            "value": 6982610
+                        }
+                    }
+                ]
+            }
+        }
