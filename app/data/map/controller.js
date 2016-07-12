@@ -40,14 +40,20 @@ function getGeoURL(entityType) {
     return Constants.GEO_URLS[entityType];
 }
 
+function getLimit(entityType) {
+    return Constants.GEO_LIMIT[entityType] || Constants.GEO_LIMIT_DEFAULT;
+}
+
 function getEntitiesInBounds(entityType, bounds) {
     const url = Request.buildURL(`${getGeoURL(entityType)}.json`, _.assign({
         $select: 'id',
         type: entityType,
-        $limit: 50000
+        $limit: getLimit(entityType)
     }, _.isNil(bounds) ? {} : {
         $where: intersects('the_geom', bounds)
-    }));
+    }, _.includes(Constants.GEO_RANKED, entityType) ? {
+        $order: 'rank desc'
+    } : {}));
 
     return Request.getJSON(url).then(response => {
         return Promise.resolve(response.map(_.property('id')));

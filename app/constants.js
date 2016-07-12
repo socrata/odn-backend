@@ -16,8 +16,14 @@ const Constants = {
         'region.state': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.county': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.msa': 'https://odn.data.socrata.com/resource/3ma7-imys',
-        'region.place': 'https://odn.data.socrata.com/resource/b7ai-sdak',
-        'region.zip_code': 'https://odn.data.socrata.com/resource/w2ee-t9ut'
+        'region.place': 'https://odn.data.socrata.com/resource/rmqq-dzu4',
+        'region.zip_code': 'https://odn.data.socrata.com/resource/92xu-eg4b'
+    },
+    GEO_RANKED: ['region.place', 'region.zip_code'],
+    GEO_LIMIT_DEFAULT: 5000,
+    GEO_LIMIT: {
+        'region.place': 1000,
+        'region.zip_code': 1000
     },
 
     TIMEOUT_MS: 5000,
