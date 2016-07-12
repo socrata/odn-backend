@@ -51,7 +51,7 @@ class Cache {
 
     append(key, value) {
         return new Promise((resolve, reject) => {
-            this.client.append(key, JSON.stringify(value), (error, value) => {
+            this.client.append(key, value, (error, value) => {
                 if (_.isNil(error)) resolve();
                 reject(error);
             });

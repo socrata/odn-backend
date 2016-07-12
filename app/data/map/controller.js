@@ -18,10 +18,7 @@ module.exports = (request, response) => {
         getZoomLevel(request),
         getBounds(request)
     ]).then(([session, zoomLevel, bounds]) => {
-        // TODO object destructuring?
-        const entityType = session.entityType;
-        const dataset = session.dataset;
-        const constraints = session.constraints;
+        const {entityType, dataset, constraints} = session;
 
         getEntitiesInBounds(entityType, bounds)
             .then(ids => session.notSent(ids, zoomLevel)).then(ids => {
