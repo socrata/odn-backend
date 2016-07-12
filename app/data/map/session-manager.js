@@ -15,8 +15,8 @@ class SessionManager {
 
     static get(sessionID) {
         return cache.getJSON(cacheKey(sessionID)).then(value => {
-            const {dataset, constraints, entityType} = value;
-            const session = new Session(dataset, constraints, entityType, sessionID);
+            const {dataset, constraints, entityType, entities} = value;
+            const session = new Session(dataset, constraints, entityType, entities, sessionID);
             return Promise.resolve(session);
         }).catch(error => {
             return Promise.reject(notFound(`session id not found: ${sessionID}`));

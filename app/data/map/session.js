@@ -4,10 +4,11 @@ const cache = require('../../cache');
 const Constants = require('../../constants');
 
 class Session {
-    constructor(dataset, constraints, entityType, id) {
+    constructor(dataset, constraints, entityType, entities, id) {
         this.dataset = dataset;
         this.constraints = constraints;
         this.entityType = entityType;
+        this.entities = entities;
         this.id = id || generateID();
     }
 

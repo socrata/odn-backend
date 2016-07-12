@@ -27,7 +27,7 @@ module.exports = (request, response) => {
 
         checkConstraints(dataset, constraints).then(() => {
             Promise.all([
-                getSessionID(dataset, constraints, entityType),
+                getSessionID(dataset, constraints, entityType, entities),
                 getBoundingBox(entities, entityType),
                 getSummaryStatistics(dataset, constraints, entityType)
             ]).then(([sessionID, boundingBox, summaryStats]) => {
@@ -41,8 +41,8 @@ module.exports = (request, response) => {
     }).catch(errorHandler);
 };
 
-function getSessionID(dataset, constraints, entityType) {
-    const session = new Session(dataset, constraints, entityType);
+function getSessionID(dataset, constraints, entityType, entities) {
+    const session = new Session(dataset, constraints, entityType, entities);
     return SessionManager.add(session);
 }
 

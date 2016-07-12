@@ -21,18 +21,21 @@ module.exports = (request, response) => {
         const {entityType, dataset, constraints} = session;
 
         getEntitiesInBounds(entityType, bounds)
-            .then(ids => session.notSent(ids, zoomLevel)).then(ids => {
+            .then(ids => {
+                return Promise.resolve(_.uniq(ids.concat(session.entities.map(_.property('id')))));
+            })
+            .then(ids => session.notSent(ids, zoomLevel))
+            .then(ids => {
+                const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
+                const valuesPromise = getDataChunked(dataset, constraints, idGroups);
+                const geodataPromise = getGeodataChunked(entityType, zoomLevel, idGroups);
 
-            const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
-            const valuesPromise = getDataChunked(dataset, constraints, idGroups);
-            const geodataPromise = getGeodataChunked(entityType, zoomLevel, idGroups);
+                Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
+                    geojson = joinGeoWithData(geojson, values);
 
-            Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
-                geojson = joinGeoWithData(geojson, values);
-
-                response.json({geojson});
+                    response.json({geojson});
+                }).catch(errorHandler);
             }).catch(errorHandler);
-        }).catch(errorHandler);
     }).catch(errorHandler);
 };
 

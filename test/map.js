@@ -62,6 +62,11 @@ describe('/data/v1/map', () => {
                 .to.have.status(422);
         });
 
+        it('should reject an invalid region', () => {
+            return expect(newMap('entity_id=invalid&variable=demographics.population.count&year=2013'))
+                .to.have.status(404);
+        });
+
         describe('with population for washington and colorado in 2013', () => {
             let response, sessionID;
 
@@ -281,6 +286,18 @@ describe('/data/v1/map', () => {
                 return chakram.wait();
             });
         });
+
+        it('should always return data for the selected entities if it is available', () => {
+            // Loomis is a town in northern washington with only 138 people
+            return newMap('entity_id=1600000US5340350&variable=demographics.population.count&year=2013').then(sessionResponse => {
+                const sessionID = sessionResponse.body.session_id;
+
+                return map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=5`).then(valuesResponse => {
+                    const ids = valuesResponse.body.geojson.features.map(feature => feature.properties.id);
+                    return expect(ids).to.include.members(['1600000US5340350']);
+                });
+            });
+        });
     });
 });
 
@@ -315,5 +332,4 @@ const newMapSchema = {
         required: ['session_id', 'summary_statistics', 'bounds']
     }
 };
-
 
