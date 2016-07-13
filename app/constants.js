@@ -8,6 +8,7 @@ const Constants = {
     RELATIVES_URL: 'https://odn.data.socrata.com/resource/dc4t-zwj5.json',
     ENTITY_URL: 'https://odn.data.socrata.com/resource/kksg-4m3m.json',
     VARIABLE_URL: 'https://odn.data.socrata.com/resource/sutp-685r.json',
+
     GEO_URL: 'https://odn.data.socrata.com/resource/j4v5-7652',
     GEO_URLS: {
         'region.nation': 'https://odn.data.socrata.com/resource/3ma7-imys',
@@ -25,6 +26,10 @@ const Constants = {
         'region.place': 1000,
         'region.zip_code': 1000
     },
+
+    CATALOG_URL: 'https://api.us.socrata.com/api/catalog/v1',
+    CATALOG_LIMIT_DEFAULT: 10,
+    CATALOG_LIMIT_MAX: 100,
 
     TIMEOUT_MS: 5000,
     CACHE_OPTIONS: {
