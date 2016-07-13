@@ -11,19 +11,16 @@ const Aliases = require('../aliases');
 const Constants = require('../constants');
 const Request = require('../request');
 
-const validTypes = ['dataset', 'category', 'publisher'];
-
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
     Promise.all([
-        getType(request),
         getQuery(request),
         getEntities(request),
         getSearchTerms(request),
         getLimit(request),
         getOffset(request)
-    ]).then(([type, query, entities, searchTerms, limit, offset]) => {
+    ]).then(([query, entities, searchTerms, limit, offset]) => {
         searchDatasets(entities, searchTerms, query, limit, offset).then(datasets => {
             response.json({datasets});
         }).catch(errorHandler);
@@ -31,20 +28,24 @@ module.exports = (request, response) => {
 };
 
 function searchDatasets(entities, searchTerms, query, limit, offset) {
-    const params = {
+    const params = _.assign(searchQuery(entities, searchTerms, query), {
         limit,
         offset,
-        q_internal: qInternal(entities, searchTerms, query),
         only: 'datasets'
-    };
+    });
     const url = Request.buildURL(Constants.CATALOG_URL, params);
-    console.log(params);
-    console.log(url);
+    // console.log(params);
+    // console.log(url);
 
     return Request.getJSON(url).then(results => {
         const datasets = results.results.map(getDataset);
         return Promise.resolve(datasets);
     });
+}
+
+function searchQuery(entities, searchTerms, query) {
+    if (_.isEmpty(entities) && _.isEmpty(searchTerms)) return {q: query};
+    return {q_internal: qInternal(entities, searchTerms, query)};
 }
 
 function getDataset(result) {
@@ -122,7 +123,8 @@ function paren(query) {
 
 function getSearchTerms(request) {
     const datasetID = request.query.dataset_id;
-    if (_.isNil(datasetID) || datasetID === '') return Promise.resolve([]);
+    if (_.isNil(datasetID)) return Promise.resolve([]);
+    if (datasetID === '') return Promise.reject(notFound('dataset id cannot be empty'));
 
     const tree = Sources.search(datasetID);
     if (_.isNil(tree))
@@ -142,14 +144,6 @@ function getEntities(request) {
     return EntityLookup.byIDs(ids);
 }
 
-function getType(request) {
-    let type = request.params.type;
-    if (_.isNil(type)) return Promise.reject(invalid('type parameter required'));
-    if (!_.includes(validTypes, type))
-        return Promise.reject(notFound(`invalid type ${type}. Must be one of ${validTypes}`));
-    return Promise.resolve(type);
-}
-
 function getQuery(request) {
     return Promise.resolve(request.query.query || '');
 }
@@ -161,7 +155,7 @@ function getOffset(request) {
 function getLimit(request) {
     return getPositiveInteger('limit', request.query.limit, Constants.CATALOG_LIMIT_DEFAULT).then(limit => {
         if (limit > Constants.CATALOG_LIMIT_MAX)
-            return Promise.reject(`limit cannot be greater than ${Constants.CATALOG_LIMIT_MAX}`);
+            return Promise.reject(invalid(`limit cannot be greater than ${Constants.CATALOG_LIMIT_MAX}`));
         return Promise.resolve(limit);
     });
 }
