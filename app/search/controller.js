@@ -75,7 +75,11 @@ function queryEntity(entity) {
     const words = split(entity.name)
         .filter(_.negate(stopword));
     const aliased = words.map(word => Aliases.get(word).concat([word]).map(quote));
-    return and(aliased.map(or));
+    const grouped = _(aliased)
+        .groupBy(_.size)
+        .values()
+        .value();
+    return and(grouped.map(aliases => or(aliases.map(or))));
 }
 
 function split(phrase) {
