@@ -535,7 +535,7 @@ interaction where suggestions are provided as a user types.
     + limit (optional, number)
 
         Maximum number of results to return.
-        Must be an integer from 1 to 100.
+        Must be an integer from 0 to 100.
 
         + Default: `5`
 
@@ -561,7 +561,7 @@ interaction where suggestions are provided as a user types.
 + Response 200 (application/json)
 
         {
-            "entities": [
+            "options": [
                 {
                     "id": "310M200US42660",
                     "name": "Seattle Metro Area (WA)",
@@ -572,5 +572,67 @@ interaction where suggestions are provided as a user types.
                     "name": "Seattle, WA",
                     "type": "regions.place"
                 }
+            ]
+        }
+        
+        
+## Search [/search/v1/{type}{?query}{?limit}{?offset}{?app_token}]
+
+Search for entities like geographical regions, questions, and datasets
+that match the given query. Similar to `/suggest` but returns a more
+complete set of results at the expense of response time.
+
++ Parameters
+    + type (required, string, `entity`)
+
+        Type of the object to find.
+
+        + Values
+            + `entity`
+            + `dataset`
+            + `question`
+
+    + query (required, string, `seattle`)
+
+        Query to match.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 0 to 50000.
+
+        + Default: `10`
+        
+    + offset (optional, number)
+    
+        Number of results to skip.
+        Used for pagination.
+        
+        + Default: `0`
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get search results [GET]
+
++ Request
+
+    Search for datasets that match "seattle crime"
+
+    - Parameters
+        - type: dataset
+        - query: seattle crime
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+
++ Response 200 (application/json)
+
+        {
+            "options": [
+                ...
             ]
         }
