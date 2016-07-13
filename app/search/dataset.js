@@ -28,14 +28,11 @@ module.exports = (request, response) => {
 };
 
 function searchDatasets(entities, searchTerms, query, limit, offset) {
-    const params = _.assign(searchQuery(entities, searchTerms, query), {
+    const url = Request.buildURL(Constants.CATALOG_URL, _.assign({
         limit,
         offset,
         only: 'datasets'
-    });
-    const url = Request.buildURL(Constants.CATALOG_URL, params);
-    // console.log(params);
-    // console.log(url);
+    }, searchQuery(entities, searchTerms, query)));
 
     return Request.getJSON(url).then(results => {
         const datasets = results.results.map(getDataset);

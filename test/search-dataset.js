@@ -7,7 +7,7 @@ function search(path) {
     return get(`http://localhost:3001/search/v1/dataset?${path}`);
 }
 
-describe('/search/v1', () => {
+describe('/search/v1/dataset', () => {
     it('should return all datasets when given no parameters', () => {
         return search('').then(response => {
             expect(response).to.have.status(200);
