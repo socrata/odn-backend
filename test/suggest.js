@@ -20,8 +20,11 @@ describe('/suggest/v1', () => {
         return expect(suggest('entity?query=a&limit=-1')).to.have.status(422);
     });
 
-    it('should not accept a zero limit', () => {
-        return expect(suggest('entity?query=a&limit=0')).to.have.status(422);
+    it('should accept a zero limit and return no entities', () => {
+        return suggest('entity?query=a&limit=0').then(response => {
+            expect(response).to.have.status(200);
+            expect(response.body.options).to.be.empty;
+        });
     });
 
     it('should not accept a huge limit', () => {

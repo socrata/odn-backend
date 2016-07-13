@@ -26,8 +26,8 @@ function validateRequest(request) {
             reject(Exception.invalidParam('limit must be an integer'));
         const limit = parseInt(limitString);
 
-        if (limit < 1)
-            reject(Exception.invalidParam('limit must be at least 1'));
+        if (limit < 0)
+            reject(Exception.invalidParam('limit must be at least 0'));
         if (limit > Constants.SUGGEST_COUNT_MAX)
             reject(Exception.invalidParam(`limit cannot be greater than ${Constants.SUGGEST_COUNT_MAX}`));
 
