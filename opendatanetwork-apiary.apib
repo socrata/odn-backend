@@ -576,7 +576,7 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Search [/search/v1/{type}{?query}{?limit}{?offset}{?app_token}]
+## Search [/search/v1/{type}{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
 
 Search for entities like geographical regions, questions, and datasets
 that match the given query. Similar to `/suggest` but returns a more
@@ -591,10 +591,21 @@ complete set of results at the expense of response time.
             + `entity`
             + `dataset`
             + `question`
+            + `category`
+            + `publisher`
 
-    + query (required, string, `seattle`)
+    + query (optional, string, `seattle`)
 
         Query to match.
+
+    + entity_id (optional, string, `0100000US`)
+    
+        Entities to use in formulating the query.
+        
+    + dataset_id (optional, string, `demographics.population`)
+    
+        If included, the search terms of the dataset 
+        will be used in the query.
 
     + limit (optional, number)
 
