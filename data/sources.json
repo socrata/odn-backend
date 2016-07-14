@@ -39,106 +39,106 @@
                     },
                     "male_percent_high_school_graduate_or_higher": {
                         "type": "percent",
-						"name": "percent of males with at least a high school diploma"
-					},
+                        "name": "percent of males with at least a high school diploma"
+                    },
                     "female_percent_high_school_graduate": {
                         "type": "percent",
-						"name": "percent of females who graduated high school"
-					},
+                        "name": "percent of females who graduated high school"
+                    },
                     "percent_graduate_or_professional_degree": {
                         "type": "percent",
-						"name": "percent of people with a graduate or professional degree"
-					},
+                        "name": "percent of people with a graduate or professional degree"
+                    },
                     "percent_some_college": {
                         "type": "percent",
-						"name": "percent of people with some college education"
-					},
+                        "name": "percent of people with some college education"
+                    },
                     "male_percent_less_than_9th_grade": {
                         "type": "percent",
-						"name": "percent of males who did not finish the 9th grade"
-					},
+                        "name": "percent of males who did not finish the 9th grade"
+                    },
                     "percent_bachelors_degree": {
                         "type": "percent",
-						"name": "percent of people with a bachelor's degree"
-					},
+                        "name": "percent of people with a bachelor's degree"
+                    },
                     "percent_high_school_graduate_or_higher": {
                         "type": "percent",
-						"name": "percent of people with at least a high school diploma"
-					},
+                        "name": "percent of people with at least a high school diploma"
+                    },
                     "female_percent_bachelors_degree_or_higher": {
                         "type": "percent",
-						"name": "percent of females with at least a bachelor's degree"
-					},
+                        "name": "percent of females with at least a bachelor's degree"
+                    },
                     "percent_associates_degree": {
                         "type": "percent",
-						"name": "percent of people with an associate's degree"
-					},
+                        "name": "percent of people with an associate's degree"
+                    },
                     "population": {},
                     "male_percent_9th_to_12th_grade_no_diploma": {
                         "type": "percent",
-						"name": "percent of males with some high school education but no diploma"
-					},
+                        "name": "percent of males with some high school education but no diploma"
+                    },
                     "male_percent_some_college": {
                         "type": "percent",
-						"name": "percent of males with some college education"
-					},
+                        "name": "percent of males with some college education"
+                    },
                     "percent_9th_to_12th_grade_no_diploma": {
                         "type": "percent",
-						"name": "percent of people with some high school education but no diploma"
-					},
+                        "name": "percent of people with some high school education but no diploma"
+                    },
                     "female_percent_some_college": {
                         "type": "percent",
-						"name": "percent of females with some college education"
-					},
+                        "name": "percent of females with some college education"
+                    },
                     "percent_bachelors_degree_or_higher": {
                         "type": "percent",
-						"name": "percent of people with at least a bachelor's degree"
-					},
+                        "name": "percent of people with at least a bachelor's degree"
+                    },
                     "female_percent_9th_to_12th_grade_no_diploma": {
                         "type": "percent",
-						"name": "percent of females with some high school education but no diploma"
-					},
+                        "name": "percent of females with some high school education but no diploma"
+                    },
                     "percent_high_school_graduate": {
                         "type": "percent",
-						"name": "percent of people who graduated high school"
-					},
+                        "name": "percent of people who graduated high school"
+                    },
                     "female_percent_associates_degree": {
                         "type": "percent",
-						"name": "percent of females with an associate's degree"
-					},
+                        "name": "percent of females with an associate's degree"
+                    },
                     "male_percent_high_school_graduate": {
                         "type": "percent",
-						"name": "percent of males who graduated high school"
-					},
+                        "name": "percent of males who graduated high school"
+                    },
                     "female_percent_bachelors_degree": {
                         "type": "percent",
-						"name": "percent of females with a bachelor's degree"
-					},
+                        "name": "percent of females with a bachelor's degree"
+                    },
                     "female_percent_graduate_or_professional_degree": {
                         "type": "percent",
-						"name": "percent of females with a graduate or professional degree"
-					},
+                        "name": "percent of females with a graduate or professional degree"
+                    },
                     "male_percent_bachelors_degree_or_higher": {
                         "type": "percent",
-						"name": "percent of males with at least a bachelor's degree"
-					},
+                        "name": "percent of males with at least a bachelor's degree"
+                    },
                     "total_ranks": {},
                     "percent_high_school_graduate_or_higher_rank": {
                         "type": "rank",
-						"name": "ranking of high school graduation rate"
-					},
+                        "name": "ranking of high school graduation rate"
+                    },
                     "female_percent_less_than_9th_grade": {
                         "type": "percent",
-						"name": "percent of females who did not finish the 9th grade"
-					},
+                        "name": "percent of females who did not finish the 9th grade"
+                    },
                     "female_percent_high_school_graduate_or_higher": {
                         "type": "percent",
-						"name": "percent of females with at least a high school diploma"
-					},
+                        "name": "percent of females with at least a high school diploma"
+                    },
                     "percent_bachelors_degree_or_higher_rank": {
                         "type": "rank",
-						"name": "ranking of college graduation rate"
-					},
+                        "name": "ranking of college graduation rate"
+                    },
                     "male_percent_graduate_or_professional_degree": {
                         "type": "percent",
                         "name": "percent of males with a graduate or professional degree"
@@ -159,14 +159,14 @@
                         "type": "dollar"
                     },
                     "capital-expenditures-per-student": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "instruction-salaries": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "instruction-salaries-per-student": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "administration-salaries-per-student": {
                         "type": "dollar"
                     }
@@ -206,56 +206,56 @@
                     },
                     "male_earners": {},
                     "male_full_time_median_earnings": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "male_median_earnings": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "median_earnings": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "median_earnings_bachelor_degree": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "median_earnings_graduate_or_professional_degree": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "median_earnings_high_school": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "median_earnings_less_than_high_school": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "median_earnings_some_college_or_associates": {
-						"type": "dollar"
-					},
+                        "type": "dollar"
+                    },
                     "percent_with_earnings_10000_to_14999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_15000_to_24999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_1_to_9999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_25000_to_34999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_35000_to_49999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_50000_to_64999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_65000_to_74999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_75000_to_99999": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "percent_with_earnings_over_100000": {
-						"type": "percent"
-					},
+                        "type": "percent"
+                    },
                     "population": {},
                     "ratio_bachelor_to_median": {},
                     "ratio_female_earners": {},
@@ -277,11 +277,11 @@
                 "constraints": ["year"],
                 "variables": {
                     "jobs-prox-idx-mean": {
-						"name": "mean job proximity index"
-					},
+                        "name": "mean job proximity index"
+                    },
                     "jobs-prox-idx-median": {
-						"name": "median job proximity index"
-					},
+                        "name": "median job proximity index"
+                    },
                     "jobs-prox-idx-stdev": {
                         "name": "job proximity index standard deviation"
                     }
@@ -320,14 +320,14 @@
                 "constraints": ["year"],
                 "variables": {
                     "env-health-idx-mean": {
-						"name": "mean environmental health index"
-					},
+                        "name": "mean environmental health index"
+                    },
                     "env-health-idx-median": {
-						"name": "median environmental health index"
-					},
+                        "name": "median environmental health index"
+                    },
                     "env-health-idx-stdev": {
-						"name": "environmental health index standard deviation"
-					}
+                        "name": "environmental health index standard deviation"
+                    }
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
                 "description": "The environmental health hazard exposure index summarizes potential exposure to harmful toxins including carcinogenic, respiratory, and neurological hazards. Values are percentile ranked and range from 0 to 100, with higher values corresponding to less exposure to harmful toxins. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015.",
@@ -606,13 +606,13 @@
                 "constraints": ["year"],
                 "variables": {
                     "per_capita_gdp": {
-						"name": "GDP per capita",
+                        "name": "GDP per capita",
                         "type": "dollar"
-					},
+                    },
                     "per_capita_gdp_percent_change": {
-						"name": "annual change in GDP",
+                        "name": "annual change in GDP",
                         "type": "percent"
-					}
+                    }
                 },
                 "searchTerms": ["gdp", "gross domestic product", "economy", "production", "revenue", "gross national product", "gnp"],
                 "description": "Gross Domestic Product (GDP) is a measure of the value of all goods and services produced in a region minus the value of the goods and services used up in production. Real GDP is adjusted for changes in the value of money (inflation and deflation) so that values can be compared between years. Data is available for U.S. states and metropolitan areas.",

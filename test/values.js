@@ -48,7 +48,7 @@ describe('/data/v1/values', () => {
     it('should allow specifying just a variable', () => {
         return values('variable=demographics.population.change').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', '0100000US', '0200000US1'],
@@ -65,7 +65,7 @@ describe('/data/v1/values', () => {
     it('should allow specifying a variable and year but no entities', () => {
         return values('variable=demographics.population.change&year=2013').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['variable']
@@ -78,7 +78,7 @@ describe('/data/v1/values', () => {
     it('should allow specifying a variable, year, and entity', () => {
         return values('variable=demographics.population.count&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.have.json({
                 data: [
                     ['variable', '0100000US'],
@@ -97,7 +97,7 @@ describe('/data/v1/values', () => {
     it('should get all occupations for a given year', () => {
         return values('variable=jobs.occupations.employed&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['occupation', '0100000US'],
@@ -114,7 +114,7 @@ describe('/data/v1/values', () => {
     it('should get all years for a given occupation', () => {
         return values('variable=jobs.occupations.employed&occupation=Food Service&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', '0100000US'],
@@ -127,7 +127,7 @@ describe('/data/v1/values', () => {
     it('should allow specifying multiple variables if all constraints are fixed', () => {
         return values('variable=education.education&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['variable', '0100000US'],
@@ -147,7 +147,7 @@ describe('/data/v1/values', () => {
     it('should get population count for all years in washington state', () => {
         return values('variable=demographics.population.count&entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', '0400000US53'],
@@ -194,7 +194,7 @@ describe('/data/v1/values', () => {
     it('should accept a zero forecast parameter and not forecast anything', () => {
         return values('variable=demographics.population.count&entity_id=0100000US&forecast=0').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', '0100000US']
@@ -206,7 +206,7 @@ describe('/data/v1/values', () => {
     it('should forecast population data', () => {
         return values('variable=demographics.population.count&entity_id=0100000US&forecast=3').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', 'forecast', '0100000US'],
@@ -234,7 +234,7 @@ describe('/data/v1/values', () => {
     it('should default to not describing the data', () => {
         return values('variable=demographics.population&entity_id=0100000US&year=2013').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.not.have.keys('description');
         });
     });
@@ -242,7 +242,7 @@ describe('/data/v1/values', () => {
     it('should not describe the data if the describe parameter is set to false', () => {
         return values('variable=demographics.population&entity_id=0100000US&year=2013&describe=false').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.not.have.keys('description');
         });
     });
@@ -250,7 +250,7 @@ describe('/data/v1/values', () => {
     it('should describe the data if the describe parameter is set to true', () => {
         return values('variable=demographics.population&entity_id=0100000US&year=2013&describe=true').then(response => {
             expect(response).to.have.status(200);
-			expect(response).to.have.schema(valuesSchema);
+            expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.have.all.keys(['data', 'description']);
             expect(response.body.description).to.have.string('United States');
             expect(response.body.description).to.have.string('population');
