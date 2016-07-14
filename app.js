@@ -17,6 +17,7 @@ app.get('/data/v1/values', require('./app/data/values/controller'));
 app.get('/data/v1/map/new', require('./app/data/map/new'));
 app.get('/data/v1/map/values', require('./app/data/map/values'));
 app.get('/suggest/v1/:type', require('./app/suggest/controller'));
+app.get('/search/v1/dataset', require('./app/search/dataset'));
 
 app.use(require('./app/error').respond);
 

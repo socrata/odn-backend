@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const Exception = require('../error');
 const Constants = require('../constants');
-const Stopwords = require('./stopwords');
+const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
 
 function validateRequest(request) {
