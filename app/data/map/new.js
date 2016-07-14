@@ -73,10 +73,9 @@ function getBoundingBox(entities, entityType) {
 
 function getSummaryStatistics(dataset, constraints, entityType) {
     const variable = _.values(dataset.variables)[0];
-    entityType = _.last(entityType.split('.'));
 
     const url = Request.buildURL(dataset.url, _.assign({
-        type: entityType,
+        $where: `type in ('${entityType}','${_.last(entityType.split('.'))}')`,
         variable: _.last(variable.id.split('.')),
         $select: 'avg(value) as average, min(value) as minimum, max(value) as maximum'
     }, constraints));
