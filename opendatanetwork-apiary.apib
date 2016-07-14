@@ -576,24 +576,11 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Search [/search/v1/{type}{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+## Search Datasets [/search/v1/dataset{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
 
-Search for entities like geographical regions, questions, and datasets
-that match the given query. Similar to `/suggest` but returns a more
-complete set of results at the expense of response time.
+Search for datasets given a query string, ODN dataset, or set of entities.
 
 + Parameters
-    + type (required, string, `entity`)
-
-        Type of the object to find.
-
-        + Values
-            + `entity`
-            + `dataset`
-            + `question`
-            + `category`
-            + `publisher`
-
     + query (optional, string, `seattle`)
 
         Query to match.
@@ -630,11 +617,11 @@ complete set of results at the expense of response time.
 
 + Request
 
-    Search for datasets that match "seattle crime"
+    Search for datasets about health and Seattle.
 
     - Parameters
-        - type: dataset
-        - query: seattle crime
+        - dataset_id: health.health
+        - entity_id: 1600000US5363000
 
     - Headers
 
@@ -642,8 +629,37 @@ complete set of results at the expense of response time.
 
 + Response 200 (application/json)
 
+
         {
-            "options": [
-                ...
-            ]
+          "datasets":[
+            {
+              "name":"Big Cities Health Data Inventory",
+              "description":"This dataset illustrates health status of 26 of the nation’s largest and most urban cities as captured by 34 health (and six demographics-related) indicators. These indicators represent some of the leading causes of morbidity and mortality in the United States and leading priorities of national, state, and local health agencies. Public health data were captured in nine overarching categories: HIV/AIDS, cancer, nutrition/physical activity/obesity, food safety, infectious disease, maternal and child health, tobacco, injury/violence, and behavioral health/substance abuse.",
+              "attribution":"The Big Cities Health Coalition",
+              "domain":"bchi.bigcitieshealth.org",
+              "domain_url":"http://bchi.bigcitieshealth.org",
+              "dataset_url":"https://bchi.bigcitieshealth.org/d/rwyf-6cby",
+              "dev_docs_url":"https://dev.socrata.com/foundry/bchi.bigcitieshealth.org/ffnx-yiyc",
+              "updated_at":"2016-06-27T19:10:04.000Z",
+              "created_at":"2015-09-01T19:23:15.000Z",
+              "categories":[
+                "education",
+                "health"
+              ]
+            },
+            {
+              "name":"King County Health Reform Indicators",
+              "description":"Health reporting area (HRA) and zip code-level indicators for monitoring the impact of the Affordable Care Act in King County, WA. Topic areas range from access to care to population health. Imported to Socrata to allow data to be pulled as JSON from SODA to feed into Leaflet.js-based maps on an external site.",
+              "attribution":"Public Health - Seattle & King County",
+              "domain":"data.kingcounty.gov",
+              "domain_url":"http://data.kingcounty.gov",
+              "dataset_url":"https://data.kingcounty.gov/d/ajpg-dges",
+              "dev_docs_url":"https://dev.socrata.com/foundry/data.kingcounty.gov/t34p-gkbv",
+              "updated_at":"2014-12-17T00:09:12.000Z",
+              "created_at":"2014-03-06T23:17:51.000Z",
+              "categories":[
+                "health"
+              ]
+            }
+          ]
         }
