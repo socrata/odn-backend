@@ -535,7 +535,7 @@ interaction where suggestions are provided as a user types.
     + limit (optional, number)
 
         Maximum number of results to return.
-        Must be an integer from 1 to 100.
+        Must be an integer from 0 to 100.
 
         + Default: `5`
 
@@ -561,7 +561,7 @@ interaction where suggestions are provided as a user types.
 + Response 200 (application/json)
 
         {
-            "entities": [
+            "options": [
                 {
                     "id": "310M200US42660",
                     "name": "Seattle Metro Area (WA)",
@@ -573,4 +573,93 @@ interaction where suggestions are provided as a user types.
                     "type": "regions.place"
                 }
             ]
+        }
+        
+        
+## Search Datasets [/search/v1/dataset{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+
+Search for datasets given a query string, ODN dataset, or set of entities.
+
++ Parameters
+    + query (optional, string, `seattle`)
+
+        Query to match.
+
+    + entity_id (optional, string, `0100000US`)
+    
+        Entities to use in formulating the query.
+        
+    + dataset_id (optional, string, `demographics.population`)
+    
+        If included, the search terms of the dataset 
+        will be used in the query.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 0 to 50000.
+
+        + Default: `10`
+        
+    + offset (optional, number)
+    
+        Number of results to skip.
+        Used for pagination.
+        
+        + Default: `0`
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get search results [GET]
+
++ Request
+
+    Search for datasets about health and Seattle.
+
+    - Parameters
+        - dataset_id: health.health
+        - entity_id: 1600000US5363000
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+
++ Response 200 (application/json)
+
+
+        {
+          "datasets":[
+            {
+              "name":"Big Cities Health Data Inventory",
+              "description":"This dataset illustrates health status of 26 of the nation’s largest and most urban cities as captured by 34 health (and six demographics-related) indicators. These indicators represent some of the leading causes of morbidity and mortality in the United States and leading priorities of national, state, and local health agencies. Public health data were captured in nine overarching categories: HIV/AIDS, cancer, nutrition/physical activity/obesity, food safety, infectious disease, maternal and child health, tobacco, injury/violence, and behavioral health/substance abuse.",
+              "attribution":"The Big Cities Health Coalition",
+              "domain":"bchi.bigcitieshealth.org",
+              "domain_url":"http://bchi.bigcitieshealth.org",
+              "dataset_url":"https://bchi.bigcitieshealth.org/d/rwyf-6cby",
+              "dev_docs_url":"https://dev.socrata.com/foundry/bchi.bigcitieshealth.org/ffnx-yiyc",
+              "updated_at":"2016-06-27T19:10:04.000Z",
+              "created_at":"2015-09-01T19:23:15.000Z",
+              "categories":[
+                "education",
+                "health"
+              ]
+            },
+            {
+              "name":"King County Health Reform Indicators",
+              "description":"Health reporting area (HRA) and zip code-level indicators for monitoring the impact of the Affordable Care Act in King County, WA. Topic areas range from access to care to population health. Imported to Socrata to allow data to be pulled as JSON from SODA to feed into Leaflet.js-based maps on an external site.",
+              "attribution":"Public Health - Seattle & King County",
+              "domain":"data.kingcounty.gov",
+              "domain_url":"http://data.kingcounty.gov",
+              "dataset_url":"https://data.kingcounty.gov/d/ajpg-dges",
+              "dev_docs_url":"https://dev.socrata.com/foundry/data.kingcounty.gov/t34p-gkbv",
+              "updated_at":"2014-12-17T00:09:12.000Z",
+              "created_at":"2014-03-06T23:17:51.000Z",
+              "categories":[
+                "health"
+              ]
+            }
+          ]
         }
