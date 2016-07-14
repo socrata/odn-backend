@@ -1,4 +1,5 @@
 
+const _ = require('lodash');
 const chakram = require('chakram');
 const get = chakram.get;
 const expect = chakram.expect;
@@ -125,6 +126,21 @@ describe('/search/v1/dataset', () => {
         });
     });
 
+    it('should generate working dev docs urls', () => {
+        return search('limit=1').then(response => {
+            const urls = _(response.body.datasets[0])
+                .pick(['dev_docs_url'])
+                .values()
+                .value();
+
+            return Promise.all(urls.map(get)).then(responses => {
+                responses.forEach((response, index) => {
+                    expect(response).to.have.status(200);
+                });
+            });
+        });
+    });
+
     it('should find datasets for crime', () => {
         return search('query=crime').then(response => {
             expect(response).to.have.status(200);
@@ -168,6 +184,7 @@ const datasetSchema = {
         dataset: {
             type: 'object',
             properties: {
+                id: {type: 'string'},
                 name: {type: 'string'},
                 description: {type: 'string'},
                 attribution: {type: 'string'},
@@ -182,7 +199,7 @@ const datasetSchema = {
                     items: {type: 'string'}
                 }
             },
-            requried: ['name', 'description', 'attribution', 'domain',
+            requried: ['id', 'name', 'description', 'attribution', 'domain',
                 'domain_url', 'dataset_url', 'dev_docs_url',
                 'updated_at', 'created_at', 'categories']
         }

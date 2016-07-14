@@ -47,14 +47,15 @@ function searchQuery(entities, searchTerms, query) {
 
 function getDataset(result) {
     const resource = result.resource;
-    const fxf = resource.nbe_fxf || resource.fxf;
+    const id = resource.nbe_fxf || resource.id;
     const domain = result.metadata.domain;
 
     return _.assign(_.pick(resource, ['name', 'description', 'attribution']), {
+        id,
         domain,
         domain_url: `http://${domain}`,
         dataset_url: result.permalink,
-        dev_docs_url: `https://dev.socrata.com/foundry/${domain}/${fxf}`,
+        dev_docs_url: `https://dev.socrata.com/foundry/${domain}/${id}`,
         updated_at: resource.updatedAt,
         created_at: resource.createdAt,
         categories: result.classification.categories
