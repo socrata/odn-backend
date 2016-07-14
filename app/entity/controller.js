@@ -17,6 +17,7 @@ module.exports = (request, response) => {
         getType(request)
     ]).then(([id, name, type]) => {
         getEntities(id, name, type).then(entities => {
+            entities = entities.map(entity => _.omit(entity, 'rank'));
             response.json({entities});
         }).catch(errorHandler);
     }).catch(errorHandler);
@@ -25,7 +26,8 @@ module.exports = (request, response) => {
 function getEntities(id, name, type) {
     const url = Request.buildURL(Constants.ENTITY_URL, _.assign({
         id,
-        type
+        type,
+        $order: 'rank desc'
     }, _.isEmpty(name) ? {name} : {
         $q: name
     }));
