@@ -107,12 +107,14 @@ class Sources {
         return _.cloneDeep(this.topics);
     }
 
-    search(datasetID) {
-        return trim(this.getTopics(), getPath(datasetID));
+    search(datasetID, topics) {
+        topics = topics || this.getTopics();
+        return trim(topics, getPath(datasetID));
     }
 
     searchMany(datasetIDs) {
-        const trees = datasetIDs.map(id => this.search(id));
+        const topics = this.getTopics();
+        const trees = datasetIDs.map(id => this.search(id, topics));
         if (_.some(trees, _.isNil)) return null;
         return _.merge.apply(this, trees);
     }

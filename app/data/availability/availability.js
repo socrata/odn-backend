@@ -8,19 +8,18 @@ const Sources = require('../../sources');
 
 class Availability {
     static get(entities) {
-        return new Promise((resolve, reject) => {
-            getVariables(entities).then(variables => {
-                const availableVariables = variables
-                    .filter(variable => variable.count_variable == entities.length)
-                    .map(variable => variable.variable);
+        return getVariables(entities).then(variables => {
+            const availableVariables = variables
+                .filter(variable => variable.count_variable == entities.length)
+                .map(variable => variable.variable);
 
-                resolve(availableVariables);
-            }).catch(reject);
+            return Promise.resolve(availableVariables);
         });
     }
 
     static topicTree(variables, entities) {
         let topics = Sources.searchMany(variables);
+
         if (_.isNil(topics)) return null;
 
         topics = Sources.mapVariables(topics, (variable, id, parents) => {
