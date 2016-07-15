@@ -13,47 +13,38 @@ function pick(tree, paths) {
     if (_.isEmpty(paths)) return tree;
     if (_.isEmpty(tree) && !_.isEmpty(paths)) return null;
 
-    const o = {};
+    const picked = {};
 
     const grouped = _(paths)
         .filter(_.negate(_.isEmpty))
         .groupBy(_.first)
+        .toPairs()
         .value();
 
-    let invalid = false;
-    _.forIn(grouped, (subpaths, key) => {
-        if (!(key in tree)) {
-            invalid = true;
-            return;
-        }
+    const invalid = grouped.some(([key, subpaths]) => {
+        if (!(key in tree)) return true;
 
         subpaths = subpaths.map(_.tail);
         const subtree = tree[key];
         if (subpaths[0].length === 0) {
-            o[key] = subtree;
+            picked[key] = subtree;
             return;
         }
 
         const recurse = ['datasets', 'variables', 'topics']
             .filter(field => field in subtree);
-        if (recurse.length === 0) {
-            invalid = true;
-            return;
-        }
-        o[key] = _.omit(subtree, recurse);
+        if (recurse.length === 0) return true;
 
-        recurse.forEach(field => {
+        picked[key] = _.omit(subtree, recurse);
+
+        return recurse.some(field => {
             const pickedSubtree = pick(subtree[field], subpaths);
-            if (_.isNil(pickedSubtree)) {
-                invalid = true;
-                return;
-            }
-
-            o[key][field] = pickedSubtree;
+            if (_.isNil(pickedSubtree)) return true;
+            picked[key][field] = pickedSubtree;
         });
     });
 
-    return invalid ? null : o;
+    return invalid ? null : picked;
 }
 
 function mapTree(tree, iteratee, parents) {
