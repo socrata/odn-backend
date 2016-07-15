@@ -2,36 +2,58 @@
 
 const _ = require('lodash');
 const fs = require('fs');
+const util = require('util');
 
 const Constants = require('../app/constants');
 
-function trim(tree, path) {
-    if (path.length === 0) return tree;
+/**
+ * Paths must all be the same length.
+ */
+function pick(tree, paths) {
+    if (_.isEmpty(paths)) return tree;
+    if (_.isEmpty(tree) && !_.isEmpty(paths)) return null;
 
-    const id = path[0];
-    if (path.length === 1) {
-        const subtree = id in tree ? _.pick(tree, [id]) : null;
-        return subtree;
-    }
+    const o = {};
 
-    const subtree = tree[id];
-    if (_.isNil(subtree)) return null;
-    const recurseFields = ['topics', 'datasets', 'variables'];
-    const trimmed = _.omit(subtree, recurseFields);
-    const subpath = path.slice(1);
+    const grouped = _(paths)
+        .filter(_.negate(_.isEmpty))
+        .groupBy(_.first)
+        .value();
 
-    let good = false;
-    recurseFields.forEach(field => {
-        if (field in subtree) {
-            const trimmedSubtree = trim(subtree[field], subpath);
-            if (!_.isNil(trimmedSubtree)) {
-                trimmed[field] = trimmedSubtree;
-                good = true;
-            }
+    let invalid = false;
+    _.forIn(grouped, (subpaths, key) => {
+        if (!(key in tree)) {
+            invalid = true;
+            return;
         }
+
+        subpaths = subpaths.map(_.tail);
+        const subtree = tree[key];
+        if (subpaths[0].length === 0) {
+            o[key] = subtree;
+            return;
+        }
+
+        const recurse = ['datasets', 'variables', 'topics']
+            .filter(field => field in subtree);
+        if (recurse.length === 0) {
+            invalid = true;
+            return;
+        }
+        o[key] = _.omit(subtree, recurse);
+
+        recurse.forEach(field => {
+            const pickedSubtree = pick(subtree[field], subpaths);
+            if (_.isNil(pickedSubtree)) {
+                invalid = true;
+                return;
+            }
+
+            o[key][field] = pickedSubtree;
+        });
     });
 
-    return good ? {[id]: trimmed} : null;
+    return invalid ? null : o;
 }
 
 function mapTree(tree, iteratee, parents) {
@@ -107,16 +129,12 @@ class Sources {
         return _.cloneDeep(this.topics);
     }
 
-    search(datasetID, topics) {
-        topics = topics || this.getTopics();
-        return trim(topics, getPath(datasetID));
+    search(id) {
+        return this.searchMany([id]);
     }
 
-    searchMany(datasetIDs) {
-        const topics = this.getTopics();
-        const trees = datasetIDs.map(id => this.search(id, topics));
-        if (_.some(trees, _.isNil)) return null;
-        return _.merge.apply(this, trees);
+    searchMany(ids) {
+        return pick(this.topics, ids.map(getPath));
     }
 
     mapVariables(tree, iteratee) {
