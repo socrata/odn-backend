@@ -72,7 +72,7 @@ and that it is up to the client to decide which one is the best fit.
             ]
         }
         
-## Entity Relationships [/related/v1/{relation}{?entity_id}{?limit}{?app_token}]
+## Entity Relationships [/entity/v1/{relation}{?entity_id}{?limit}{?app_token}]
 
 Find entities that are related to one another.
 
@@ -630,14 +630,11 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Search [/search/v1/dataset{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+## Search [/search/v1/dataset{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
 
-Search for datasets given a query string, ODN dataset, or set of entities.
+Search for datasets related to an ODN dataset or set of entities.
 
 + Parameters
-    + query (optional, string, `seattle`)
-
-        Query to match.
 
     + entity_id (optional, string, `0100000US`)
     
