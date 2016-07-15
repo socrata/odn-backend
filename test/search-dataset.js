@@ -184,7 +184,7 @@ const datasetSchema = {
         dataset: {
             type: 'object',
             properties: {
-                id: {type: 'string'},
+                fxf: {type: 'string'},
                 name: {type: 'string'},
                 description: {type: 'string'},
                 attribution: {type: 'string'},
@@ -199,7 +199,7 @@ const datasetSchema = {
                     items: {type: 'string'}
                 }
             },
-            requried: ['id', 'name', 'description', 'attribution', 'domain',
+            requried: ['fxf', 'name', 'description', 'attribution', 'domain',
                 'domain_url', 'dataset_url', 'dev_docs_url',
                 'updated_at', 'created_at', 'categories']
         }
