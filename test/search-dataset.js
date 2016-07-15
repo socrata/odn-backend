@@ -98,6 +98,10 @@ describe('/search/v1/dataset', () => {
         return expect(search('entity_id=invalid-id')).to.have.status(404);
     });
 
+    it('should not accept an empty id', () => {
+        return expect(search('entity_id=')).to.have.status(404);
+    });
+
     it('should not accept a valid id followed by an invalid id', () => {
         return expect(search('entity_id=0100000US,invalid-id')).to.have.status(404);
     });
@@ -114,18 +118,6 @@ describe('/search/v1/dataset', () => {
         return expect(search('entity_id=    0100000US   ,      0400000US53 ')).to.have.status(200);
     });
 
-    it('should accept an empty query', () => {
-        return expect(search('query=')).to.have.status(200);
-    });
-
-    it('should find datasets for crime', () => {
-        return search('query=crime').then(response => {
-            expect(response).to.have.status(200);
-            expect(response).to.have.schema(datasetSchema);
-            expect(response.body.datasets).to.not.be.empty;
-        });
-    });
-
     it('should generate working dev docs urls', () => {
         return search('limit=1').then(response => {
             const urls = _(response.body.datasets[0])
@@ -137,17 +129,6 @@ describe('/search/v1/dataset', () => {
                 responses.forEach((response, index) => {
                     expect(response).to.have.status(200);
                 });
-            });
-        });
-    });
-
-    it('should find datasets for crime', () => {
-        return search('query=crime').then(response => {
-            expect(response).to.have.status(200);
-            expect(response).to.have.schema(datasetSchema);
-            expect(response.body.datasets).to.not.be.empty;
-            response.body.datasets.forEach(dataset => {
-                expect(dataset.name.toLowerCase()).to.contain('crime');
             });
         });
     });

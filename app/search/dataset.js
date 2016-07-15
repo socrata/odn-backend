@@ -15,34 +15,29 @@ module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
     Promise.all([
-        getQuery(request),
         getEntities(request),
         getSearchTerms(request),
         getLimit(request),
         getOffset(request)
-    ]).then(([query, entities, searchTerms, limit, offset]) => {
-        searchDatasets(entities, searchTerms, query, limit, offset).then(datasets => {
+    ]).then(([entities, searchTerms, limit, offset]) => {
+        searchDatasets(entities, searchTerms, limit, offset).then(datasets => {
             response.json({datasets});
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
-function searchDatasets(entities, searchTerms, query, limit, offset) {
+function searchDatasets(entities, searchTerms, limit, offset) {
     const url = Request.buildURL(Constants.CATALOG_URL, _.assign({
         limit,
         offset,
-        only: 'datasets'
-    }, searchQuery(entities, searchTerms, query)));
+        only: 'datasets',
+        q_internal: qInternal(entities, searchTerms)
+    }));
 
     return Request.getJSON(url).then(results => {
         const datasets = results.results.map(getDataset);
         return Promise.resolve(datasets);
     });
-}
-
-function searchQuery(entities, searchTerms, query) {
-    if (_.isEmpty(entities) && _.isEmpty(searchTerms)) return {q: query};
-    return {q_internal: qInternal(entities, searchTerms, query)};
 }
 
 function getDataset(result) {
@@ -62,11 +57,10 @@ function getDataset(result) {
     });
 }
 
-function qInternal(entities, searchTerms, query) {
+function qInternal(entities, searchTerms) {
     return and([
         or(entities.map(queryEntity)),
-        or(searchTerms.map(quote)),
-        quote(query)
+        or(searchTerms.map(quote))
     ]);
 }
 
@@ -116,13 +110,14 @@ function quote(word) {
 }
 
 function paren(query) {
+    if (_.isEmpty(query)) return null;
     return `(${query})`;
 }
 
 function getSearchTerms(request) {
     const datasetID = request.query.dataset_id;
     if (_.isNil(datasetID)) return Promise.resolve([]);
-    if (datasetID === '') return Promise.reject(notFound('dataset id cannot be empty'));
+    if (datasetID === '') return Promise.reject(notFound('dataset_id cannot be empty'));
 
     const tree = Sources.search(datasetID);
     if (_.isNil(tree))
@@ -138,7 +133,8 @@ function getSearchTerms(request) {
 
 function getEntities(request) {
     const ids = request.query.entity_id;
-    if (_.isNil(ids) || ids === '') return Promise.resolve([]);
+    if (_.isNil(ids)) return Promise.resolve([]);
+    if (ids === '') return Promise.reject(notFound('entity_id cannot be empty'));
     return EntityLookup.byIDs(ids);
 }
 
