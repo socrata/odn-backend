@@ -18,7 +18,61 @@ Registering for and including a [Socrata application token](https://dev.socrata.
 grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter
 or the `X-App-Token` HTTP header.
 
-## Relatives [/related/v1/{relation}{?entity_id}{?limit}{?app_token}]
+## Entity Lookup [/entity/v1{?entity_id}{?entity_name}{?entity_type}{?app_token}]
+
+Find all entities that match the given constraints.
+Useful for looking up the ID of an entity from its name,
+or the name of an entity from its ID.
+
+Note that a name may match multiple entities of the same type
+and that it is up to the client to decide which one is the best fit.
+
++ Parameters
+    + entity_id (optional, string, `0400000US53`)
+    
+        ID of the entity.
+
+    + entity_name (optional, string, `washington`)
+
+        Name of the entity.
+    
+    + entity_type (optional, string, `region.state`)
+    
+        Type of the entity.
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+
+### Get Entities [GET]
+
++ Request
+
+    Find the ID of Washington state.
+
+    - Parameters
+        - entity_name: washington
+        - entity_type: region.state
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+            
++ Response 200 (application/json)
+
+        {
+            "entities": [
+                {
+                    "id": "0400000US53",
+                    "name": "Washington",
+                    "type": "region.state"
+                }
+            ]
+        }
+        
+## Entity Relationships [/related/v1/{relation}{?entity_id}{?limit}{?app_token}]
 
 Find entities that are related to one another.
 
@@ -99,7 +153,7 @@ For example, region entities are sorted in descending order by population.
                 }
             ]
         }
-
+        
 ## Data Availability [/data/v1/availability/{?entity_id}{?app_token}]
 
 Find all of the topics, datasets, and variables that have data
@@ -454,7 +508,7 @@ regions like states, counties, cities, or zip codes.
         Unique session ID from the `map/new` endpoint.
         Used to track previously sent data for increased efficiency.
 
-    + zoom_level (required, number)
+    + zoom_level (required, number, `2`)
     
         Zoom level of the map.
         Geometries are automatically simplified based on this zoom level.
@@ -467,7 +521,7 @@ regions like states, counties, cities, or zip codes.
         + latitude of SE point
         + longitude of SE point
         
-    + app_token (optional, string)
+    + app_token (optional, string, `CGxaHQoQlgQSev4zyUh5aR5J3`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
         used with your request. Can also be passed via the `X-App-Token` HTTP header.
@@ -576,7 +630,7 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Search Datasets [/search/v1/dataset{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+## Search [/search/v1/dataset{?query}{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
 
 Search for datasets given a query string, ODN dataset, or set of entities.
 
@@ -662,58 +716,4 @@ Search for datasets given a query string, ODN dataset, or set of entities.
               ]
             }
           ]
-        }
-        
-## Find Entities [/entity/v1{?entity_id}{?entity_name}{?entity_type}{?app_token}]
-
-Find all entities that match the given constraints.
-Useful for looking up the ID of an entity from its name,
-or the name of an entity from its ID.
-
-Note that a name may match multiple entities of the same type
-and that it is up to the client to decide which one is the best fit.
-
-+ Parameters
-    + entity_id (optional, string, `0400000US53`)
-    
-        ID of the entity.
-
-    + entity_name (optional, string, `washington`)
-
-        Name of the entity.
-    
-    + entity_type (optional, string, `region.state`)
-    
-        Type of the entity.
-
-    + app_token (optional, string)
-
-        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
-
-
-### Get Entities [GET]
-
-+ Request
-
-    Find the ID of Washington state.
-
-    - Parameters
-        - entity_name: washington
-        - entity_type: region.state
-
-    - Headers
-
-            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
-            
-+ Response 200 (application/json)
-
-        {
-            "entities": [
-                {
-                    "id": "0400000US53",
-                    "name": "Washington",
-                    "type": "region.state"
-                }
-            ]
         }
