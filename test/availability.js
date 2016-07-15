@@ -174,7 +174,7 @@ describe('/data/v1/availability', () => {
                 });
             });
 
-            return Promise.all(variableURLs.map(get));
+            return Promise.all(variableURLs.slice(0, 1).map(get));
         }).then(responses => {
             responses.forEach(response => {
                 expect(response).to.have.status(200);
