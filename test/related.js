@@ -4,7 +4,7 @@ const get = chakram.get;
 const expect = chakram.expect;
 
 function related(path) {
-    return get(`http://localhost:3001/related/v1/${path}`);
+    return get(`http://localhost:3001/entity/v1/${path}`);
 }
 
 const relatedSchema = {
@@ -41,7 +41,7 @@ const relatedSchema = {
     required: ['relatives']
 };
 
-describe('/related/v1', () => {
+describe('/entity/v1/related', () => {
     it('should require id', () => {
         return expect(related('parent')).to.have.status(422);
     });
