@@ -156,5 +156,9 @@ class Sources {
     }
 }
 
-module.exports = Sources.fromFile('data/sources.json', 'data/attributions.json');
+function path(relative) {
+    return `${__dirname}/${relative}`;
+}
+
+module.exports = Sources.fromFile(path('../data/sources.json'), path('../data/attributions.json'));
 
