@@ -155,30 +155,70 @@ Now, you should be able to render maps of the new entity type.
 
 ### Update [Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
 
+The [ODN Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
+lets us quickly figure out which variables are available for a given entity.
+
+For example,
+
+```csv
+id,variable
+0400000US53,demographics.population.count
+```
+
+From this, we know that the `demographics.population.count` variable
+is available for the entity `04000000US53` (Washington State).
+To update this dataset, you must first create a source declaration.
+
 #### Add Source Declaration
 
-After you have uploaded a dataset to Socrata you can write a declaration for it.
-Source declarations are stored in
-[`/data/sources.json`](https://github.com/socrata/odn-backend/blob/0f4689f1cb5592f74aeca7539e33bb2e4d8e9a6c/data/sources.json).
+Source declarations tell the ODN how to categorize, name, and locate each dataset.
+They also tell the ODN which variables are in the dataset.
 
-Topics are at the top level of the source tree.
-Try to find a topic that fits your dataset or create your own.
+All source declarations are stored in [`/data/sources.json`](https://github.com/socrata/odn-backend/blob/0f4689f1cb5592f74aeca7539e33bb2e4d8e9a6c/data/sources.json).
 
-Each node in the tree may optionally specify a `name`.
+The first level of declarations are topics.
+These are broad groupings of datasets like `demographics`, `education`, and `crime`.
+Each topic contains many datasets.
 
-Next, add your dataset to the list of datasets in the topic.
-Each dataset requires the following fields:
+Each dataset represents a Socrata dataset.
+Datasets must contain the following properties:
  - `fxf`: NBE ID of the dataset.
  - `domain`: Defaults to `odn.data.socrata.com`.
  - `sources`: List of source of the data. Must be one of the sources listed [`/data/attributions.json`](https://github.com/socrata/odn-backend/blob/0f4689f1cb5592f74aeca7539e33bb2e4d8e9a6c/data/attributions.json)
  - `searchTerms`: List of terms to use when searching for datasets related to this one.
 
-Next, list out all of the variables in your dataset.
+Each dataset must also contain a list of variables.
 You can use a SOQL `$group` query to get all of the variables in a dataset.
 For example, to get all of the variables in the [ODN Population dataset](https://odn.data.socrata.com/resource/9jg8-ki9x.json?$group=variable&$select=variable).
-Give each variable a `name` or one will be inferred automatically.
 Each variable may also specify a format type.
 The current format types are `number` (default), `percent`, `dollar`, and `rank`.
+
+For example, this is the source declaration for the `demographics.population` dataset:
+
+```json
+{
+    "demographics": {
+        "datasets": {
+            "population": {
+                "fxf": "9jg8-ki9x",
+                "constraints": ["year"],
+                "variables": {
+                    "count": {"name": "population"},
+                    "change": {
+                        "name": "annual population change",
+                        "description": "Percent change from the previous year",
+                        "type": "percent"
+                    }
+                },
+                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
+                "sources": ["acs"]
+            }
+        }
+    }
+}
+```
+
+#### Generate Variables
 
 After adding the source declaration, use the use the
 [`variables.sh`](https://github.com/socrata/odn-backend/blob/424ee5c4ef8af6a63ec5ee93663a1749546dc191/data/process/variables.sh)
@@ -190,7 +230,7 @@ Usage: variables.js {datasetID} {outputFile}
 ```
 
 For example, if we want to get the variables for the `demographics.population`
-dataset and output them to `population-variables.csv`:
+dataset dataset and output them to `population-variables.csv`:
 
 ```sh
 % ./variables.sh demographics.population population-variables.csv
