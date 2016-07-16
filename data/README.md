@@ -8,21 +8,40 @@ Scripts for loading data into the ODN.
 ### Format
 
 First, the dataset must be transformed into a format the the ODN can use.
-Each row in the dataset contains an entity and a single value.
+Each row in the dataset contains an entity, variable, value, and a set of constraints.
 
-#### ID
+Every dataset must have the following columns:
+ - `id`: Entity ID (`0400000US53`)
+ - `type`: Entity type. (`region.state`)
+ - `variable`: Variable ID. (`population`)
+ - `value`: Value of the variable for the entity. (`6919450`)
 
-The `id` column is the unique ID of the entity.
+A `name` column can also be included, however since this is already available
+in the ODN Entities dataset it is not necessary.
 
+Other columns may be added to specify dataset constraints..
+For example, if we had a dataset containing population by year,
+we would use `population` as the variable and add a constraint
+column called `year`. The dataset would look like this:
 
+```csv
+id,name,type,year,variable,value
+0400000US53,Washington,region.state,2014,population,6919450
+0400000US53,Washington,region.state,2015,population,6970450
+0400000US53,Washington,region.state,2016,population,7023970
+```
 
- - id: ID of the entity. Required for all datasets.
- - type: Type of the entity. Some legacy datasets exclude the `region` prefix
-    on types, but it should be included on all new datasets.
-    Note that `type` is only used for generating summary statistics for
-    maps. It is not necessary for 
-  
-Take the dataset and get it in ODN format.
+You can include any number of constraint columns,
+For example, the occupation dataset has `occupation` and `year` constraints:
+
+```csv
+id,name,type,year,occupation,variable,value
+0400000US53,Washington,region.state,Farming,2014,count,6346
+0400000US53,Washington,region.state,Farming,2015,count,6330
+0400000US53,Washington,region.state,Farming,2016,count,6290
+```
+
+This schema is preferable to having a separate variable for each occupation or year.
 
 ### Upload
 
@@ -73,48 +92,72 @@ Providing a rank is optional but encouraged.
 
 ### Adding Entities
 
+First, create a local CSV file containing a list of the new entities.
+For example, if we wanted to add Canada to the ODN:
+
+```csv
+id,name,type,rank
+CA,Canada,region.nation,35100000
+CABC,British Columbia,region.province,4631000
+...
+```
+
 #### Update [Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m)
 
-Add 
+Append your entity CSV file to the [ODN Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m) dataset.
 
 #### Update [Relations](https://dev.socrata.com/foundry/odn.data.socrata.com/dc4t-zwj5)
 
-The relations dataset contains parent-child relations between entities.
+If the new entities are hierarchically related to each other,
+update the [ODN Relations](https://dev.socrata.com/foundry/odn.data.socrata.com/dc4t-zwj5) dataset.
+This dataset contains parent-child relations between entities
+from which sibling relationships can be inferred.
 It is used for the `/related` endpoint.
+
+To add Canada as a parent of B.C., we would add the following line to the relations dataset:
+
+```
+parent_id,parent_name,parent_type,parent_rank,child_id,child_name,child_type,child_rank
+CA,Canada,region.nation,35100000,CABC,British Columbia,region.province,4631000
+```
 
 #### Update [Suggest]()
 
+TODO: Write a script that takes entities dataset and generates autosuggest dataset.
 
 #### Update Geographies
 
-If you added any geographical entities.
+If you added any geographical entities that you want to be able to map,
+you must find and upload geography files.
 
-Try to find the highest resolution shapefiles that you can.
-Currently all data is that the 1:500,000 scale.
-Geometries are simplified on demand so this will not strain the client.
+First, try to find the highest resolution shapefiles that you can.
+Currently all data from the [Census](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html)
+is that the 1:500,000 scale.
 
-For example, [this dataset](https://dev.socrata.com/foundry/odn.data.socrata.com/rmqq-dzu4)
-contains GeoJSON for the `region.place` entity type.
-Each GeoJSON object should contain the `id`, `name`, and `type`
-of the entity that it is associated with.
+Next, transform the source files into GeoJSON.
+[`ogr2ogr`](http://www.gdal.org/ogr2ogr.html) can help with this.
 
+Then, map each GeoJSON feature to an ODN Entity by adding `id`, `name`, `type`.
+If there are too many features to map at once (>1000),
+you should include a `rank` property that will be used to 
+prioritize which entities are displayed.
+A higher rank denotes higher priority.
 
+Now, upload the geographical dataset to Socrata.
 
-For types like `region.place` and `region.zip_code` where there are too many entities
-to display at once, you can include a `rank` property to control which entities
-have priority. Both `region.place` and `region.zip_code` are ranked by land area.
-Once you have uploaded the GeoJSON to Socrata, you can update
-[`Constants.GEO_URLS`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L13)
-with a link to the new dataset.
-If the new entity is ranked, add it to
+Once the upload is done, get a link to the new dataset and update
+[`Constants.GEO_URLS`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L13).
+
+If you added a `rank` property, add the entity type to 
 [`Constants.GEO_RANKED`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L23).
+
+Now, you should be able to render maps of the new entity type.
 
 ### Update [Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
 
 #### Add Source Declaration
 
-After you have uploaded a dataset to Socrata,
-you can write a declaration for it.
+After you have uploaded a dataset to Socrata you can write a declaration for it.
 Source declarations are stored in
 [`/data/sources.json`](https://github.com/socrata/odn-backend/blob/0f4689f1cb5592f74aeca7539e33bb2e4d8e9a6c/data/sources.json).
 
@@ -128,7 +171,7 @@ Each dataset requires the following fields:
  - `fxf`: NBE ID of the dataset.
  - `domain`: Defaults to `odn.data.socrata.com`.
  - `sources`: List of source of the data. Must be one of the sources listed [`/data/attributions.json`](https://github.com/socrata/odn-backend/blob/0f4689f1cb5592f74aeca7539e33bb2e4d8e9a6c/data/attributions.json)
-- `searchTerms`: List of terms to use when searching for datasets related to this one.
+ - `searchTerms`: List of terms to use when searching for datasets related to this one.
 
 Next, list out all of the variables in your dataset.
 You can use a SOQL `$group` query to get all of the variables in a dataset.
@@ -137,14 +180,13 @@ Give each variable a `name` or one will be inferred automatically.
 Each variable may also specify a format type.
 The current format types are `number` (default), `percent`, `dollar`, and `rank`.
 
-
 After adding the source declaration, use the use the
 [`variables.sh`](https://github.com/socrata/odn-backend/blob/424ee5c4ef8af6a63ec5ee93663a1749546dc191/data/process/variables.sh)
 script to extract all of the variables from the dataset.
 
 ```sh
 % ./variables.sh
-Usage: variables.js {declarationFile} {datasetID} {outputFile}
+Usage: variables.js {datasetID} {outputFile}
 ```
 
 For example, if we want to get the variables for the `demographics.population`
