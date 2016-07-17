@@ -121,9 +121,30 @@ parent_id,parent_name,parent_type,parent_rank,child_id,child_name,child_type,chi
 CA,Canada,region.nation,35100000,CABC,British Columbia,region.province,4631000
 ```
 
-#### Update [Suggest]()
+#### Update [Suggest](https://dev.socrata.com/foundry/odn.data.socrata.com/28uu-xzwf)
 
-TODO: Write a script that takes entities dataset and generates autosuggest dataset.
+Update the [ODN Suggest Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/28uu-xzwf) dataset
+with the new entities.
+
+Use the `/data/process/suggest-entity.js` script to generate autosuggest data.
+
+```
+$ node suggest-entity.js
+Usage: suggest-entity.js {entityPath} {outputPath}
+  entityPath - path to a CSV file containing entities to process
+  outputPath - path to a CSV file to output autosuggest
+```
+
+For example, if your new entities are in `entities.csv` and you want to
+output autosuggest data to `entities-autosuggest.csv`:
+
+```
+$ node suggest-entity.js entities.csv entities-autosuggest.csv
+```
+
+Then, take `entities-autosuggest.csv` and append it to the
+[ODN Suggest Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/28uu-xzwf) dataset.
+The autosuggest index may take some time to update.
 
 #### Update Geographies
 
@@ -139,7 +160,7 @@ Next, transform the source files into GeoJSON.
 
 Then, map each GeoJSON feature to an ODN Entity by adding `id`, `name`, `type`.
 If there are too many features to map at once (>1000),
-you should include a `rank` property that will be used to 
+you should include a `rank` property that will be used to
 prioritize which entities are displayed.
 A higher rank denotes higher priority.
 
@@ -148,7 +169,7 @@ Now, upload the geographical dataset to Socrata.
 Once the upload is done, get a link to the new dataset and update
 [`Constants.GEO_URLS`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L13).
 
-If you added a `rank` property, add the entity type to 
+If you added a `rank` property, add the entity type to
 [`Constants.GEO_RANKED`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L23).
 
 Now, you should be able to render maps of the new entity type.

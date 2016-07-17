@@ -8,15 +8,15 @@ const Sources = require('../app/sources');
 const declarations = {
     entity: {
         domain: Constants.ODN_DATA_DOMAIN,
-        fxf: '68ht-6puw',
-        column: 'all',
-        encoded: ['id', 'type', 'population'],
-        sort: option => -parseFloat(option.fields.population),
+        fxf: '28uu-xzwf',
+        column: 'name',
+        encoded: ['id', 'type', 'rank'],
+        sort: option => -parseFloat(option.fields.rank),
         transform: option => {
             return {
                 id: option.fields.id,
                 name: option.text,
-                type: `region.${option.fields.type}`
+                type: option.fields.type
             };
         }
     },
