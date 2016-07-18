@@ -91,7 +91,7 @@ function getData(dataset, constraints, ids) {
 
     const url = Request.buildURL(dataset.url, _.assign({
         variable: _.last(variable.id.split('.')),
-        $where: whereIn('id', ids),
+        $where: Request.whereIn('id', ids),
         $select: 'id,value'
     }, constraints));
 
@@ -114,14 +114,6 @@ function chunkIDs(ids, maximumLength) {
             return group;
         }
     }).values().value();
-}
-
-function whereIn(name, options) {
-    return `${name} in (${options.map(quote).join(',')})`;
-}
-
-function quote(string) {
-    return `'${string}'`;
 }
 
 function getGeodataChunked(entityType, zoomLevel, idGroups) {
@@ -152,7 +144,7 @@ function getGeodata(entityType, zoomLevel, ids) {
     const simplificationAmount = Math.pow(1/2, zoomLevel);
 
     const url = Request.buildURL(`${getGeoURL(entityType)}.geojson`, {
-        $where: whereIn('id', ids),
+        $where: Request.whereIn('id', ids),
         $select: `id,name,${simplify('the_geom', simplificationAmount)}`
     });
 

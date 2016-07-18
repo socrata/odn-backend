@@ -225,17 +225,9 @@ function getValuesURL(dataset, constraints, entities, unspecified) {
     return Promise.resolve(url);
 }
 
-function quote(string) {
-    return `'${string}'`;
-}
-
-function whereIn(name, options) {
-    return `${name} in (${options.map(quote).join(',')})`;
-}
-
 function whereEntities(entities) {
     if (entities.length === 0) return [];
-    return whereIn('id', entities.map(_.property('id')));
+    return Request.whereIn('id', entities.map(_.property('id')));
 }
 
 function variableID(variable) {
@@ -244,7 +236,6 @@ function variableID(variable) {
 
 function whereVariables(variables) {
     if (variables.length === 0) return [];
-    return whereIn('variable', variables.map(variableID));
-
+    return Request.whereIn('variable', variables.map(variableID));
 }
 

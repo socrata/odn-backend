@@ -49,7 +49,7 @@ function getSessionID(dataset, constraints, entityType, entities) {
 function getBoundingBox(entities, entityType) {
     const ids = entities.map(_.property('id'));
     const url = Request.buildURL(`${Constants.GEO_URLS[entityType]}.json`, {
-        $where: whereIn('id', ids),
+        $where: Request.whereIn('id', ids),
         $select: 'extent(the_geom)'
     });
 
@@ -90,14 +90,6 @@ function getSummaryStatistics(dataset, constraints, entityType) {
         response = _.mapValues(response, parseFloat);
         return Promise.resolve(response);
     });
-}
-
-function whereIn(name, options) {
-    return `${name} in (${options.map(quote).join(',')})`;
-}
-
-function quote(string) {
-    return `'${string}'`;
 }
 
 function getEntities(request) {
