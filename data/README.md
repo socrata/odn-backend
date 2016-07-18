@@ -1,14 +1,19 @@
 
 # Data
 
-Scripts for loading data into the ODN.
+Loading data into the ODN.
 
 ## Adding Data
 
+First, [format](#format) the data and [upload](#upload) it to Socrata.
+If there are new entities, [update the entities dataset](#update-entities).
+Then, [update the variables dataset](#update-variables)
+and [deploy your changes](#deploy-changes).
+
 ### Format
 
-First, the dataset must be transformed into a format the the ODN can use.
-Each row in the dataset contains an entity, variable, value, and a set of constraints.
+First, the dataset must be transformed into a format that the ODN can use.
+Each row in the dataset must contain an entity, variable, value, and a set of constraints.
 
 Every dataset must have the following columns:
  - `id`: Entity ID (`0400000US53`)
@@ -19,7 +24,7 @@ Every dataset must have the following columns:
 A `name` column can also be included, however since this is already available
 in the ODN Entities dataset it is not necessary.
 
-Other columns may be added to specify dataset constraints..
+Other columns may be added to specify constraints.
 For example, if we had a dataset containing population by year,
 we would use `population` as the variable and add a constraint
 column called `year`. The dataset would look like this:
@@ -31,7 +36,7 @@ id,name,type,year,variable,value
 0400000US53,Washington,region.state,2016,population,7023970
 ```
 
-You can include any number of constraint columns,
+Each dataset can have any number of constraint columns.
 For example, the occupation dataset has `occupation` and `year` constraints:
 
 ```csv
@@ -41,40 +46,34 @@ id,name,type,year,occupation,variable,value
 0400000US53,Washington,region.state,Farming,2016,count,6290
 ```
 
-This schema is preferable to having a separate variable for each occupation or year.
-
 ### Upload
 
-Upload the dataset to Socrata. Preferably `odn.data.socrata.com`.
-Make public.
-
-### Write Data Source Declaration
-
-Write declaration in `sources.json`.
+Once the dataset is in the proper format, upload it to Socrata.
+Make sure that the dataset is public.
 
 ### Update Entities
 
-
-### Entities
-
-A listing of all entities is stored in the
+If the new dataset contains new entities, you must update the
 [ODN Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m)
-dataset.
-Each entity has an id, name, type, and rank associated with it.
+dataset with information about the new entities.
 
-#### ID
+#### Entity Attributes
+
+Each entity has an id, name, type, and rank.
+
+##### ID
 
 The id of an entity is a string that identifies it.
 No two entities may have the same id.
 Entity IDs may contain only numbers and letters with no
 punctuation or whitespace.
 
-#### Name
+##### Name
 
 Each entity has a human-readable name associated with it.
 This can be any string.
 
-#### Type
+##### Type
 
 The type of an entity is used to determine whether or not
 two entities are comparable. There is a hierarchy of entity types
@@ -82,7 +81,7 @@ with levels in the hierarchy separated by `.`.
 For example, all geographical types are grouped under `region`
 so the type of a county is `region.county`.
 
-#### Rank
+##### Rank
 
 The rank of an entity denotes its importance compared to all
 other entities with the same type.
@@ -90,7 +89,7 @@ For example, regions are ranked by population.
 A higher rank means that the entity is more important.
 Providing a rank is optional but encouraged.
 
-### Adding Entities
+#### Adding Entities
 
 First, create a local CSV file containing a list of the new entities.
 For example, if we wanted to add Canada to the ODN:
@@ -277,3 +276,15 @@ dataset.
 The simplest way to do this is using
 [Datasync](https://socrata.github.io/datasync/).
 Remember to use the OBE FXF of the ODN Variables dataset.
+
+### Deploy Changes
+
+After adding a new dataset, verify that it works.
+Start the server locally and check that the new data shows up in `/data/v1/availability`.
+Run all unit tests using `npm test` to make sure that nothing broke.
+
+Once you have verified your changes, check out a new branch
+using `git checkout -b {branch name}`. Then, push your branch to GitHub using
+`git push origin {branch name}`. Finally, open a pull request and ping
+Lane Aasen for review.
+

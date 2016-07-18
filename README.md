@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/socrata/odn-backend.svg?branch=master)](https://travis-ci.org/socrata/odn-backend)
 
 A REST API for the Open Data Network.
+Available at [odn-backend.herokuapp.com](http://odn-backend.herokuapp.com).
 
 ## Documentation
 
@@ -23,18 +24,14 @@ It will automatically restart when the source is changed.
 
 ### Tests
 
-REST API tests are written using [Chakram](https://github.com/dareid/chakram).
+REST API tests are written using [Chakram](https://github.com/dareid/chakram)
+and run with [Mocha](https://mochajs.org/).
 They are available in the `test` directory.
-Run tests using `npm run test`.
+Run tests using `npm test` or `mocha`.
 
-#### Running Tests before Committing
-
-The `pre-commit.sh` script will make sure that all unit tests succeed before
-every commit. To install it, run:
-
-```sh
-ln -s -f ../../pre-commit.sh .git/hooks/pre-commit
-```
+Sometimes, running tests will trigger a webserver restart which
+will then cause many tests to fail.
+If this happens, start the server using `node app.js`.
 
 ### Deployment
 
@@ -57,6 +54,17 @@ Integration tests are run to check each deployment using
 [Travis CI](https://travis-ci.org/socrata/odn-backend).
 These tests must pass for the deployment to succeed.
 
+#### Running Tests before Committing
+
+Since all tests must pass for a deployment to succeed,
+it is a good idea to run unit tests locally before pushing to GitHub.
+The `pre-commit.sh` script will make sure that all unit tests succeed before
+every commit. To install it, run:
+
+```sh
+ln -s -f ../../pre-commit.sh .git/hooks/pre-commit
+```
+
 ### Logging
 
 All Heroku logs are forwarded to [Sumo Logic](https://www.sumologic.com/).
@@ -64,32 +72,21 @@ This includes basic information for each request,
 as well as detailed stack traces for all exceptions and 500s.
 Search with `_source=odn_api_heroku` to see all of the logs.
 
+Use the [Sumo dashboard](https://service.sumologic.com/ui/dashboard.html?f=76263689&t=r)
+for an overview of how the service is performing.
+For access to this dashboard, use the Socrata Sumo account.
+
 ### Monitoring
 
-There is a [Pingdom alert](https://my.pingdom.com/reports/uptime#check=2202319)
-that checks to make sure production is up.
+There are several Pingdom alerts that monitor the service:
+ - [/data/v1/availability](https://my.pingdom.com/reports/uptime#check=2210560)
+ - [/data/v1/constraint](https://my.pingdom.com/reports/uptime#check=2210566)
+ - [/entity/v1](https://my.pingdom.com/reports/uptime#check=2202319)
 
-It will email Chris, Deep, Lane, and Tosh if the API is down.
+Pingdom will alert Chris, Deep, Lane, and Tosh if the API is down.
 Once apps are built around the ODN API, alerts will be sent to on call.
 
-## Datasets
+## Adding Data to the ODN
 
-The ODN REST API is backed by a series of Socrata datasets.
-
-### [Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m)
-
-The entities dataset contains a list of all entities in the ODN.
-Each entity has the following properties:
- - id: unique alphanumeric id
- - name: canonical name of the entity
- - type: hierarchical type of the entity (e.g. region.nation)
-
-### [Relations](https://dev.socrata.com/foundry/odn.data.socrata.com/dc4t-zwj5)
-
-The relations dataset contains parent-child relations between entities.
-Each row containsa parent entity and a child entity with an additional
-rank field for each entity that is used for sorting results.
-The higher the rank, the more important the entity.
-While the rank field is not required, it is very useful and should
-be included.
+See [`/data`](/data) for information on adding data to the ODN.
 
