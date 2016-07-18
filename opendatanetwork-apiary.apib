@@ -18,6 +18,157 @@ Registering for and including a [Socrata application token](https://dev.socrata.
 grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter
 or the `X-App-Token` HTTP header.
 
+## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}]
+
+Suggests entities like geographical regions, questions, datasets, publishers and categories
+that match the given query prefix or full phrase. Useful for building autosuggest style query 
+interaction where suggestions are provided as a user types.
+
++ Parameters
+    + type (required, string, `entity`)
+
+        Type of the object to find.
+
+        + Values
+            + `entity`
+            + `category`
+            + `publisher`
+            + `dataset`
+            + `question`
+
+    + query (required, string, `seattl`)
+
+        Query to match.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 0 to 100.
+
+        + Default: `5`
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get suggestions [GET]
+
++ Request
+
+    Suggest entities that match "seattl".
+
+    - Parameters
+        - type: entity
+        - query: seattl
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+
++ Response 200 (application/json)
+
+        {
+            "options": [
+                {
+                    "id": "310M200US42660",
+                    "name": "Seattle Metro Area (WA)",
+                    "type": "regions.msa"
+                },
+                {
+                    "id": "1600000US5363000",
+                    "name": "Seattle, WA",
+                    "type": "regions.place"
+                }
+            ]
+        }
+        
+        
+## Search [/search/v1/dataset{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+
+Search for datasets related to an ODN dataset or set of entities.
+
++ Parameters
+
+    + entity_id (optional, string, `0100000US`)
+    
+        Entities to use in formulating the query.
+        
+    + dataset_id (optional, string, `demographics.population`)
+    
+        If included, the search terms of the dataset 
+        will be used in the query.
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 0 to 50000.
+
+        + Default: `10`
+        
+    + offset (optional, number)
+    
+        Number of results to skip.
+        Used for pagination.
+        
+        + Default: `0`
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get search results [GET]
+
++ Request
+
+    Search for datasets about health and Seattle.
+
+    - Parameters
+        - dataset_id: health.health
+        - entity_id: 1600000US5363000
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+
++ Response 200 (application/json)
+
+
+        {
+          "datasets":[
+            {
+              "name":"Big Cities Health Data Inventory",
+              "description":"This dataset illustrates health status of 26 of the nation’s largest and most urban cities as captured by 34 health (and six demographics-related) indicators. These indicators represent some of the leading causes of morbidity and mortality in the United States and leading priorities of national, state, and local health agencies. Public health data were captured in nine overarching categories: HIV/AIDS, cancer, nutrition/physical activity/obesity, food safety, infectious disease, maternal and child health, tobacco, injury/violence, and behavioral health/substance abuse.",
+              "attribution":"The Big Cities Health Coalition",
+              "domain":"bchi.bigcitieshealth.org",
+              "domain_url":"http://bchi.bigcitieshealth.org",
+              "dataset_url":"https://bchi.bigcitieshealth.org/d/rwyf-6cby",
+              "dev_docs_url":"https://dev.socrata.com/foundry/bchi.bigcitieshealth.org/ffnx-yiyc",
+              "updated_at":"2016-06-27T19:10:04.000Z",
+              "created_at":"2015-09-01T19:23:15.000Z",
+              "categories":[
+                "education",
+                "health"
+              ]
+            },
+            {
+              "name":"King County Health Reform Indicators",
+              "description":"Health reporting area (HRA) and zip code-level indicators for monitoring the impact of the Affordable Care Act in King County, WA. Topic areas range from access to care to population health. Imported to Socrata to allow data to be pulled as JSON from SODA to feed into Leaflet.js-based maps on an external site.",
+              "attribution":"Public Health - Seattle & King County",
+              "domain":"data.kingcounty.gov",
+              "domain_url":"http://data.kingcounty.gov",
+              "dataset_url":"https://data.kingcounty.gov/d/ajpg-dges",
+              "dev_docs_url":"https://dev.socrata.com/foundry/data.kingcounty.gov/t34p-gkbv",
+              "updated_at":"2014-12-17T00:09:12.000Z",
+              "created_at":"2014-03-06T23:17:51.000Z",
+              "categories":[
+                "health"
+              ]
+            }
+          ]
+        }
+        
 ## Entity Lookup [/entity/v1{?entity_id}{?entity_name}{?entity_type}{?app_token}]
 
 Find all entities that match the given constraints.
@@ -541,155 +692,4 @@ regions like states, counties, cities, or zip codes.
                     }
                 ]
             }
-        }
-        
-## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}]
-
-Suggests entities like geographical regions, questions, datasets, publishers and categories
-that match the given query prefix or full phrase. Useful for building autosuggest style query 
-interaction where suggestions are provided as a user types.
-
-+ Parameters
-    + type (required, string, `entity`)
-
-        Type of the object to find.
-
-        + Values
-            + `entity`
-            + `category`
-            + `publisher`
-            + `dataset`
-            + `question`
-
-    + query (required, string, `seattl`)
-
-        Query to match.
-
-    + limit (optional, number)
-
-        Maximum number of results to return.
-        Must be an integer from 0 to 100.
-
-        + Default: `5`
-
-    + app_token (optional, string)
-
-        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
-
-### Get suggestions [GET]
-
-+ Request
-
-    Suggest entities that match "seattl".
-
-    - Parameters
-        - type: entity
-        - query: seattl
-
-    - Headers
-
-            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
-
-+ Response 200 (application/json)
-
-        {
-            "options": [
-                {
-                    "id": "310M200US42660",
-                    "name": "Seattle Metro Area (WA)",
-                    "type": "regions.msa"
-                },
-                {
-                    "id": "1600000US5363000",
-                    "name": "Seattle, WA",
-                    "type": "regions.place"
-                }
-            ]
-        }
-        
-        
-## Search [/search/v1/dataset{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
-
-Search for datasets related to an ODN dataset or set of entities.
-
-+ Parameters
-
-    + entity_id (optional, string, `0100000US`)
-    
-        Entities to use in formulating the query.
-        
-    + dataset_id (optional, string, `demographics.population`)
-    
-        If included, the search terms of the dataset 
-        will be used in the query.
-
-    + limit (optional, number)
-
-        Maximum number of results to return.
-        Must be an integer from 0 to 50000.
-
-        + Default: `10`
-        
-    + offset (optional, number)
-    
-        Number of results to skip.
-        Used for pagination.
-        
-        + Default: `0`
-
-    + app_token (optional, string)
-
-        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
-
-### Get search results [GET]
-
-+ Request
-
-    Search for datasets about health and Seattle.
-
-    - Parameters
-        - dataset_id: health.health
-        - entity_id: 1600000US5363000
-
-    - Headers
-
-            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
-
-+ Response 200 (application/json)
-
-
-        {
-          "datasets":[
-            {
-              "name":"Big Cities Health Data Inventory",
-              "description":"This dataset illustrates health status of 26 of the nation’s largest and most urban cities as captured by 34 health (and six demographics-related) indicators. These indicators represent some of the leading causes of morbidity and mortality in the United States and leading priorities of national, state, and local health agencies. Public health data were captured in nine overarching categories: HIV/AIDS, cancer, nutrition/physical activity/obesity, food safety, infectious disease, maternal and child health, tobacco, injury/violence, and behavioral health/substance abuse.",
-              "attribution":"The Big Cities Health Coalition",
-              "domain":"bchi.bigcitieshealth.org",
-              "domain_url":"http://bchi.bigcitieshealth.org",
-              "dataset_url":"https://bchi.bigcitieshealth.org/d/rwyf-6cby",
-              "dev_docs_url":"https://dev.socrata.com/foundry/bchi.bigcitieshealth.org/ffnx-yiyc",
-              "updated_at":"2016-06-27T19:10:04.000Z",
-              "created_at":"2015-09-01T19:23:15.000Z",
-              "categories":[
-                "education",
-                "health"
-              ]
-            },
-            {
-              "name":"King County Health Reform Indicators",
-              "description":"Health reporting area (HRA) and zip code-level indicators for monitoring the impact of the Affordable Care Act in King County, WA. Topic areas range from access to care to population health. Imported to Socrata to allow data to be pulled as JSON from SODA to feed into Leaflet.js-based maps on an external site.",
-              "attribution":"Public Health - Seattle & King County",
-              "domain":"data.kingcounty.gov",
-              "domain_url":"http://data.kingcounty.gov",
-              "dataset_url":"https://data.kingcounty.gov/d/ajpg-dges",
-              "dev_docs_url":"https://dev.socrata.com/foundry/data.kingcounty.gov/t34p-gkbv",
-              "updated_at":"2014-12-17T00:09:12.000Z",
-              "created_at":"2014-03-06T23:17:51.000Z",
-              "categories":[
-                "health"
-              ]
-            }
-          ]
         }
