@@ -35,23 +35,17 @@ module.exports = (request, response) => {
         const constraints = _.omit(request.query, ['entity_id', 'constraint']);
 
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
-            const params = _.assign({
-                '$group': constraint,
-                '$select': constraint,
-                '$order': `${constraint} ASC`
-            }, constraints);
+            const url = Request.buildURL(dataset.url, _.assign({
+                $where: getIDs(entities),
+                $group: constraint,
+                $select: constraint,
+                $order: `${constraint} ASC`
+            }, constraints));
 
-            const url = `${variable.url}&${querystring.stringify(params)}`;
             Request.getJSON(url).then(json => {
                 const options = json.map(option => {
-                    const value = option[constraint];
-                    const params = _.assign({
-                        [constraint]: value,
-                    }, constraints);
-
                     return {
-                        constraint_value: value,
-                        constraint_url: `${variable.url}&${querystring.stringify(params)}`
+                        constraint_value: option[constraint]
                     };
                 });
 
@@ -60,4 +54,9 @@ module.exports = (request, response) => {
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
+
+function getIDs(entities) {
+    const entityIDs = entities.map(entity => entity.id);
+    return `id in(${entityIDs.map(id => `'${id}'`).join(',')})`;
+}
 

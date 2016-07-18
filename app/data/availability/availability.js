@@ -22,15 +22,6 @@ class Availability {
 
         if (_.isNil(topics)) return null;
 
-        topics = Sources.mapVariables(topics, (variable, id, parents) => {
-            const dataset = _.last(parents);
-            const url = Request.buildURL(dataset.url, {
-                'variable': _.last(variable.id.split('.')),
-                '$where': getIDs(entities)
-            });
-            return _.assign(variable, {url});
-        });
-
         topics = Sources.mapDatasets(topics, dataset => {
             return _.omit(dataset, 'searchTerms');
         });
