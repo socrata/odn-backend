@@ -29,6 +29,8 @@ function validateRequest(request) {
 }
 
 function relationPromise(entity, relation, n) {
+    relation = relation.toLowerCase();
+
     if (relation === 'parent') {
         return Relatives.parents(entity, n);
     } else if (relation === 'child') {
