@@ -1,4 +1,5 @@
 
+const _ = require('lodash');
 const chakram = require('chakram');
 const get = chakram.get;
 const expect = chakram.expect;
@@ -37,6 +38,23 @@ describe('/suggest/v1', () => {
 
     it('should accept an empty query', () => {
         return expect(suggest('entity?query=')).to.have.status(200);
+    });
+
+    it('should have case insensitive data types', () => {
+        return Promise.all([suggest('entity?query=seattle'),
+                            suggest('ENTITY?query=seattle'),
+                            suggest('eNtItY?query=seattle')]).then(responses => {
+
+            responses.forEach(response => {
+                expect(response).to.have.status(200);
+                expect(response).to.have.schema(entitySchema);
+            });
+
+            const control = responses[0].body;
+            _.tail(responses).forEach(response => {
+                expect(response.body).to.deep.equal(control);
+            });
+        });
     });
 
     it('should find entity suggestions for seattle', () => {
