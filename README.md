@@ -16,6 +16,12 @@ After cloning the repository and downloading node,
 simply run `npm install` from within the project directory
 to install all dependencies.
 
+### Memcached
+
+The ODN backend uses [memcached](https://memcached.org/)
+to cache responses from the Socrata backend and store map sessions.
+To install memcached on a mac, use `brew install memcached`.
+
 ### Server
 
 Use `npm run server` to start the development
