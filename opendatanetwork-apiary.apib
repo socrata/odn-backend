@@ -76,22 +76,8 @@ and that it is up to the client to decide which one is the best fit.
 
 Find entities that are related to one another.
 
-The current hierarchy of entities is listed below,
-where "a > b" means that a is a parent of b.
-Note that some entities, like metropolitan areas, may have multiple parents.
-For example, the New York metropolitan area lies within the states of New York,
-New Jersey, and Pennsylvania.
-
-```
-nation > region
-region > division
-division > state
-state > county
-state > msa
-state > place
-```
-
-TODO: update with link to relation file on odn-backend when available
+Region relations are specified in
+[`Constants.TYPE_RELATIONS`](https://github.com/socrata/odn-backend/blob/1d782093dba3e9f98ac9bc7edfac32be915aa81b/app/constants.js#L40).
 
 Entities are grouped by type and sorted in descending order by their rank.
 For example, region entities are sorted in descending order by population.
