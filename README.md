@@ -52,7 +52,15 @@ There should be no need to manually deploy to Heroku,
 but if you do, make sure that `master` stays in sync with what is
 on Heroku.
 
-Email `lane.aasen@socrata.com` for Heroku access.
+Check LastPass for Heroku access.
+
+#### MemJS
+
+The ODN uses the Heroku [MemJS](https://github.com/alevy/memjs) add-on
+for memcached.
+The cache is flushed on each deploy to avoid synchronization conflicts.
+Make sure to the `NODE_ENV` environmental variable to `production`
+on every Heroku dyno so that the cache knows to flush itself.
 
 #### Integration Tests
 

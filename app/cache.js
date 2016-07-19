@@ -12,10 +12,27 @@ const Exception = require('./error');
 const noCache = new Exception('cache not set up', 500);
 const miss = key => new Exception(`cache miss: ${key}`, 500);
 
-
 class Cache {
     constructor(configString, options) {
         this.client = memjs.Client.create(configString, options);
+
+        this.flushOnStart();
+    }
+
+    /**
+     * Flushes the cache if in production to prevent stale data.
+     */
+    flushOnStart() {
+        const env = process.env.NODE_ENV || 'development';
+        if (env === 'production') this.flush();
+    }
+
+    flush() {
+        if (_.isNil(this.client)) return;
+
+        this.client.flush(error => {
+            if (!_.isNil(error)) console.error(`error flushing cache: ${error}`);
+        });
     }
 
     /**
