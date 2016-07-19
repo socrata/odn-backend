@@ -63,14 +63,6 @@ class Request {
         const paramString = querystring.stringify(validParams);
         return `${path}${path[path.length - 1] == '?' ? '' : '?'}${paramString}`;
     }
-
-    static whereIn(name, options) {
-        return `${name} in (${options.map(quote).join(',')})`;
-    }
-}
-
-function quote(string) {
-    return `'${string}'`;
 }
 
 module.exports = Request;

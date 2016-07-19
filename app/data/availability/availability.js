@@ -3,8 +3,8 @@
 const _ = require('lodash');
 
 const Constants = require('../../constants');
-const Request = require('../../request');
 const Sources = require('../../sources');
+const SOQL = require('../../soql');
 
 class Availability {
     static get(entities) {
@@ -30,19 +30,13 @@ class Availability {
     }
 }
 
-function getIDs(entities) {
-    const entityIDs = entities.map(entity => entity.id);
-    return `id in(${entityIDs.map(id => `'${id}'`).join(',')})`;
-}
-
 function getVariables(entities) {
-    const url = Request.buildURL(Constants.VARIABLE_URL, {
-        '$where': getIDs(entities),
-        '$select': 'variable,count(variable)',
-        '$group': 'variable'
-    });
-
-    return Request.getJSON(url);
+    return new SOQL(Constants.VARIABLE_URL)
+        .whereIn('id', entities.map(_.property('id')))
+        .select('variable')
+        .select('count(variable)')
+        .group('variable')
+        .send();
 }
 
 module.exports = Availability;

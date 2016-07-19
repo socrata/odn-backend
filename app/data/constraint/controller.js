@@ -5,8 +5,8 @@ const querystring = require('querystring');
 
 const EntityLookup = require('../../entity-lookup');
 const Exception = require('../../error');
-const Request = require('../../request');
 const Constraint = require('./constraint');
+const SOQL = require('../../soql');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -35,28 +35,24 @@ module.exports = (request, response) => {
         const constraints = _.omit(request.query, ['entity_id', 'constraint']);
 
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
-            const url = Request.buildURL(dataset.url, _.assign({
-                $where: getIDs(entities),
-                $group: constraint,
-                $select: constraint,
-                $order: `${constraint} ASC`
-            }, constraints));
+            new SOQL(dataset.url)
+                .whereIn('id', entities.map(_.property('id')))
+                .group(constraint)
+                .select(constraint)
+                .order(constraint)
+                .equals(constraints)
+                .send()
+                .then(json => {
+                    const options = json.map(option => {
+                        return {
+                            constraint_value: option[constraint]
+                        };
+                    });
 
-            Request.getJSON(url).then(json => {
-                const options = json.map(option => {
-                    return {
-                        constraint_value: option[constraint]
-                    };
-                });
-
-                response.json({permutations: options});
-            }).catch(errorHandler);
+                    response.json({permutations: options});
+                })
+                .catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
-
-function getIDs(entities) {
-    const entityIDs = entities.map(entity => entity.id);
-    return `id in(${entityIDs.map(id => `'${id}'`).join(',')})`;
-}
 

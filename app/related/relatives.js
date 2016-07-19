@@ -4,6 +4,7 @@ const _ = require('lodash');
 
 const Constants = require('../constants');
 const Request = require('../request');
+const SOQL = require('../soql');
 
 class Relatives {
     static peers(entity, n) {
@@ -85,22 +86,23 @@ function siblings(entity, n) {
  * Gets relatives with the given parameters from Socrata.
  */
 function relatives(relation, ids, relativeType, n) {
-    return new Promise((resolve, reject) => {
-        const complement = relation === 'parent' ? 'child' : 'parent';
+    const complement = relation === 'parent' ? 'child' : 'parent';
 
-        const url = Request.buildURL(Constants.RELATIVES_URL, {
-            [`${relation}_type`]: relativeType,
-            '$where': `${complement}_id in (${ids.map(id => `'${id}'`).join(',')})`,
-            '$select': `${relation}_id as id, ${relation}_name as name, ${relation}_type as type`,
-            '$order': `${relation}_rank DESC`,
-            '$limit': n
+    return new SOQL(Constants.RELATIVES_URL)
+        .equal(`${relation}_type`, relativeType)
+        .whereIn(`${complement}_id`, ids)
+        .selectAs(`${relation}_id`, 'id')
+        .selectAs(`${relation}_name`, 'name')
+        .selectAs(`${relation}_type`, 'type')
+        .order(`${relation}_rank`, 'desc')
+        .limit(n)
+        .send()
+        .then(entities => {
+            return Promise.resolve({
+                entities,
+                type: relativeType
+            });
         });
-
-        Request.getJSON(url).then(entities => resolve({
-            entities,
-            type: relativeType
-        })).catch(reject);
-    });
 }
 
 /**

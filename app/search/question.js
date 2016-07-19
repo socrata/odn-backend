@@ -9,6 +9,7 @@ const Sources = require('../sources');
 const Stopwords = require('../stopwords');
 const Constants = require('../constants');
 const Request = require('../request');
+const SOQL = require('../soql');
 const SuggestSources = require('../../data/autosuggest-sources');
 const question = SuggestSources.question;
 
@@ -28,21 +29,20 @@ module.exports = (request, response) => {
 };
 
 function searchQuestions(entities, dataset, limit, offset) {
-    const url = Request.buildURL(`https://${question.domain}/resource/${question.fxf}.json`, _.assign({
-        $select: 'question',
-        $order: 'regionPopulation desc,variableIndex asc,source desc',
-        $offset: offset,
-        $limit: limit
-    }, entities.length === 0 ? {} : {
-        $where: Request.whereIn('regionID', entities.map(_.property('id'))),
-    }, _.isNil(dataset) ? {} : {
-        source: _.last(dataset.id.split('.'))
-    }));
-
-    return Request.getJSON(url).then(response => {
-        return question.decode(response.map(_.property('question')))
-            .then(options => question.transform(options));
-    });
+    return new SOQL(`https://${question.domain}/resource/${question.fxf}.json`)
+        .select('question')
+        .order('regionPopulation', 'desc')
+        .order('variableIndex', 'asc')
+        .order('source', 'desc')
+        .offset(offset)
+        .limit(limit)
+        .whereIn('regionID', entities.map(_.property('id')))
+        .equal('source', _.isNil(dataset) ? null : _.last(dataset.id.split('.')))
+        .send()
+        .then(response => {
+            return question.decode(response.map(_.property('question')))
+                .then(options => question.transform(options));
+        });
 }
 
 function getDataset(request) {

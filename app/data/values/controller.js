@@ -7,7 +7,7 @@ const Exception = require('../../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 
-const Request = require('../../request');
+const SOQL = require('../../soql');
 const Constants = require('../../constants');
 const Sources = require('../../sources');
 const Constraint = require('../constraint/constraint');
@@ -106,8 +106,7 @@ module.exports = (request, response) => {
 
         getConstraints(request, dataset).then(constraints => {
             getUnspecified(dataset, constraints).then(unspecified => {
-                getValuesURL(dataset, constraints, entities, unspecified)
-                    .then(Request.getJSON).then(rows => {
+                getValues(dataset, constraints, entities, unspecified).then(rows => {
                     const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
                     const framePromise = getFrame(unspecified, rows)
                         .then(_.partial(getForecast, request));
@@ -208,34 +207,19 @@ function getForecastSteps(request) {
     });
 }
 
-function getValuesURL(dataset, constraints, entities, unspecified) {
-    let queries = [];
-    if (entities.length > 0) queries.push(whereEntities(entities));
-    const variables = _.values(dataset.variables);
-    if (variables.length > 0) queries.push(whereVariables(variables));
-    const $where = queries.join(' AND ');
-
-    const params = _.assign({}, constraints, {
-        $where: queries.join(' AND '),
-        $select: ['id', 'value', unspecified].join(','),
-        $order: `${unspecified}, id`
-    });
-
-    const url = Request.buildURL(dataset.url, params);
-    return Promise.resolve(url);
-}
-
-function whereEntities(entities) {
-    if (entities.length === 0) return [];
-    return Request.whereIn('id', entities.map(_.property('id')));
+function getValues(dataset, constraints, entities, unspecified) {
+    return new SOQL(dataset.url)
+        .whereIn('id', entities.map(_.property('id')))
+        .whereIn('variable', _.values(dataset.variables).map(variableID))
+        .select('id')
+        .select('value')
+        .select(unspecified)
+        .order(unspecified)
+        .order('id')
+        .send();
 }
 
 function variableID(variable) {
     return _.last(variable.id.split('.'));
-}
-
-function whereVariables(variables) {
-    if (variables.length === 0) return [];
-    return Request.whereIn('variable', variables.map(variableID));
 }
 

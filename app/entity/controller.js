@@ -6,7 +6,7 @@ const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 const EntityLookup = require('../entity-lookup');
 const Constants = require('../constants');
-const Request = require('../request');
+const SOQL = require('../soql');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -24,15 +24,13 @@ module.exports = (request, response) => {
 };
 
 function getEntities(id, name, type) {
-    const url = Request.buildURL(Constants.ENTITY_URL, _.assign({
-        id,
-        type,
-        $order: 'rank desc'
-    }, _.isEmpty(name) ? {name} : {
-        $q: name
-    }));
-
-    return Request.getJSON(url);
+    return new SOQL(Constants.ENTITY_URL)
+        .equal('id', id)
+        .equal('type', type)
+        .order('rank', 'desc')
+        .equal('name', _.isEmpty(name) ? name : null)
+        .q(_.isEmpty(name) ? null : name)
+        .send();
 }
 
 function getID(request) {

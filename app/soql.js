@@ -65,6 +65,30 @@ class SOQL {
         return this;
     }
 
+    equal(column, value) {
+        if (!(_.isNil(column) || _.isNil(value)))
+            this.query[column] = value;
+        return this;
+    }
+
+    equals(constraints) {
+        _.forIn(constraints, (value, key) => {
+            this.equal(key, value);
+        });
+        return this;
+    }
+
+    q(string) {
+        if (!_.isEmpty(string)) this.query.$q = string;
+        return this;
+    }
+
+    group(column) {
+        if (!_.isNil(column))
+            this.query.$group = join(',', this.query.$group, column);
+        return this;
+    }
+
     send() {
         const url = Request.buildURL(this.url, this.query);
         const options = {url, headers: this.headers};

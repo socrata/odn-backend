@@ -22,6 +22,14 @@ describe('SOQL', () => {
         });
     });
 
+    it('should set query', () => {
+        const query = new SOQL()
+            .q('string');
+        expect(query.query).to.deep.equal({
+            $q: 'string'
+        });
+    });
+
     it('should be able to select multiple columns', () => {
         const query = new SOQL()
             .select('a')
@@ -29,6 +37,16 @@ describe('SOQL', () => {
             .select('c,d');
         expect(query.query).to.deep.equal({
             $select: 'a,b,c,d'
+        });
+    });
+
+    it('should be able to group multiple columns', () => {
+        const query = new SOQL()
+            .group('a')
+            .group('b')
+            .group('c,d');
+        expect(query.query).to.deep.equal({
+            $group: 'a,b,c,d'
         });
     });
 
@@ -80,6 +98,26 @@ describe('SOQL', () => {
         });
     });
 
+    it('should allow equal', () => {
+        const query = new SOQL()
+            .equal('id', 'abc');
+        expect(query.query).to.deep.equal({
+            id: 'abc'
+        });
+    });
+
+    it('should allow equals', () => {
+        const query = new SOQL()
+            .equals({
+                id: 'abc',
+                name: 'name'
+            });
+        expect(query.query).to.deep.equal({
+            id: 'abc',
+            name: 'name'
+        });
+    });
+
     it('should allow chaining many queries parameters', () => {
         const query = new SOQL()
             .token('asd')
@@ -90,6 +128,10 @@ describe('SOQL', () => {
             .where('rank > 1000')
             .whereIn('id', [1, 2])
             .order('rank', 'desc')
+            .equal('a', 'b')
+            .group('ads')
+            .equals({'abcdef': '123456'})
+            .q('asd')
             .token('123');
         expect(query).to.not.be.null;
     });
@@ -135,7 +177,12 @@ describe('SOQL', () => {
             .whereIn('a', [])
             .whereIn(null, [1])
             .order(null, 'b')
-            .order(null, null);
+            .order(null, null)
+            .equal(null, null)
+            .equal('a', null)
+            .equal(null, 'b')
+            .q(null)
+            .group(null);
 
         expect(query.query).to.be.empty;
         expect(query.headers).to.be.empty;
