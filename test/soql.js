@@ -120,5 +120,25 @@ describe('SOQL', () => {
                 expect(error.statusCode).to.equal(403);
             });
     });
+
+    it('should not set null or parameters', () => {
+        const query = new SOQL()
+            .token(null)
+            .select(null)
+            .selectAs('a', null)
+            .selectAs(null, 'b')
+            .selectAs(null, null)
+            .limit(null)
+            .offset(null)
+            .where(null)
+            .whereIn(null, null)
+            .whereIn('a', [])
+            .whereIn(null, [1])
+            .order(null, 'b')
+            .order(null, null);
+
+        expect(query.query).to.be.empty;
+        expect(query.headers).to.be.empty;
+    });
 });
 

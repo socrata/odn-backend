@@ -20,40 +20,48 @@ class SOQL {
     }
 
     token(token) {
-        this.headers[tokenKey] = token;
+        if (!_.isNil(token))
+            this.headers[tokenKey] = token;
         return this;
     }
 
     select(column) {
-        this.query.$select = join(',', this.query.$select, column);
+        if (!_.isNil(column))
+            this.query.$select = join(',', this.query.$select, column);
         return this;
     }
 
     selectAs(column, alias) {
+        if (_.isNil(column) || _.isNil(alias)) return this;
         return this.select(`${column} as ${alias}`);
     }
 
     limit(number) {
-        this.query.$limit = number;
+        if (!_.isNil(number))
+            this.query.$limit = number;
         return this;
     }
 
     offset(number) {
-        this.query.$offset = number;
+        if (!_.isNil(number))
+            this.query.$offset = number;
         return this;
     }
 
     where(condition) {
-        this.query.$where = join(' AND ', this.query.$where, condition);
+        if (!_.isNil(condition))
+            this.query.$where = join(' AND ', this.query.$where, condition);
         return this;
     }
 
     whereIn(column, options) {
+        if (_.isNil(column) || _.isNil(options) || options.length === 0) return this;
         return this.where(`${column} in (${options.map(quote).join(',')})`);
     }
 
     order(column, ordering) {
-        this.query.$order = join(',', this.query.$order, join(' ', column, ordering));
+        if (!_.isNil(column))
+            this.query.$order = join(',', this.query.$order, join(' ', column, ordering));
         return this;
     }
 
