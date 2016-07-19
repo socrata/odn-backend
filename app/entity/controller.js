@@ -10,21 +10,23 @@ const SOQL = require('../soql');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     Promise.all([
         getID(request),
         getName(request),
         getType(request)
     ]).then(([id, name, type]) => {
-        getEntities(id, name, type).then(entities => {
+        getEntities(id, name, type, token).then(entities => {
             entities = entities.map(entity => _.omit(entity, 'rank'));
             response.json({entities});
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
-function getEntities(id, name, type) {
+function getEntities(id, name, type, token) {
     return new SOQL(Constants.ENTITY_URL)
+        .token(token)
         .equal('id', id)
         .equal('type', type)
         .order('rank', 'desc')

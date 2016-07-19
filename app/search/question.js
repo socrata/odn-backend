@@ -15,6 +15,7 @@ const question = SuggestSources.question;
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     Promise.all([
         getEntities(request),
@@ -22,14 +23,15 @@ module.exports = (request, response) => {
         getLimit(request),
         getOffset(request)
     ]).then(([entities, dataset, limit, offset]) => {
-        searchQuestions(entities, dataset, limit, offset).then(questions => {
+        searchQuestions(entities, dataset, limit, offset, token).then(questions => {
             response.json({questions});
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
-function searchQuestions(entities, dataset, limit, offset) {
+function searchQuestions(entities, dataset, limit, offset, token) {
     return new SOQL(`https://${question.domain}/resource/${question.fxf}.json`)
+        .token(token)
         .select('question')
         .order('regionPopulation', 'desc')
         .order('variableIndex', 'asc')
@@ -66,7 +68,7 @@ function getEntities(request) {
     const ids = request.query.entity_id;
     if (_.isNil(ids)) return Promise.resolve([]);
     if (ids === '') return Promise.reject(notFound('entity_id cannot be empty'));
-    return EntityLookup.byIDs(ids);
+    return EntityLookup.byIDs(ids, request.token);
 }
 
 function getQuery(request) {

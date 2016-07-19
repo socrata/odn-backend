@@ -28,15 +28,15 @@ function validateRequest(request) {
     });
 }
 
-function relationPromise(entity, relation, n) {
+function relationPromise(entity, relation, n, token) {
     relation = relation.toLowerCase();
 
     if (relation === 'parent') {
-        return Relatives.parents(entity, n);
+        return Relatives.parents(entity, n, token);
     } else if (relation === 'child') {
-        return Relatives.children(entity, n);
+        return Relatives.children(entity, n, token);
     } else if (relation === 'sibling') {
-        return Relatives.siblings(entity, n);
+        return Relatives.siblings(entity, n, token);
     } else if (relation === 'peer') {
         return Relatives.peers(entity, n);
     } else {
@@ -47,10 +47,11 @@ must be 'parent', 'child', 'sibling', or 'peer'`));
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     validateRequest(request).then(([relation, id, limit]) => {
-        EntityLookup.byID(id).then(entity => {
-            relationPromise(entity, relation, limit).then(json => {
+        EntityLookup.byID(id, token).then(entity => {
+            relationPromise(entity, relation, limit, token).then(json => {
                 response.json(json);
             }).catch(errorHandler);
         }).catch(errorHandler);

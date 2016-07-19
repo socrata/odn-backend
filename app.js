@@ -10,6 +10,9 @@ app.use(compression());
 app.use(cors());
 
 app.get('/', require('./app/home'));
+
+
+app.use(require('./app/token'));
 app.get('/data/v1/availability', require('./app/data/availability/controller'));
 app.get('/data/v1/constraint/:variable', require('./app/data/constraint/controller'));
 app.get('/data/v1/values', require('./app/data/values/controller'));

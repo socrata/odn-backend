@@ -14,6 +14,7 @@ const SessionManager = require('./session-manager');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     Promise.all([
         getEntities(request),
@@ -27,9 +28,9 @@ module.exports = (request, response) => {
 
         checkConstraints(dataset, constraints).then(() => {
             Promise.all([
-                getSessionID(dataset, constraints, entityType, entities),
-                getBoundingBox(entities, entityType),
-                getSummaryStatistics(dataset, constraints, entityType)
+                getSessionID(dataset, constraints, entityType, entities, token),
+                getBoundingBox(entities, entityType, token),
+                getSummaryStatistics(dataset, constraints, entityType, token)
             ]).then(([sessionID, boundingBox, summaryStats]) => {
                 response.json({
                     session_id: sessionID,
@@ -46,9 +47,10 @@ function getSessionID(dataset, constraints, entityType, entities) {
     return SessionManager.add(session);
 }
 
-function getBoundingBox(entities, entityType) {
+function getBoundingBox(entities, entityType, token) {
     const ids = entities.map(_.property('id'));
     return new SOQL(`${Constants.GEO_URLS[entityType]}.json`)
+        .token(token)
         .whereIn('id', ids)
         .select('extent(the_geom)')
         .send()
@@ -70,10 +72,11 @@ function getBoundingBox(entities, entityType) {
         });
 }
 
-function getSummaryStatistics(dataset, constraints, entityType) {
+function getSummaryStatistics(dataset, constraints, entityType, token) {
     const variable = _.values(dataset.variables)[0];
 
     return new SOQL(dataset.url)
+        .token(token)
         .whereIn('type', [entityType, _.last(entityType.split('.'))])
         .equal('variable', _.last(variable.id.split('.')))
         .selectAs('avg(value)', 'average')
@@ -99,7 +102,7 @@ function getEntities(request) {
     if (_.isNil(ids))
         return Promise.reject(invalid('parameter entity_id required'));
 
-    return EntityLookup.byIDs(ids).then(entities => {
+    return EntityLookup.byIDs(ids, request.token).then(entities => {
         if (entities.length === 0)
             return Promise.reject(notFound(`entities not found: ${ids}`));
 

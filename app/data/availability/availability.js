@@ -7,8 +7,8 @@ const Sources = require('../../sources');
 const SOQL = require('../../soql');
 
 class Availability {
-    static get(entities) {
-        return getVariables(entities).then(variables => {
+    static get(entities, token) {
+        return getVariables(entities, token).then(variables => {
             const availableVariables = variables
                 .filter(variable => variable.count_variable == entities.length)
                 .map(variable => variable.variable);
@@ -30,8 +30,9 @@ class Availability {
     }
 }
 
-function getVariables(entities) {
+function getVariables(entities, token) {
     return new SOQL(Constants.VARIABLE_URL)
+        .token(token)
         .whereIn('id', entities.map(_.property('id')))
         .select('variable')
         .select('count(variable)')

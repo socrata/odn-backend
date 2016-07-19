@@ -1,5 +1,10 @@
 
 const Constants = {
+    APP_TOKEN_HEADER: 'X-App-Token',
+    APP_TOKEN_PARAM: 'app_token',
+    // Token for running unit tests.
+    APP_TOKEN: 'TULfSVvj7mto3wKM3qW8dMj9L',
+
     ODN_DATA_DOMAIN: 'odn.data.socrata.com',
 
     PEERS_URL: 'https://odn-peers.herokuapp.com/peers',

@@ -1,7 +1,6 @@
 
 const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
 
 const Sources = require('../app/sources');

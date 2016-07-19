@@ -1,8 +1,8 @@
 
 const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 function search(path) {
     return get(`http://localhost:3001/search/v1/dataset?${path}`);

@@ -9,11 +9,12 @@ const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 
 class EntityLookup {
-    static byID(id) {
+    static byID(id, token) {
         if (_.isNil(id))
             return Promise.reject(invalid('id cannot be null'));
 
         return new SOQL(Constants.ENTITY_URL)
+            .token(token)
             .equal('id', id)
             .send()
             .then(entities => {
@@ -23,9 +24,9 @@ class EntityLookup {
             });
     }
 
-    static byIDs(idString) {
+    static byIDs(idString, token) {
         const ids = parseIDString(idString);
-        return Promise.all(ids.map(EntityLookup.byID));
+        return Promise.all(ids.map(id => EntityLookup.byID(id, token)));
     }
 }
 

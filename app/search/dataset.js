@@ -135,7 +135,7 @@ function getEntities(request) {
     const ids = request.query.entity_id;
     if (_.isNil(ids)) return Promise.resolve([]);
     if (ids === '') return Promise.reject(notFound('entity_id cannot be empty'));
-    return EntityLookup.byIDs(ids);
+    return EntityLookup.byIDs(ids, request.token);
 }
 
 function getQuery(request) {

@@ -1,7 +1,7 @@
 
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 const constraintSchema = {
     definitions: {

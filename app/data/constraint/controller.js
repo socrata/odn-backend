@@ -10,12 +10,13 @@ const SOQL = require('../../soql');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     const variableID = request.params.variable;
     if (_.isNil(variableID) || variableID === '')
         return errorHandler(Exception.invalidParam('variable required'));
 
-    EntityLookup.byIDs(request.query.entity_id).then(entities => {
+    EntityLookup.byIDs(request.query.entity_id, token).then(entities => {
         if (entities.length === 0)
             return errorHandler(Exception.invalidParam('at least one id required'));
 
@@ -32,10 +33,11 @@ module.exports = (request, response) => {
             return errorHandler(Exception.notFound(`invalid constraint: ${constraint}.
                         Must be one of: ${dataset.constraints.join(', ')}`));
 
-        const constraints = _.omit(request.query, ['entity_id', 'constraint']);
+        const constraints = _.omit(request.query, ['entity_id', 'constraint', 'app_token']);
 
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
             new SOQL(dataset.url)
+                .token(token)
                 .whereIn('id', entities.map(_.property('id')))
                 .group(constraint)
                 .select(constraint)

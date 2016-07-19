@@ -1,7 +1,6 @@
 
 const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
 
 const SOQL = require('../app/soql');
@@ -138,7 +137,7 @@ describe('SOQL', () => {
 
     it('should send a well-formed request', () => {
         return new SOQL(Constants.ENTITY_URL)
-            .token('dfEcLW1MJOca55Pb19sLnFPZa')
+            .token(Constants.APP_TOKEN)
             .select('id')
             .select('name')
             .whereIn('type', ['region.state'])

@@ -1,8 +1,8 @@
 
 const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 function suggest(path) {
     return get(`http://localhost:3001/suggest/v1/${path}`);

@@ -5,8 +5,9 @@ const _ = require('lodash');
 const Request = require('./request');
 const Exception = require('./error');
 const invalidAppToken = Exception.invalidAppToken;
-
-const tokenKey = 'X-App-Token';
+const missingAppToken = Exception.missingAppToken;
+const Constants = require('./constants');
+const tokenKey = Constants.APP_TOKEN_HEADER;
 
 /**
  * Building SOQL queries.
@@ -90,6 +91,7 @@ class SOQL {
     }
 
     send() {
+        if (!(tokenKey in this.headers)) return Promise.reject(missingAppToken());
         const url = Request.buildURL(this.url, this.query);
         const options = {url, headers: this.headers};
         return Request.getJSON(options).catch(error => {
