@@ -11,5 +11,9 @@ node_modules
 *.jar
 *.sij
 *.sh
+!load-test.sh
+!flush-memcache.sh
 *.geojson
+
+.load-test-urls
 
