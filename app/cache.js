@@ -8,6 +8,10 @@ const _ = require('lodash');
 const memjs = require('memjs');
 
 const Constants = require('./constants');
+const Exception = require('./error');
+const noCache = new Exception('cache not set up', 500);
+const miss = key => new Exception(`cache miss: ${key}`, 500);
+
 
 class Cache {
     constructor(configString, options) {
@@ -19,9 +23,12 @@ class Cache {
      */
     get(key) {
         return new Promise((resolve, reject) => {
+            if (_.isNil(this.client))
+                return reject(noCache());
+
             this.client.get(key, (error, value) => {
-                if (value) resolve(value.toString());
-                if (_.isNil(error)) reject(`key not found: ${key}`);
+                if (value) return resolve(value.toString());
+                if (_.isNil(error)) return reject(miss(key));
                 reject(error);
             });
         });
@@ -38,6 +45,9 @@ class Cache {
      */
     set(key, value, expiration) {
         return new Promise((resolve, reject) => {
+            if (_.isNil(this.client))
+                return reject(noCache());
+
             this.client.set(key, value, (error, value) => {
                 if (value) resolve();
                 reject(error);
@@ -51,6 +61,9 @@ class Cache {
 
     append(key, value) {
         return new Promise((resolve, reject) => {
+            if (_.isNil(this.client))
+                return reject(noCache());
+
             this.client.append(key, value, (error, value) => {
                 if (_.isNil(error)) resolve();
                 reject(error);

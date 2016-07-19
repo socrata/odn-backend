@@ -26,6 +26,10 @@ class Exception {
         return new Exception(message, 504);
     }
 
+    static invalidAppToken(token) {
+        return new Exception(`invalid app token: ${token}`, 403);
+    }
+
     static getHandler(request, response) {
         return error => {
             Exception.respond(error, request, response);

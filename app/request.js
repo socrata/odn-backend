@@ -8,8 +8,7 @@ const crypto = require('crypto');
 
 const Exception = require('./error');
 const Constants = require('./constants');
-
-const cache = memjs.Client.create(null, Constants.CACHE_OPTIONS);
+const cache = require('./cache');
 
 class Request {
     /**
@@ -22,46 +21,26 @@ class Request {
         return crypto.createHash('sha512').update(url).digest('base64');
     }
 
-    static get(url, timeout) {
-        return new Promise((resolve, reject) => {
-            if (!cache) {
-                Request.timeout(request(url), timeout).then(body => {
-                    resolve(body);
-                }).catch(error => {
-                    const exception = new Exception(`error fetching ${url}`,
-                            error.statusCode || 500);
-                    exception.error = error;
+    static get(optionsOrURL, timeout) {
+        const options = _.isString(optionsOrURL) ? {url: optionsOrURL} : optionsOrURL;
+        const url = _.isString(optionsOrURL) ? optionsOrURL : optionsOrURL.url;
+        const key = Request.key(url);
 
-                    reject(exception);
-                });
-            } else {
-                const key = Request.key(_.isString(url) ? url : url.uri);
-
-                cache.get(key, (error, value) => {
-                    if (value) {
-                        resolve(value);
-                    } else {
-                        Request.timeout(request(url), timeout).then(body => {
-                            resolve(body);
-                            if (!error) cache.set(key, body);
-                        }).catch(error => {
-                            const exception = new Exception(`error fetching ${url}`,
-                                    error.statusCode || 500);
-                            exception.error = error;
-
-                            reject(exception);
-                        });
-                    }
-                });
-            }
+        return cache.get(key).catch(error => {
+            return Request.timeout(request(options), timeout).then(value => {
+                cache.set(key, value);
+                return Promise.resolve(value);
+            }).catch(error => {
+                const exception = new Exception(`error fetching ${url}`, error.statusCode || 500);
+                exception.error = error;
+                return Promise.reject(exception);
+            });
         });
     }
 
-    static getJSON(url, timeout) {
-        return new Promise((resolve, reject) => {
-            Request.get(url, timeout).then(value => {
-                resolve(JSON.parse(value.toString()));
-            }).catch(reject);
+    static getJSON(optionsOrURL, timeout) {
+        return Request.get(optionsOrURL, timeout).then(value => {
+            return Promise.resolve(JSON.parse(value.toString()));
         });
     }
 
