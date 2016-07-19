@@ -26,6 +26,15 @@ class Exception {
         return new Exception(message, 504);
     }
 
+    static invalidAppToken(token) {
+        return new Exception(`invalid app token: ${token}`, 403);
+    }
+
+    static missingAppToken() {
+        return new Exception(`App token required as 'app_token' parameter or 'X-App-Token' header.
+                Get an app token here: https://dev.socrata.com/docs/app-tokens.html`, 403);
+    }
+
     static getHandler(request, response) {
         return error => {
             Exception.respond(error, request, response);

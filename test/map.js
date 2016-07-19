@@ -1,8 +1,8 @@
 
 const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 function map(path) {
     return get(`http://localhost:3001/data/v1/map/values?${path}`);

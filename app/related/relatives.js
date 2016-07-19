@@ -4,28 +4,29 @@ const _ = require('lodash');
 
 const Constants = require('../constants');
 const Request = require('../request');
+const SOQL = require('../soql');
 
 class Relatives {
     static peers(entity, n) {
         return resolveGroups(entity, [peers(entity, n + 1)], n);
     }
 
-    static parents(entity, n) {
+    static parents(entity, n, token) {
         const parentPromises = parentTypes(entity)
-            .map(parentType => parents(entity, parentType, n));
+            .map(parentType => parents(entity, parentType, n, token));
 
         return resolveGroups(entity, parentPromises, n);
     }
 
-    static children(entity, n) {
+    static children(entity, n, token) {
         const childPromises = childTypes(entity)
-            .map(childType => children(entity, childType, n));
+            .map(childType => children(entity, childType, n, token));
 
         return resolveGroups(entity, childPromises, n);
     }
 
-    static siblings(entity, n) {
-        return resolveGroups(entity, [siblings(entity, n + 1)], n);
+    static siblings(entity, n, token) {
+        return resolveGroups(entity, [siblings(entity, n + 1, token)], n);
     }
 }
 
@@ -48,23 +49,23 @@ function parentTypes(entity) {
 /**
  * Gets the children of an entity with the given childType.
  */
-function children(entity, childType, n) {
-    return relatives('child', [entity.id], childType, n);
+function children(entity, childType, n, token) {
+    return relatives('child', [entity.id], childType, n, token);
 }
 
 /**
  * Gets the parents of an entity with the given parentType.
  */
-function parents(entity, parentType, n) {
-    return relatives('parent', [entity.id], parentType, n);
+function parents(entity, parentType, n, token) {
+    return relatives('parent', [entity.id], parentType, n, token);
 }
 
 /**
  * Gets the siblings of an entity which are children of any of its parents.
  */
-function siblings(entity, n) {
+function siblings(entity, n, token) {
     return new Promise((resolve, reject) => {
-        Relatives.parents(entity).then(response => {
+        Relatives.parents(entity, Constants.RELATED_COUNT_MAX, token).then(response => {
             const parentIDs = _.chain(response.relatives)
                 .map(group => group.entities)
                 .flatten()
@@ -73,7 +74,7 @@ function siblings(entity, n) {
 
             if (parentIDs.length < 1) resolve();
 
-            relatives('child', parentIDs, entity.type, n * parentIDs.length).then(response => {
+            relatives('child', parentIDs, entity.type, n * parentIDs.length, token).then(response => {
                 response.entities = _.uniqBy(response.entities, _.property('id'));
                 resolve(response);
             }).catch(reject);
@@ -84,23 +85,25 @@ function siblings(entity, n) {
 /**
  * Gets relatives with the given parameters from Socrata.
  */
-function relatives(relation, ids, relativeType, n) {
-    return new Promise((resolve, reject) => {
-        const complement = relation === 'parent' ? 'child' : 'parent';
+function relatives(relation, ids, relativeType, n, token) {
+    const complement = relation === 'parent' ? 'child' : 'parent';
 
-        const url = Request.buildURL(Constants.RELATIVES_URL, {
-            [`${relation}_type`]: relativeType,
-            '$where': `${complement}_id in (${ids.map(id => `'${id}'`).join(',')})`,
-            '$select': `${relation}_id as id, ${relation}_name as name, ${relation}_type as type`,
-            '$order': `${relation}_rank DESC`,
-            '$limit': n
+    return new SOQL(Constants.RELATIVES_URL)
+        .token(token)
+        .equal(`${relation}_type`, relativeType)
+        .whereIn(`${complement}_id`, ids)
+        .selectAs(`${relation}_id`, 'id')
+        .selectAs(`${relation}_name`, 'name')
+        .selectAs(`${relation}_type`, 'type')
+        .order(`${relation}_rank`, 'desc')
+        .limit(n)
+        .send()
+        .then(entities => {
+            return Promise.resolve({
+                entities,
+                type: relativeType
+            });
         });
-
-        Request.getJSON(url).then(entities => resolve({
-            entities,
-            type: relativeType
-        })).catch(reject);
-    });
 }
 
 /**

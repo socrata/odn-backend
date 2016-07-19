@@ -5,15 +5,15 @@ const expect = chakram.expect;
 const get = require('./get');
 
 function search(path) {
-    return get(`http://localhost:3001/search/v1/dataset?${path}`);
+    return get(`http://localhost:3001/search/v1/question?${path}`);
 }
 
-describe('/search/v1/dataset', () => {
-    it('should return all datasets when given no parameters', () => {
+describe('/search/v1/question', () => {
+    it('should return all questions when given no parameters', () => {
         return search('').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.have.schema(datasetSchema);
-            expect(response.body.datasets).to.not.be.empty;
+            expect(response).to.have.schema(questionSchema);
+            expect(response.body.questions).to.not.be.empty;
         });
     });
 
@@ -24,7 +24,7 @@ describe('/search/v1/dataset', () => {
     it('should accept a zero limit and return no entities', () => {
         return search('limit=0').then(response => {
             expect(response).to.have.status(200);
-            expect(response.body.options).to.be.empty;
+            expect(response.body.questions).to.be.empty;
         });
     });
 
@@ -39,8 +39,8 @@ describe('/search/v1/dataset', () => {
     it('should respect the limit parameter', () => {
         return search('limit=13').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.have.schema(datasetSchema);
-            expect(response.body.datasets).to.have.lengthOf(13);
+            expect(response).to.have.schema(questionSchema);
+            expect(response.body.questions).to.have.lengthOf(13);
         });
     });
 
@@ -55,12 +55,12 @@ describe('/search/v1/dataset', () => {
     it('should respect the offset parameter', () => {
         return Promise.all([search('limit=13'), search('limit=13&offset=2')]).then(([first, second]) => {
             expect(first).to.have.status(200);
-            expect(first).to.have.schema(datasetSchema);
+            expect(first).to.have.schema(questionSchema);
             expect(second).to.have.status(200);
-            expect(second).to.have.schema(datasetSchema);
+            expect(second).to.have.schema(questionSchema);
 
-            expect(first.body.datasets.slice(2))
-                .to.deep.equal(second.body.datasets.slice(0, 11));
+            expect(first.body.questions.slice(2))
+                .to.deep.equal(second.body.questions.slice(0, 11));
         });
     });
 
@@ -86,7 +86,7 @@ describe('/search/v1/dataset', () => {
         return Promise.all(equivalentPromises).then(responses => {
             responses.forEach(response => {
                 expect(response).to.have.status(200);
-                expect(response).to.have.schema(datasetSchema);
+                expect(response).to.have.schema(questionSchema);
             });
 
             expect(responses[0].body).to.deep.equal(responses[1].body);
@@ -118,80 +118,57 @@ describe('/search/v1/dataset', () => {
         return expect(search('entity_id=    0100000US   ,      0400000US53 ')).to.have.status(200);
     });
 
-    it('should generate working dev docs urls', () => {
-        return search('limit=1').then(response => {
-            const urls = _(response.body.datasets[0])
-                .pick(['dev_docs_url'])
-                .values()
-                .value();
-
-            return Promise.all(urls.map(get)).then(responses => {
-                responses.forEach((response, index) => {
-                    expect(response).to.have.status(200);
-                });
-            });
+    it('should return questions for seattle', () => {
+        return search('entity_id=1600000US5363000').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(questionSchema);
+            const ids = _.uniq(response.body.questions.map(question => question.entity.id));
+            expect(ids).to.deep.equal(['1600000US5363000']);
         });
     });
 
-    it('should find population datasets when given the demographics.population dataset', () => {
+    it('should return questions for population', () => {
         return search('dataset_id=demographics.population').then(response => {
             expect(response).to.have.status(200);
-            expect(response).to.have.schema(datasetSchema);
-            expect(response.body.datasets).to.have.length.above(1);
-            response.body.datasets.forEach(dataset => {
-                if (dataset.categories.length > 0)
-                    expect(dataset.categories).to.include('demographics');
-            });
-        });
-    });
+            expect(response).to.have.schema(questionSchema);
+            const variables = response.body.questions.map(_.property('variable_id'));
 
-    it('should find the same results for Seattle, WA as for Seattle Metro Area, WA', () => {
-        return Promise.all([
-            search('entity_id=310M200US42660'),
-            search('entity_id=1600000US5363000')
-        ]).then(responses => {
-            responses.forEach(response => {
-                expect(response).to.have.status(200);
-                expect(response).to.have.schema(datasetSchema);
-            });
-
-            expect(responses[0].body).to.deep.equal(responses[1].body);
+            expect(variables).to.contain('demographics.population.population');
+            expect(variables).to.contain('demographics.population.population_change');
         });
     });
 });
 
-const datasetSchema = {
+const questionSchema = {
     definitions: {
-        dataset: {
+        entity: {
             type: 'object',
             properties: {
-                fxf: {type: 'string'},
+                id: {type: 'string'},
                 name: {type: 'string'},
-                description: {type: 'string'},
-                attribution: {type: 'string'},
-                domain: {type: 'string'},
-                domain_url: {type: 'string'},
-                dataset_url: {type: 'string'},
-                dev_docs_url: {type: 'string'},
-                updated_at: {type: 'string'},
-                created_at: {type: 'string'},
-                categories: {
-                    type: 'array',
-                    items: {type: 'string'}
-                }
+                type: {type: 'string'}
             },
-            requried: ['fxf', 'name', 'description', 'attribution', 'domain',
-                'domain_url', 'dataset_url', 'dev_docs_url',
-                'updated_at', 'created_at', 'categories']
+            required: ['id', 'name']
+        },
+
+        question: {
+            type: 'object',
+            properties: {
+                entity: {'$ref': '#/definitions/entity'},
+                variable_id: {type: 'string'},
+                constraints: {type: 'object'},
+                text: {type: 'string'}
+            },
+            required: ['entity', 'variable_id', 'text']
         }
     },
     type: 'object',
     properties: {
-        datasets: {
+        questions: {
             type: 'array',
-            etems: {'$ref': '#/definitions/dataset'}
+            items: {'$ref': '#/definitions/question'}
         }
     },
-    required: ['datasets']
+    required: ['questions']
 };
 

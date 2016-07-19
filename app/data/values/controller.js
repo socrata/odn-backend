@@ -7,7 +7,7 @@ const Exception = require('../../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 
-const Request = require('../../request');
+const SOQL = require('../../soql');
 const Constants = require('../../constants');
 const Sources = require('../../sources');
 const Constraint = require('../constraint/constraint');
@@ -41,12 +41,12 @@ function getDataset(request) {
 }
 
 function getEntities(request) {
-    return EntityLookup.byIDs(request.query.entity_id);
+    return EntityLookup.byIDs(request.query.entity_id, request.token);
 }
 
 function getConstraints(request, dataset) {
     return new Promise((resolve, reject) => {
-        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast', 'describe']);
+        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast', 'describe', 'app_token']);
 
         _.keys(constraints).forEach(constraint => {
             if (!_.includes(dataset.constraints, constraint))
@@ -98,6 +98,7 @@ function getUnspecified(dataset, constraints) {
  */
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     Promise.all([getDataset(request), getEntities(request)]).then(([dataset, entities]) => {
 
@@ -106,8 +107,7 @@ module.exports = (request, response) => {
 
         getConstraints(request, dataset).then(constraints => {
             getUnspecified(dataset, constraints).then(unspecified => {
-                getValuesURL(dataset, constraints, entities, unspecified)
-                    .then(Request.getJSON).then(rows => {
+                getValues(dataset, constraints, entities, unspecified, token).then(rows => {
                     const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
                     const framePromise = getFrame(unspecified, rows)
                         .then(_.partial(getForecast, request));
@@ -208,43 +208,20 @@ function getForecastSteps(request) {
     });
 }
 
-function getValuesURL(dataset, constraints, entities, unspecified) {
-    let queries = [];
-    if (entities.length > 0) queries.push(whereEntities(entities));
-    const variables = _.values(dataset.variables);
-    if (variables.length > 0) queries.push(whereVariables(variables));
-    const $where = queries.join(' AND ');
-
-    const params = _.assign({}, constraints, {
-        $where: queries.join(' AND '),
-        $select: ['id', 'value', unspecified].join(','),
-        $order: `${unspecified}, id`
-    });
-
-    const url = Request.buildURL(dataset.url, params);
-    return Promise.resolve(url);
-}
-
-function quote(string) {
-    return `'${string}'`;
-}
-
-function whereIn(name, options) {
-    return `${name} in (${options.map(quote).join(',')})`;
-}
-
-function whereEntities(entities) {
-    if (entities.length === 0) return [];
-    return whereIn('id', entities.map(_.property('id')));
+function getValues(dataset, constraints, entities, unspecified, token) {
+    return new SOQL(dataset.url)
+        .token(token)
+        .whereIn('id', entities.map(_.property('id')))
+        .whereIn('variable', _.values(dataset.variables).map(variableID))
+        .select('id')
+        .select('value')
+        .select(unspecified)
+        .order(unspecified)
+        .order('id')
+        .send();
 }
 
 function variableID(variable) {
     return _.last(variable.id.split('.'));
-}
-
-function whereVariables(variables) {
-    if (variables.length === 0) return [];
-    return whereIn('variable', variables.map(variableID));
-
 }
 

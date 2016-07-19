@@ -31,7 +31,7 @@ function validateRequest(request) {
         if (limit > Constants.SUGGEST_COUNT_MAX)
             reject(Exception.invalidParam(`limit cannot be greater than ${Constants.SUGGEST_COUNT_MAX}`));
 
-        resolve([type, query, limit]);
+        resolve([type.toLowerCase(), query, limit]);
     });
 }
 

@@ -5,17 +5,18 @@ const querystring = require('querystring');
 
 const EntityLookup = require('../../entity-lookup');
 const Exception = require('../../error');
-const Request = require('../../request');
 const Constraint = require('./constraint');
+const SOQL = require('../../soql');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     const variableID = request.params.variable;
     if (_.isNil(variableID) || variableID === '')
         return errorHandler(Exception.invalidParam('variable required'));
 
-    EntityLookup.byIDs(request.query.entity_id).then(entities => {
+    EntityLookup.byIDs(request.query.entity_id, token).then(entities => {
         if (entities.length === 0)
             return errorHandler(Exception.invalidParam('at least one id required'));
 
@@ -32,31 +33,27 @@ module.exports = (request, response) => {
             return errorHandler(Exception.notFound(`invalid constraint: ${constraint}.
                         Must be one of: ${dataset.constraints.join(', ')}`));
 
-        const constraints = _.omit(request.query, ['entity_id', 'constraint']);
+        const constraints = _.omit(request.query, ['entity_id', 'constraint', 'app_token']);
 
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
-            const params = _.assign({
-                '$group': constraint,
-                '$select': constraint,
-                '$order': `${constraint} ASC`
-            }, constraints);
+            new SOQL(dataset.url)
+                .token(token)
+                .whereIn('id', entities.map(_.property('id')))
+                .group(constraint)
+                .select(constraint)
+                .order(constraint)
+                .equals(constraints)
+                .send()
+                .then(json => {
+                    const options = json.map(option => {
+                        return {
+                            constraint_value: option[constraint]
+                        };
+                    });
 
-            const url = `${variable.url}&${querystring.stringify(params)}`;
-            Request.getJSON(url).then(json => {
-                const options = json.map(option => {
-                    const value = option[constraint];
-                    const params = _.assign({
-                        [constraint]: value,
-                    }, constraints);
-
-                    return {
-                        constraint_value: value,
-                        constraint_url: `${variable.url}&${querystring.stringify(params)}`
-                    };
-                });
-
-                response.json({permutations: options});
-            }).catch(errorHandler);
+                    response.json({permutations: options});
+                })
+                .catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };

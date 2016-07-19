@@ -1,7 +1,7 @@
 
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 function url(path) {
     return `http://localhost:3001${path}`;

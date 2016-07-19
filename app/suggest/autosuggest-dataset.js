@@ -7,33 +7,47 @@ const Exception = require('../error');
 const Request = require('../request');
 
 class AutosuggestDataset {
-    constructor(domain, fxf, column, fields, sort, transform) {
+    constructor(domain, fxf, column, fields, sortFunc, transformFunc) {
         this.domain = domain;
         this.fxf = fxf;
         this.column = column;
         this.fields = fields || [];
-        this.sorted = !_.isNil(sort);
-        this.sort = sort || _.identity;
-        this.transform = transform || _.identity;
+        this.sorted = !_.isNil(sortFunc);
+        this.sortFunc = sortFunc || _.identity;
+        this.transformFunc = transformFunc || _.identity;
 
         this.baseURL = `https://${domain}/views/${fxf}/columns/${column}/suggest/`;
 
     }
 
     get(query, limit) {
-        return new Promise((resolve, reject) => {
-            const newLimit = this.sorted && Constants.SUGGEST_COUNT_SORTED > limit ?
-                Constants.SUGGEST_COUNT_SORTED : limit;
-            const url = this._getURL(query, newLimit);
+        const newLimit = this.sorted && Constants.SUGGEST_COUNT_SORTED > limit ?
+            Constants.SUGGEST_COUNT_SORTED : limit;
+        const url = this._getURL(query, newLimit);
 
-            return Request.getJSON(url).then(response => {
-                this._decodeOptions(response.options).then(options => {
-                    options = this._sortOptions(options).slice(0, limit);
-                    options = options.map(this.transform);
-                    resolve({options});
-                }).catch(reject);
-            }).catch(reject);
+        return Request.getJSON(url).then(response => {
+            return this.decode(response.options.map(_.property('text')))
+                .then(options => this.sort(options))
+                .then(options => this.truncate(options, limit))
+                .then(options => this.transform(options))
+                .then(options => Promise.resolve({options}));
         });
+    }
+
+    decode(options) {
+        return this._decodeOptions(options);
+    }
+
+    sort(options) {
+        return Promise.resolve(this._sortOptions(options));
+    }
+
+    truncate(options, limit) {
+        return Promise.resolve(options.slice(0, limit));
+    }
+
+    transform(options) {
+        return Promise.resolve(options.map(this.transformFunc));
     }
 
     _getURL(query, limit) {
@@ -44,12 +58,12 @@ class AutosuggestDataset {
 
     _sortOptions(options) {
         if (!this.sorted) return options;
-        return _.sortBy(options, this.sort);
+        return _.sortBy(options, this.sortFunc);
     }
 
     _decodeOptions(options) {
         const decodedPromises = options
-            .map(option => this._decode(option.text));
+            .map(option => this._decode(option));
 
         return Promise.all(decodedPromises);
     }

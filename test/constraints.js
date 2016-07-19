@@ -1,17 +1,17 @@
 
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 const constraintSchema = {
     definitions: {
         permutation: {
             type: 'object',
             properties: {
-                constraint_value: {type: 'string'},
-                constraint_url: {type: 'string'}
+                constraint_value: {type: 'string'}
             },
-            required: ['constraint_value', 'constraint_url']
+            required: ['constraint_value'],
+            additionalProperties: false
         }
     },
 
@@ -101,25 +101,9 @@ describe('/data/v1/constraint', () => {
             expect(response).to.comprise.of.json({
                 'permutations': [
                     {
-                        'constraint_value': '2009',
-                        'constraint_url': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US')&year=2009"
+                        'constraint_value': '2009'
                     }
                 ]
-            });
-        });
-    });
-
-    it('should generate working urls', () => {
-        return populationUS('constraint=year').then(response => {
-            expect(response).to.have.status(200);
-            expect(response).to.have.schema(constraintSchema);
-
-            const promises = response.body.permutations
-                .map(option => get(option.constraint_url));
-            return Promise.all(promises);
-        }).then(responses => {
-            responses.forEach(response => {
-                expect(response).to.have.status(200);
             });
         });
     });

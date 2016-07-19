@@ -1,5 +1,10 @@
 
 const Constants = {
+    APP_TOKEN_HEADER: 'X-App-Token',
+    APP_TOKEN_PARAM: 'app_token',
+    // Token for running unit tests.
+    APP_TOKEN: 'TULfSVvj7mto3wKM3qW8dMj9L',
+
     ODN_DATA_DOMAIN: 'odn.data.socrata.com',
 
     PEERS_URL: 'https://odn-peers.herokuapp.com/peers',
@@ -31,7 +36,7 @@ const Constants = {
     CATALOG_LIMIT_DEFAULT: 10,
     CATALOG_LIMIT_MAX: 100,
 
-    TIMEOUT_MS: 5000,
+    TIMEOUT_MS: 10000,
     CACHE_OPTIONS: {
         expires: 43200, // 12 hours
     },

@@ -1,8 +1,8 @@
 
 const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 const availabilitySchema = require('../data/process/declaration-schema');
 
@@ -53,8 +53,7 @@ describe('/data/v1/availability', () => {
                                 'constraints': ['year'],
                                 'variables': {
                                     'count': {
-                                        'id': 'demographics.population.count',
-                                        'url': "https://odn.data.socrata.com/resource/9jg8-ki9x.json?variable=count&%24where=id%20in('0100000US'%2C'0400000US53')",
+                                        'id': 'demographics.population.count'
                                     },
                                     'change': {
                                         'id': 'demographics.population.change',
@@ -156,31 +155,6 @@ describe('/data/v1/availability', () => {
                         }
                     }
                 }
-            });
-        });
-    });
-
-    it('should generate working variable urls', () => {
-        return availability('?entity_id=0100000US,0400000US53').then(response => {
-            expect(response).to.have.status(200);
-            expect(response).to.have.schema(availabilitySchema);
-
-            const variableURLs = [];
-            _.forIn(response.body.topics, topic => {
-                _.forIn(topic.datasets, dataset => {
-                    _.forIn(dataset.variables, variable => {
-                        variableURLs.push(variable.url);
-                    });
-                });
-            });
-
-            return Promise.all(variableURLs.slice(0, 1).map(get));
-        }).then(responses => {
-            responses.forEach(response => {
-                expect(response).to.have.status(200);
-
-                const ids = response.body.map(_.property('id'));
-                expect(ids).to.have.members(['0100000US', '0400000US53']);
             });
         });
     });

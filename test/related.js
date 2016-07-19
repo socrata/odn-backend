@@ -1,7 +1,8 @@
 
+const _ = require('lodash');
 const chakram = require('chakram');
-const get = chakram.get;
 const expect = chakram.expect;
+const get = require('./get');
 
 function related(path) {
     return get(`http://localhost:3001/entity/v1/${path}`);
@@ -68,6 +69,23 @@ describe('/entity/v1/related', () => {
 
     it('should not accept an alphabetical limit', () => {
         return expect(related('parent?entity_id=0400000US53&limit=asd')).to.have.status(422);
+    });
+
+    it('should have case insensitive relation types', () => {
+        return Promise.all([related('parent?entity_id=0400000US53'),
+                            related('PARENT?entity_id=0400000US53'),
+                            related('pArEnT?entity_id=0400000US53')]).then(responses => {
+
+            responses.forEach(response => {
+                expect(response).to.have.status(200);
+                expect(response).to.have.schema(relatedSchema);
+            });
+
+            const control = responses[0].body;
+            _.tail(responses).forEach(response => {
+                expect(response.body).to.deep.equal(control);
+            });
+        });
     });
 
     it('should show that the pacific division is a parent of washington', () => {

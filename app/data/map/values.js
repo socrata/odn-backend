@@ -7,11 +7,12 @@ const notFound = Exception.notFound;
 const invalid = Exception.invalidParam;
 const Sources = require('../../sources');
 const Constants = require('../../constants');
-const Request = require('../../request');
+const SOQL = require('../../soql');
 const SessionManager = require('./session-manager');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     Promise.all([
         getSession(request),
@@ -20,15 +21,15 @@ module.exports = (request, response) => {
     ]).then(([session, zoomLevel, bounds]) => {
         const {entityType, dataset, constraints} = session;
 
-        getEntitiesInBounds(entityType, bounds)
+        getEntitiesInBounds(entityType, bounds, token)
             .then(ids => {
                 return Promise.resolve(_.uniq(ids.concat(session.entities.map(_.property('id')))));
             })
             .then(ids => session.notSent(ids, zoomLevel))
             .then(ids => {
                 const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
-                const valuesPromise = getDataChunked(dataset, constraints, idGroups);
-                const geodataPromise = getGeodataChunked(entityType, zoomLevel, idGroups);
+                const valuesPromise = getDataChunked(dataset, constraints, idGroups, token);
+                const geodataPromise = getGeodataChunked(entityType, zoomLevel, idGroups, token);
 
                 Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
                     geojson = joinGeoWithData(geojson, values);
@@ -47,20 +48,18 @@ function getLimit(entityType) {
     return Constants.GEO_LIMIT[entityType] || Constants.GEO_LIMIT_DEFAULT;
 }
 
-function getEntitiesInBounds(entityType, bounds) {
-    const url = Request.buildURL(`${getGeoURL(entityType)}.json`, _.assign({
-        $select: 'id',
-        type: entityType,
-        $limit: getLimit(entityType)
-    }, _.isNil(bounds) ? {} : {
-        $where: intersects('the_geom', bounds)
-    }, _.includes(Constants.GEO_RANKED, entityType) ? {
-        $order: 'rank desc'
-    } : {}));
-
-    return Request.getJSON(url).then(response => {
-        return Promise.resolve(response.map(_.property('id')));
-    });
+function getEntitiesInBounds(entityType, bounds, token) {
+    return new SOQL(`${getGeoURL(entityType)}.json`)
+        .token(token)
+        .select('id')
+        .equal('type', entityType)
+        .limit(getLimit(entityType))
+        .where(_.isNil(bounds) ? null : intersects('the_geom', bounds))
+        .order(_.includes(Constants.GEO_RANKED, entityType) ? 'rank desc' : null)
+        .send()
+        .then(response => {
+            return Promise.resolve(response.map(_.property('id')));
+        });
 }
 
 function joinGeoWithData(geojson, data) {
@@ -78,24 +77,26 @@ function joinGeoWithData(geojson, data) {
     return geojson;
 }
 
-function getDataChunked(dataset, constraints, idGroups) {
-    const promises = idGroups.map(_.curry(getData)(dataset)(constraints));
+function getDataChunked(dataset, constraints, idGroups, token) {
+    const promises = idGroups.map(ids => {
+        return getData(dataset, constraints, ids, token);
+    });
 
     return Promise.all(promises).then(responses => {
         return Promise.resolve(_.flatten(responses));
     });
 }
 
-function getData(dataset, constraints, ids) {
+function getData(dataset, constraints, ids, token) {
     const variable = _.first(_.values(dataset.variables));
 
-    const url = Request.buildURL(dataset.url, _.assign({
-        variable: _.last(variable.id.split('.')),
-        $where: whereIn('id', ids),
-        $select: 'id,value'
-    }, constraints));
-
-    return Request.getJSON(url);
+    return new SOQL(dataset.url)
+        .token(token)
+        .equal('variable', _.last(variable.id.split('.')))
+        .whereIn('id', ids)
+        .select('id')
+        .select('value')
+        .send();
 }
 
 function chunkIDs(ids, maximumLength) {
@@ -116,15 +117,7 @@ function chunkIDs(ids, maximumLength) {
     }).values().value();
 }
 
-function whereIn(name, options) {
-    return `${name} in (${options.map(quote).join(',')})`;
-}
-
-function quote(string) {
-    return `'${string}'`;
-}
-
-function getGeodataChunked(entityType, zoomLevel, idGroups) {
+function getGeodataChunked(entityType, zoomLevel, idGroups, token) {
     if (idGroups.length === 0) {
         return Promise.resolve({
             type: 'FeatureCollection',
@@ -132,7 +125,9 @@ function getGeodataChunked(entityType, zoomLevel, idGroups) {
         });
     }
 
-    const promises = idGroups.map(_.curry(getGeodata)(entityType)(zoomLevel));
+    const promises = idGroups.map(ids => {
+        return getGeodata(entityType, zoomLevel, ids, token);
+    });
 
     return Promise.all(promises).then(responses => {
         return Promise.resolve(mergeDeep(responses));
@@ -148,15 +143,16 @@ function mergeArrays(a, b) {
     return a;
 }
 
-function getGeodata(entityType, zoomLevel, ids) {
+function getGeodata(entityType, zoomLevel, ids, token) {
     const simplificationAmount = Math.pow(1/2, zoomLevel);
 
-    const url = Request.buildURL(`${getGeoURL(entityType)}.geojson`, {
-        $where: whereIn('id', ids),
-        $select: `id,name,${simplify('the_geom', simplificationAmount)}`
-    });
-
-    return Request.getJSON(url);
+    return new SOQL(`${getGeoURL(entityType)}.geojson`)
+        .token(token)
+        .whereIn('id', ids)
+        .select('id')
+        .select('name')
+        .select(`${simplify('the_geom', simplificationAmount)}`)
+        .send();
 }
 
 function simplify(column, amount) {

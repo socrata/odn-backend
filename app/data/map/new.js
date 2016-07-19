@@ -8,12 +8,13 @@ const invalid = Exception.invalidParam;
 const EntityLookup = require('../../entity-lookup');
 const Sources = require('../../sources');
 const Constants = require('../../constants');
-const Request = require('../../request');
+const SOQL = require('../../soql');
 const Session = require('./session');
 const SessionManager = require('./session-manager');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     Promise.all([
         getEntities(request),
@@ -27,9 +28,9 @@ module.exports = (request, response) => {
 
         checkConstraints(dataset, constraints).then(() => {
             Promise.all([
-                getSessionID(dataset, constraints, entityType, entities),
-                getBoundingBox(entities, entityType),
-                getSummaryStatistics(dataset, constraints, entityType)
+                getSessionID(dataset, constraints, entityType, entities, token),
+                getBoundingBox(entities, entityType, token),
+                getSummaryStatistics(dataset, constraints, entityType, token)
             ]).then(([sessionID, boundingBox, summaryStats]) => {
                 response.json({
                     session_id: sessionID,
@@ -46,58 +47,53 @@ function getSessionID(dataset, constraints, entityType, entities) {
     return SessionManager.add(session);
 }
 
-function getBoundingBox(entities, entityType) {
+function getBoundingBox(entities, entityType, token) {
     const ids = entities.map(_.property('id'));
-    const url = Request.buildURL(`${Constants.GEO_URLS[entityType]}.json`, {
-        $where: whereIn('id', ids),
-        $select: 'extent(the_geom)'
-    });
+    return new SOQL(`${Constants.GEO_URLS[entityType]}.json`)
+        .token(token)
+        .whereIn('id', ids)
+        .select('extent(the_geom)')
+        .send()
+        .then(response => {
+            response = response[0];
 
-    return Request.getJSON(url).then(response => {
-        response = response[0];
+            if (_.isEmpty(response))
+                return Promise.reject(notFound(`no geodata found for ids: ${ids}`));
 
-        if (_.isEmpty(response))
-            return Promise.reject(notFound(`no geodata found for ids: ${ids}`));
+            const coordinates = response
+                .extent_the_geom
+                .coordinates[0][0]
+                .slice(0, 4)
+                .map(_.reverse);
+            const sw = coordinates[0];
+            const ne = coordinates[2];
 
-        const coordinates = response
-            .extent_the_geom
-            .coordinates[0][0]
-            .slice(0, 4)
-            .map(_.reverse);
-        const sw = coordinates[0];
-        const ne = coordinates[2];
-
-        return Promise.resolve([sw, ne]);
-    });
+            return Promise.resolve([sw, ne]);
+        });
 }
 
-function getSummaryStatistics(dataset, constraints, entityType) {
+function getSummaryStatistics(dataset, constraints, entityType, token) {
     const variable = _.values(dataset.variables)[0];
 
-    const url = Request.buildURL(dataset.url, _.assign({
-        $where: `type in ('${entityType}','${_.last(entityType.split('.'))}')`,
-        variable: _.last(variable.id.split('.')),
-        $select: 'avg(value) as average, min(value) as minimum, max(value) as maximum'
-    }, constraints));
+    return new SOQL(dataset.url)
+        .token(token)
+        .whereIn('type', [entityType, _.last(entityType.split('.'))])
+        .equal('variable', _.last(variable.id.split('.')))
+        .selectAs('avg(value)', 'average')
+        .selectAs('min(value)', 'minimum')
+        .selectAs('max(value)', 'maximum')
+        .equals(constraints)
+        .send()
+        .then(response => {
+            response = response[0];
 
-    return Request.getJSON(url).then(response => {
-        response = response[0];
+            if (_.isEmpty(response))
+                return Promise.reject(notFound(`no data found for variable ${variable.id}
+                    with entity type ${entityType}`));
 
-        if (_.isEmpty(response))
-            return Promise.reject(notFound(`no data found for variable ${variable.id}
-                with entity type ${entityType}`));
-
-        response = _.mapValues(response, parseFloat);
-        return Promise.resolve(response);
-    });
-}
-
-function whereIn(name, options) {
-    return `${name} in (${options.map(quote).join(',')})`;
-}
-
-function quote(string) {
-    return `'${string}'`;
+            response = _.mapValues(response, parseFloat);
+            return Promise.resolve(response);
+        });
 }
 
 function getEntities(request) {
@@ -106,7 +102,7 @@ function getEntities(request) {
     if (_.isNil(ids))
         return Promise.reject(invalid('parameter entity_id required'));
 
-    return EntityLookup.byIDs(ids).then(entities => {
+    return EntityLookup.byIDs(ids, request.token).then(entities => {
         if (entities.length === 0)
             return Promise.reject(notFound(`entities not found: ${ids}`));
 
