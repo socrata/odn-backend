@@ -654,6 +654,29 @@
                 "sources": [["bea", "http://www.bea.gov/newsreleases/regional/rpp/rpp_newsrelease.htm"]]
             }
         }
+    },
+
+    "crime": {
+        "datasets": {
+            "fbi_ucr": {
+                "name": "FBI Uniform Crime Reporting Program",
+                "fxf": "eds5-udzt",
+                "constraints": ["year"],
+                "variables": {
+                    "rate": {
+                        "name": "Crime incident rate per 100,000 people",
+                        "type": "rate"
+                    },
+                    "count": {
+                        "name": "Crime incident count",
+                        "type": "count"
+                    }
+                },
+                "searchTerms": ["crime", "policing", "public safety", "arrest", "warrant", "police"],
+                "description": "Crime statistics are sourced from the FBI Uniform Crime Reporting Program and aggregated across year and crime type. The FBI does not gather statistics for all jurisdictions, so some localities may be missing. Normalization is based on the population values published with the UCR data itself, so rather than on US Census data, as the jurisdiction of the data may vary. Crime rates are normalized on a per 100K basis; specifically, the crime count is divided by the population count, the result is then multiplied by 100K and rounded to the nearest integer value.",
+                "sources": ["fbi_ucr"]
+            }
+        }
     }
 }
 
