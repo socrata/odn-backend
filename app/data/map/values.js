@@ -48,7 +48,7 @@ function handleWebsocket(socket, request) {
                             geojson = joinGeoWithData(geojson, values);
                             socket.send(JSON.stringify({
                                 geojson,
-                                message: messageString,
+                                message: JSON.parse(messageString),
                                 type: 'geojson'
                             }));
                         }).catch(errorHandler);
