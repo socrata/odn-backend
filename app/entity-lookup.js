@@ -11,7 +11,7 @@ const notFound = Exception.notFound;
 class EntityLookup {
     static byID(id, token) {
         if (_.isNil(id))
-            return Promise.reject(invalid('id cannot be null'));
+            return Promise.reject(invalid('entity_id cannot be null'));
 
         return new SOQL(Constants.ENTITY_URL)
             .token(token)
@@ -19,7 +19,7 @@ class EntityLookup {
             .send()
             .then(entities => {
                 if (entities.length === 0)
-                    return Promise.reject(notFound(`id not found: '${id}'`));
+                    return Promise.reject(notFound(`entity_id not found: '${id}'`));
                 return Promise.resolve(entities[0]);
             });
     }
