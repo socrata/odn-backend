@@ -36,7 +36,7 @@ const Constants = {
     CATALOG_LIMIT_DEFAULT: 10,
     CATALOG_LIMIT_MAX: 100,
 
-    TIMEOUT_MS: 10000,
+    TIMEOUT_MS: 30000,
     CACHE_OPTIONS: {
         expires: 43200, // 12 hours
     },
