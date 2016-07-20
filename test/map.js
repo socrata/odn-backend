@@ -1,11 +1,16 @@
 
 const _ = require('lodash');
+const WebSocket = require('ws');
 const chakram = require('chakram');
 const expect = chakram.expect;
 const get = require('./get');
 
 function map(path) {
     return get(`http://localhost:3001/data/v1/map/values?${path}`);
+}
+
+function mapWS(path) {
+    return new WebSocket(`ws://localhost:3001/data/v1/map/values`);
 }
 
 function newMap(path) {
@@ -301,9 +306,64 @@ describe('/data/v1/map', () => {
     });
 
     describe('/data/v1/map/values over websocket', () => {
+        let response, sessionID, ws;
 
+        before(() => {
+            return newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
+                expect(response).to.have.status(200);
+                response = response;
+                sessionID = response.body.session_id;
+
+                ws = mapWS();
+                return new Promise((resolve, reject) => {
+                    ws.on('open', () => {
+                        resolve();
+                    });
+                });
+            });
+        });
+
+        it('should return an error if the message is not JSON', () => {
+            ws.send('invalid-json');
+
+            return next(ws).then(response => {
+                expect(response.type).to.equal('error');
+                expect(response.message).to.equal('invalid-json');
+            });
+        });
+
+        it('should return an error if the message is missing parameters', () => {
+            ws.send(JSON.stringify({}));
+
+            return next(ws).then(response => {
+                expect(response.type).to.equal('error');
+            });
+        });
+
+        it('should return geojson for a valid request', () => {
+            ws.send(JSON.stringify({
+                session_id: sessionID,
+                zoom_level: 4,
+                bounds: washingtonOregon.split(',')
+            }));
+
+            return next(ws).then(response => {
+                expect(response.type).to.equal('geojson');
+                expect(response.message).to.exist;
+                expect(response.geojson).to.exist;
+            });
+        });
     });
 });
+
+// Promise with the next response of the websocket in JSON.
+function next(socket) {
+    return new Promise((resolve, reject) => {
+        socket.on('message', data => {
+            resolve(JSON.parse(data));
+        });
+    });
+}
 
 const newMapSchema = {
     type: 'object',

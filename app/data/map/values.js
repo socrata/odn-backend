@@ -238,7 +238,8 @@ function getBounds(query) {
     if (_.isEmpty(bounds))
         return Promise.reject(invalid('parameter bounds required'));
 
-    if (_.isString(bounds)) bounds = bounds.split(',').map(parseFloat);
+    if (_.isString(bounds)) bounds = bounds.split(',');
+    bounds = bounds.map(parseFloat);
     const [nwlat, nwlong, selat, selong] = bounds;
 
     if (bounds.length !== 4 ||
