@@ -33,12 +33,24 @@ function handleHTTP(request, response) {
 }
 
 function handleWebsocket(socket, request) {
-    socket.on('message', messageString => {
-        const message = JSON.parse(messageString);
+    socket.on('message', message => {
+        try {
+            message = JSON.parse(message);
+        } catch (error) {
+            socket.send(JSON.stringify({
+                message,
+                type: 'error',
+                error: {
+                    message: 'error parsing message as JSON',
+                    statusCode: 422
+                }
+            }));
+
+            return;
+        }
 
         const errorHandler = error => {
-            console.log(error);
-            socket.send({error, message, type: 'error'});
+            socket.send(JSON.stringify({error, message, type: 'error'}));
         };
 
         parseQuery(message).then(([session, bounds, zoomLevel]) => {
