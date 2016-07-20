@@ -16,6 +16,11 @@ After cloning the repository and downloading node,
 simply run `npm install` from within the project directory
 to install all dependencies.
 
+The ODN backend uses syntactic features of ES6 that are only available in
+recent versions of Node, so it may fail to run with older versions.
+Make sure that you use the Node version specified in `package.json` (currently `6.2.2`).
+You can check your node version using `node --version`.
+
 ### Memcached
 
 The ODN backend uses [memcached](https://memcached.org/)
@@ -78,6 +83,27 @@ every commit. To install it, run:
 ```sh
 ln -s -f ../../pre-commit.sh .git/hooks/pre-commit
 ```
+
+#### Load Tests
+
+The `load-test.sh` script can be used to put load on the service.
+It randomly generates thousands of valid URLs and then uses
+[Siege](https://www.joedog.org/siege-home/) to test them.
+
+First, install Siege. On a mac, just use `brew install siege`.
+
+Then, run the `load-test.sh` script with a domain.
+For example, test against localhost, use
+
+```
+./load-test.sh localhost:3001
+```
+
+This will start a small load test. To change the parameters of the test,
+edit `load-test.sh`. Please do not use this script on production.
+Also, remember that the main bottleneck of the ODN API is the Socrata platform,
+and that a load test of the ODN is a load test of the platform.
+Don't take it down.
 
 ### Logging
 
