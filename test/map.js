@@ -182,7 +182,7 @@ describe('/data/v1/map', () => {
         });
     });
 
-    describe('/values', () => {
+    describe('/data/v1/map/values over http', () => {
         let response, sessionID;
 
         before(() => {
@@ -298,6 +298,10 @@ describe('/data/v1/map', () => {
                 });
             });
         });
+    });
+
+    describe('/data/v1/map/values over websocket', () => {
+
     });
 });
 
