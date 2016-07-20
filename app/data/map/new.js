@@ -42,8 +42,8 @@ module.exports = (request, response) => {
     }).catch(errorHandler);
 };
 
-function getSessionID(dataset, constraints, entityType, entities) {
-    const session = new Session(dataset, constraints, entityType, entities);
+function getSessionID(dataset, constraints, entityType, entities, token) {
+    const session = new Session(dataset, constraints, entityType, entities, token);
     return SessionManager.add(session);
 }
 

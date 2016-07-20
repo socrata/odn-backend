@@ -10,35 +10,67 @@ const Constants = require('../../constants');
 const SOQL = require('../../soql');
 const SessionManager = require('./session-manager');
 
-module.exports = (request, response) => {
-    const errorHandler = Exception.getHandler(request, response);
-    const token = request.token;
-
-    Promise.all([
-        getSession(request),
-        getZoomLevel(request),
-        getBounds(request)
-    ]).then(([session, zoomLevel, bounds]) => {
-        const {entityType, dataset, constraints} = session;
-
-        getEntitiesInBounds(entityType, bounds, token)
-            .then(ids => {
-                return Promise.resolve(_.uniq(ids.concat(session.entities.map(_.property('id')))));
-            })
-            .then(ids => session.notSent(ids, zoomLevel))
-            .then(ids => {
-                const idGroups = chunkIDs(ids, Constants.MAX_URL_LENGTH / 2);
-                const valuesPromise = getDataChunked(dataset, constraints, idGroups, token);
-                const geodataPromise = getGeodataChunked(entityType, zoomLevel, idGroups, token);
-
-                Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
-                    geojson = joinGeoWithData(geojson, values);
-
-                    response.json({geojson});
-                }).catch(errorHandler);
-            }).catch(errorHandler);
-    }).catch(errorHandler);
+module.exports = {
+    http: handleHTTP,
+    websocket: handleWebsocket
 };
+
+function handleHTTP(request, response) {
+    const errorHandler = Exception.getHandler(request, response);
+
+    parseQuery(request.query).then(([session, bounds, zoomLevel]) => {
+        idsToSend(session, bounds, zoomLevel).then(groups => {
+            const valuesPromise = getDataChunked(session, groups);
+            const geodataPromise = getGeodataChunked(session, zoomLevel, groups);
+
+            Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
+                geojson = joinGeoWithData(geojson, values);
+
+                response.json({geojson});
+            }).catch(errorHandler);
+        }).catch(errorHandler);
+    }).catch(errorHandler);
+}
+
+function handleWebsocket(socket, request) {
+    socket.on('message', messageString => {
+        const message = JSON.parse(messageString);
+
+        const errorHandler = error => {
+            console.log(error);
+            socket.send({error, message, type: 'error'});
+        };
+
+        parseQuery(message).then(([session, bounds, zoomLevel]) => {
+            idsToSend(session, bounds, zoomLevel).then(groups => {
+                groups.forEach(group => {
+                    Promise.all([
+                        getGeodata(session, zoomLevel, group),
+                        getData(session, group)
+                    ]).then(([geojson, values]) => {
+                        geojson = joinGeoWithData(geojson, values);
+                        socket.send(JSON.stringify({geojson, message, type: 'geojson'}));
+                    }).catch(errorHandler);
+                });
+            }).catch(errorHandler);
+        }).catch(errorHandler);
+    });
+}
+
+/**
+ * Finds the IDs of the entities in the given bounds that have not
+ * been sent at the given zoom level. Chunks the IDs into groups.
+ */
+function idsToSend(session, bounds, zoomLevel) {
+    return getEntitiesInBounds(session.entityType, bounds, session.token)
+        .then(ids => includeSelected(ids, session))
+        .then(ids => session.notSent(ids, zoomLevel))
+        .then(ids => Promise.resolve(chunkIDs(ids, Constants.MAX_URL_LENGTH / 2)));
+}
+
+function includeSelected(ids, session) {
+    return Promise.resolve(_.uniq(ids.concat(session.entities.map(_.property('id')))));
+}
 
 function getGeoURL(entityType) {
     return Constants.GEO_URLS[entityType];
@@ -77,9 +109,9 @@ function joinGeoWithData(geojson, data) {
     return geojson;
 }
 
-function getDataChunked(dataset, constraints, idGroups, token) {
+function getDataChunked(session, idGroups) {
     const promises = idGroups.map(ids => {
-        return getData(dataset, constraints, ids, token);
+        return getData(session, ids);
     });
 
     return Promise.all(promises).then(responses => {
@@ -87,11 +119,11 @@ function getDataChunked(dataset, constraints, idGroups, token) {
     });
 }
 
-function getData(dataset, constraints, ids, token) {
-    const variable = _.first(_.values(dataset.variables));
+function getData(session, ids) {
+    const variable = _.first(_.values(session.dataset.variables));
 
-    return new SOQL(dataset.url)
-        .token(token)
+    return new SOQL(session.dataset.url)
+        .token(session.token)
         .equal('variable', _.last(variable.id.split('.')))
         .whereIn('id', ids)
         .select('id')
@@ -117,7 +149,7 @@ function chunkIDs(ids, maximumLength) {
     }).values().value();
 }
 
-function getGeodataChunked(entityType, zoomLevel, idGroups, token) {
+function getGeodataChunked(session, zoomLevel, idGroups) {
     if (idGroups.length === 0) {
         return Promise.resolve({
             type: 'FeatureCollection',
@@ -126,7 +158,7 @@ function getGeodataChunked(entityType, zoomLevel, idGroups, token) {
     }
 
     const promises = idGroups.map(ids => {
-        return getGeodata(entityType, zoomLevel, ids, token);
+        return getGeodata(session, zoomLevel, ids);
     });
 
     return Promise.all(promises).then(responses => {
@@ -143,11 +175,11 @@ function mergeArrays(a, b) {
     return a;
 }
 
-function getGeodata(entityType, zoomLevel, ids, token) {
+function getGeodata(session, zoomLevel, ids) {
     const simplificationAmount = Math.pow(1/2, zoomLevel);
 
-    return new SOQL(`${getGeoURL(entityType)}.geojson`)
-        .token(token)
+    return new SOQL(`${getGeoURL(session.entityType)}.geojson`)
+        .token(session.token)
         .whereIn('id', ids)
         .select('id')
         .select('name')
@@ -174,8 +206,44 @@ function boundsToPolygon(bounds) {
     return `'POLYGON((${coordinates}))'`;
 }
 
-function getZoomLevel(request) {
-    let zoomLevel = request.query.zoom_level;
+function parseQuery(query) {
+    return Promise.all([
+        getSession(query),
+        getBounds(query),
+        getZoomLevel(query)
+    ]);
+}
+
+function getSession(query) {
+    let sessionID = query.session_id;
+
+    if (_.isNil(sessionID) || sessionID === '')
+        return Promise.reject(invalid('parameter session_id required'));
+
+    return SessionManager.get(sessionID);
+}
+
+function getBounds(query) {
+    let bounds = query.bounds;
+
+    if (_.isEmpty(bounds))
+        return Promise.reject(invalid('parameter bounds required'));
+
+    if (_.isString(bounds)) bounds = bounds.split(',').map(parseFloat);
+    const [nwlat, nwlong, selat, selong] = bounds;
+
+    if (bounds.length !== 4 ||
+        _.isNil(nwlat) || _.isNil(nwlong) || _.isNil(selat) || _.isNil(selong) ||
+        Math.abs(nwlat) > 90 || Math.abs(nwlong) > 180 ||
+        Math.abs(selat) > 90 || Math.abs(selong) > 180 ||
+        nwlat < selat || nwlong > selong)
+        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
+
+    return Promise.resolve([nwlat, nwlong, selat, selong]);
+}
+
+function getZoomLevel(query) {
+    let zoomLevel = query.zoom_level;
 
     if (_.isNil(zoomLevel) || zoomLevel === '')
         return Promise.reject(invalid('parameter zoom_level required'));
@@ -190,30 +258,5 @@ function getZoomLevel(request) {
         return Promise.reject(invalid(`zoom_level must be an integer`));
 
     return Promise.resolve(zoomLevel);
-}
-
-function getSession(request) {
-    const sessionID = request.query.session_id;
-
-    if (_.isNil(sessionID) || sessionID === '')
-        return Promise.reject(invalid('parameter session_id required'));
-
-    return SessionManager.get(sessionID);
-}
-
-function getBounds(request) {
-    const bounds = request.query.bounds;
-
-    if (_.isNil(bounds) || bounds === '')
-        return Promise.reject(invalid('parameter bounds required'));
-
-    const [nwlat, nwlong, selat, selong] = bounds.split(',').map(parseFloat);
-    if (_.isNil(nwlat) || _.isNil(nwlong) || _.isNil(selat) || _.isNil(selong) ||
-        Math.abs(nwlat) > 90 || Math.abs(nwlong) > 180 ||
-        Math.abs(selat) > 90 || Math.abs(selong) > 180 ||
-        nwlat < selat || nwlong > selong)
-        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
-
-    return Promise.resolve([nwlat, nwlong, selat, selong]);
 }
 
