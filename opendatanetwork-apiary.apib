@@ -703,6 +703,15 @@ data. Note: session IDs expire after 24 hours.
 Retrieves GeoJSON map data including variable values and polygon boundaries for geographical 
 regions like states, counties, cities, or zip codes.
 
+This endpoint is also available through [websockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket).
+After creating a map, connect to this endpoint using `ws` instead of `http`.
+To get values, send a JSON message with the same parameters as the HTTP endpoint.
+If the request was malformed, the server will send back a JSON object with the
+`type` field set to `error`. 
+If the request was successful, the server will send a series of JSON objects in
+the same form as the HTTP endpoint.
+Check out a reference websocket implementation [here](http://jsfiddle.net/w4nxL46m/64/).
+
 + Parameters
 
     + session_id (required, string)
