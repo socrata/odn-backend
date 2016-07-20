@@ -41,6 +41,16 @@ class Exception {
         };
     }
 
+    static getSocketHandler(socket, message) {
+        return error => {
+            socket.send(JSON.stringify({
+                message,
+                error,
+                type: 'error'
+            }));
+        };
+    }
+
     static respond(error, request, response, next, statusCode) {
         statusCode = error.statusCode || statusCode || 500;
 

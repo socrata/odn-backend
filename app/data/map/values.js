@@ -33,38 +33,27 @@ function handleHTTP(request, response) {
 }
 
 function handleWebsocket(socket, request) {
-    socket.on('message', message => {
-        try {
-            message = JSON.parse(message);
-        } catch (error) {
-            socket.send(JSON.stringify({
-                message,
-                type: 'error',
-                error: {
-                    message: 'error parsing message as JSON',
-                    statusCode: 422
-                }
-            }));
+    socket.on('message', messageString => {
+        const errorHandler = Exception.getSocketHandler(socket, messageString);
 
-            return;
-        }
-
-        const errorHandler = error => {
-            socket.send(JSON.stringify({error, message, type: 'error'}));
-        };
-
-        parseQuery(message).then(([session, bounds, zoomLevel]) => {
-            idsToSend(session, bounds, zoomLevel).then(groups => {
-                groups.forEach(group => {
-                    Promise.all([
-                        getGeodata(session, zoomLevel, group),
-                        getData(session, group)
-                    ]).then(([geojson, values]) => {
-                        geojson = joinGeoWithData(geojson, values);
-                        socket.send(JSON.stringify({geojson, message, type: 'geojson'}));
-                    }).catch(errorHandler);
-                });
-            }).catch(errorHandler);
+        parseJSON(messageString)
+            .then(parseQuery)
+            .then(([session, bounds, zoomLevel]) => {
+                idsToSend(session, bounds, zoomLevel).then(groups => {
+                    groups.forEach(group => {
+                        Promise.all([
+                            getGeodata(session, zoomLevel, group),
+                            getData(session, group)
+                        ]).then(([geojson, values]) => {
+                            geojson = joinGeoWithData(geojson, values);
+                            socket.send(JSON.stringify({
+                                geojson,
+                                message: messageString,
+                                type: 'geojson'
+                            }));
+                        }).catch(errorHandler);
+                    });
+                }).catch(errorHandler);
         }).catch(errorHandler);
     });
 }
@@ -78,6 +67,14 @@ function idsToSend(session, bounds, zoomLevel) {
         .then(ids => includeSelected(ids, session))
         .then(ids => session.notSent(ids, zoomLevel))
         .then(ids => Promise.resolve(chunkIDs(ids, Constants.MAX_URL_LENGTH / 2)));
+}
+
+function parseJSON(string) {
+    try {
+        return Promise.resolve(JSON.parse(string));
+    } catch (error) {
+        return Promise.reject(invalid('invalid JSON'));
+    }
 }
 
 function includeSelected(ids, session) {
