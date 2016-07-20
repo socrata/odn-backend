@@ -5,12 +5,14 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
+const ws = require('express-ws')(app);
 
 app.use(compression());
 app.use(cors());
 
 app.get('/', require('./app/home'));
 
+app.ws('/data/v1/map/websocket', require('./app/data/map/values-ws'));
 
 app.use(require('./app/token'));
 app.get('/data/v1/availability', require('./app/data/availability/controller'));

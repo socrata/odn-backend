@@ -7,6 +7,7 @@
     "cors": "2.7.1",
     "crypto": "0.0.3",
     "express": "4.14.0",
+    "express-ws": "2.0.0-rc.1",
     "geojson-merge": "0.1.0",
     "lodash": "4.13.1",
     "memjs": "0.10.0",
