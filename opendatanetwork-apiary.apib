@@ -84,7 +84,7 @@ interaction where suggestions are provided as a user types.
         }
         
         
-## Search [/search/v1/dataset{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+## Search Datasets [/search/v1/dataset{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
 
 Search for datasets related to an ODN dataset or set of entities.
 
@@ -118,7 +118,7 @@ Search for datasets related to an ODN dataset or set of entities.
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
         used with your request. Can also be passed via the `X-App-Token` HTTP header.
 
-### Get search results [GET]
+### Get datasets [GET]
 
 + Request
 
@@ -165,6 +165,78 @@ Search for datasets related to an ODN dataset or set of entities.
               "categories":[
                 "health"
               ]
+            }
+          ]
+        }
+        
+## Search Questions [/search/v1/question{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+
+Search for questions related to an ODN dataset or set of entities.
+
++ Parameters
+
+    + entity_id (optional, string, `0100000US`)
+    
+        Set of entities to find questions for.
+        
+    + dataset_id (optional, string, `demographics.population`)
+    
+        Dataset to find questions for. 
+
+    + limit (optional, number)
+
+        Maximum number of results to return.
+        Must be an integer from 0 to 50000.
+
+        + Default: `10`
+        
+    + offset (optional, number)
+    
+        Number of results to skip.
+        Used for pagination.
+        
+        + Default: `0`
+
+    + app_token (optional, string)
+
+        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
+        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+
+### Get questions [GET]
+
++ Request
+
+    Search for questions about population and the United States.
+
+    - Parameters
+        - dataset_id: demographics.population
+        - entity_id: 0100000US
+
+    - Headers
+
+            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
+
++ Response 200 (application/json)
+        
+        {
+          "questions": [
+            {
+              "entity": {
+                "id": "0100000US",
+                "name": "United States"
+              },
+              "variable_id": "demographics.population.population",
+              "variable_name": "population count",
+              "text": "What is the population count of United States?"
+            },
+            {
+              "entity": {
+                "id": "0100000US",
+                "name": "United States"
+              },
+              "variable_id": "demographics.population.population_change",
+              "variable_name": "population rate of change",
+              "text": "What is the population rate of change of United States?"
             }
           ]
         }
