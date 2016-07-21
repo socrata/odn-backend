@@ -35,6 +35,7 @@ const Constants = {
     CATALOG_URL: 'https://api.us.socrata.com/api/catalog/v1',
     CATALOG_LIMIT_DEFAULT: 10,
     CATALOG_LIMIT_MAX: 100,
+    CATALOG_USER_AGENT: 'ODN/1.0',
 
     TIMEOUT_MS: 30000,
     CACHE_OPTIONS: {

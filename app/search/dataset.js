@@ -34,7 +34,14 @@ function searchDatasets(entities, searchTerms, limit, offset) {
         q_internal: qInternal(entities, searchTerms)
     }));
 
-    return Request.getJSON(url).then(results => {
+    const options = {
+        url,
+        headers: {
+            'User-Agent': Constants.CATALOG_USER_AGENT
+        }
+    };
+
+    return Request.getJSON(options).then(results => {
         const datasets = results.results.map(getDataset);
         return Promise.resolve(datasets);
     });
