@@ -9,6 +9,7 @@ const Sources = require('../../sources');
 const Constants = require('../../constants');
 const SOQL = require('../../soql');
 const SessionManager = require('./session-manager');
+const format = require('../values/format');
 
 module.exports = {
     http: handleHTTP,
@@ -104,16 +105,15 @@ function getEntitiesInBounds(entityType, bounds, token) {
 }
 
 function joinGeoWithData(geojson, data) {
-    const idToValue = _(data)
-        .keyBy('id')
-        .mapValues(_.property('value'))
-        .value();
+    const idToValue = _.keyBy(data, 'id');
 
-    geojson.features = geojson.features
-        .filter(feature => feature.properties.id in idToValue);
+    geojson.features = geojson.features.filter(feature => {
+        return feature.properties.id in idToValue;
+    });
 
-    geojson.features
-        .forEach(feature => feature.properties.value = idToValue[feature.properties.id]);
+    geojson.features.forEach(feature => {
+        feature.properties = _.assign(feature.properties, idToValue[feature.properties.id]);
+    });
 
     return geojson;
 }
@@ -129,15 +129,25 @@ function getDataChunked(session, idGroups) {
 }
 
 function getData(session, ids) {
-    const variable = _.first(_.values(session.dataset.variables));
-
     return new SOQL(session.dataset.url)
         .token(session.token)
-        .equal('variable', _.last(variable.id.split('.')))
+        .equal('variable', _.last(session.variable.id.split('.')))
+        .equals(session.constraints)
         .whereIn('id', ids)
         .select('id')
         .select('value')
-        .send();
+        .send()
+        .then(data => formatData(session, data));
+}
+
+function formatData(session, data) {
+    const formatter = format(session.variable.type);
+
+    data.forEach(row => {
+        row.value_formatted = formatter(row.value);
+    });
+
+    return Promise.resolve(data);
 }
 
 function chunkIDs(ids, maximumLength) {
@@ -162,7 +172,13 @@ function getGeodataChunked(session, zoomLevel, idGroups) {
     if (idGroups.length === 0) {
         return Promise.resolve({
             type: 'FeatureCollection',
-            features: []
+            features: [],
+            crs: {
+                type: 'name',
+                properties: {
+                    name: 'urn:ogc:def:crs:OGC:1.3:CRS84'
+                }
+            }
         });
     }
 

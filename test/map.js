@@ -103,6 +103,16 @@ describe('/data/v1/map', () => {
                 });
             });
 
+            it('should have formatted summary statistics', () => {
+                return response.then(response => {
+                    const stats = response.body.summary_statistics;
+                    expect(stats.minimum_formatted).to.equal('570,134');
+                    expect(stats.maximum_formatted).to.equal('37,659,181');
+                    expect(stats.average_formatted).to.exist;
+                    return chakram.wait();
+                });
+            });
+
             describe('getting states in the western US', () => {
                 let valuesResponse, names;
 
@@ -280,6 +290,9 @@ describe('/data/v1/map', () => {
 
             return Promise.all(urls.map(map)).then(responses => {
                 const allIDs = responses.map(response => {
+                    expect(response).to.have.status(200);
+                    expect(response).to.have.schema(mapValuesSchema);
+
                     return response.body.geojson.features.map(_.property('id'));
                 });
 
@@ -298,6 +311,9 @@ describe('/data/v1/map', () => {
                 const sessionID = sessionResponse.body.session_id;
 
                 return map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=5`).then(valuesResponse => {
+                    expect(valuesResponse).to.have.status(200);
+                    expect(valuesResponse).to.have.schema(mapValuesSchema);
+
                     const ids = valuesResponse.body.geojson.features.map(feature => feature.properties.id);
                     return expect(ids).to.include.members(['1600000US5340350']);
                 });
@@ -392,8 +408,45 @@ const newMapSchema = {
             },
             minItems: 2,
             maxItems: 2
-        },
-        required: ['session_id', 'summary_statistics', 'bounds']
-    }
+        }
+    },
+    required: ['session_id', 'summary_statistics', 'bounds']
 };
+
+const mapValuesSchema = {
+    type: 'object',
+    properties: {
+        geojson: {
+            type: 'object',
+            properties: {
+                crs: {type: 'object'},
+                type: {type: 'string'},
+                features: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            type: {type: 'string'},
+                            geometry: {type: 'object'},
+                            properties: {
+                                type: 'object',
+                                properties: {
+                                    id: {type: 'string'},
+                                    name: {type: 'string'},
+                                    value: {type: 'string'},
+                                    value_formatted: {type: 'string'}
+                                },
+                                required: ['id', 'name', 'value', 'value_formatted']
+                            }
+                        },
+                        required: ['type', 'geometry', 'properties']
+                    }
+                }
+            },
+            required: ['crs', 'features', 'type']
+        },
+    },
+    required: ['geojson']
+};
+
 

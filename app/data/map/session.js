@@ -1,11 +1,15 @@
 'use strict';
 
+const _ = require('lodash');
+
 const cache = require('../../cache');
 const Constants = require('../../constants');
 
 class Session {
     constructor(dataset, constraints, entityType, entities, token, id) {
         this.dataset = dataset;
+        this.variable = _.first(_.values(dataset.variables));
+        this.variable = _.values(dataset.variables)[0];
         this.constraints = constraints;
         this.entityType = entityType;
         this.entities = entities;

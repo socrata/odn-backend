@@ -11,6 +11,7 @@ const Constants = require('../../constants');
 const SOQL = require('../../soql');
 const Session = require('./session');
 const SessionManager = require('./session-manager');
+const format = require('../values/format');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -74,6 +75,7 @@ function getBoundingBox(entities, entityType, token) {
 
 function getSummaryStatistics(dataset, constraints, entityType, token) {
     const variable = _.values(dataset.variables)[0];
+    const formatter = format(variable.type);
 
     return new SOQL(dataset.url)
         .token(token)
@@ -92,6 +94,13 @@ function getSummaryStatistics(dataset, constraints, entityType, token) {
                     with entity type ${entityType}`));
 
             response = _.mapValues(response, parseFloat);
+
+            _(response)
+                .toPairs()
+                .forEach(([key, value]) => {
+                    response[`${key}_formatted`] = formatter(value);
+                });
+
             return Promise.resolve(response);
         });
 }
