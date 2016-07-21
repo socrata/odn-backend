@@ -71,7 +71,7 @@ function getUnspecified(dataset, constraints) {
         });
 
         if (unspecifiedConstraints.length > 1) return reject(invalid(
-            `must specify values for all but one of: {unspecifiedConstraints.join(', ')}`));
+            `must specify values for all but one of: ${unspecifiedConstraints.join(', ')}`));
 
         if (variables.length > 1 && unspecifiedConstraints.length !== 0)
             return reject(invalid(`To retrieve a values for multiple variables,
@@ -108,6 +108,9 @@ module.exports = (request, response) => {
         getConstraints(request, dataset).then(constraints => {
             getUnspecified(dataset, constraints).then(unspecified => {
                 getValues(dataset, constraints, entities, unspecified, token).then(rows => {
+                    if (rows.length === 0) throw notFound(`no data found for the given entities
+                        with ${_(constraints).toPairs().map(pair => pair.join('=')).join(' and ')}`);
+
                     const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
                     const framePromise = getFrame(unspecified, rows)
                         .then(_.partial(getForecast, request));
@@ -218,6 +221,7 @@ function getValues(dataset, constraints, entities, unspecified, token) {
         .select(unspecified)
         .order(unspecified)
         .order('id')
+        .equals(constraints)
         .send();
 }
 

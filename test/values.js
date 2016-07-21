@@ -161,6 +161,11 @@ describe('/data/v1/values', () => {
         });
     });
 
+    it('should find no data for an invalid constraint value', () => {
+        return expect(values('entity_id=310M200US42660&variable=economy.cost_of_living.index&component=all'))
+            .to.have.status(404);
+    });
+
     it('should not be able to forecast multiple variables', () => {
         return values('variable=demographics.population&entity_id=0100000US&forecast=4').then(response => {
             expect(response).to.have.status(422);
