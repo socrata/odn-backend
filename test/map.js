@@ -277,24 +277,31 @@ describe('/data/v1/map', () => {
         });
 
         it('should return the same entities for different zoom levels', () => {
-            const urls = _.range(1, 18).map(zoomLevel => {
-                return `session_id=${sessionID}&bounds=${washingtonOregon}&zoom_level=${zoomLevel}`;
-            });
+            return newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
+                expect(response).to.have.status(200);
+                expect(response).to.have.schema(newMapSchema);
 
-            return Promise.all(urls.map(map)).then(responses => {
-                const allIDs = responses.map(response => {
-                    expect(response).to.have.status(200);
-                    expect(response).to.have.schema(mapValuesSchema);
+                const sessionID = response.body.session_id;
 
-                    return response.body.geojson.features.map(_.property('id'));
+                const urls = _.range(1, 18).filter(n => n % 2).map(zoomLevel => {
+                    return `session_id=${sessionID}&bounds=${washingtonOregon}&zoom_level=${zoomLevel}`;
                 });
 
-                const baseIDs = allIDs[0];
-                allIDs.slice(0).forEach(ids => {
-                    expect(baseIDs).to.have.members(baseIDs);
-                });
+                return Promise.all(urls.map(map)).then(responses => {
+                    const allIDs = responses.map(response => {
+                        expect(response).to.have.status(200);
+                        expect(response).to.have.schema(mapValuesSchema);
 
-                return chakram.wait();
+                        return response.body.geojson.features.map(_.property('properties.id'));
+                    });
+
+                    const baseIDs = allIDs[0];
+                    allIDs.slice(1).forEach(ids => {
+                        expect(ids).to.have.members(baseIDs);
+                    });
+
+                    return chakram.wait();
+                });
             });
         });
 

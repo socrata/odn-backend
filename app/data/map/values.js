@@ -201,15 +201,22 @@ function mergeArrays(a, b) {
 }
 
 function getGeodata(session, zoomLevel, ids) {
-    const simplificationAmount = Math.pow(1/2, zoomLevel);
-
     return new SOQL(`${getGeoURL(session.entityType)}.geojson`)
         .token(session.token)
         .whereIn('id', ids)
         .select('id')
         .select('name')
-        .select(`${simplify('the_geom', simplificationAmount)}`)
+        .select(`${simplify('the_geom', tolerance(zoomLevel))}`)
         .send();
+}
+
+/**
+ * Simplification tolerance in meters from zoom level.
+ *
+ * Zoom level is an integer ranging from 3 to 18.
+ */
+function tolerance(zoomLevel) {
+    return 2 * Math.pow(2, -zoomLevel);
 }
 
 function simplify(column, amount) {
@@ -282,6 +289,8 @@ function getZoomLevel(query) {
 
     if (isNaN(zoomLevel))
         return Promise.reject(invalid(`zoom_level must be an integer`));
+
+    zoomLevel = zoomLevel - zoomLevel % 2;
 
     return Promise.resolve(zoomLevel);
 }
