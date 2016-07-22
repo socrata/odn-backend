@@ -139,6 +139,8 @@ function formatFrameGoogle(dataset, unspecified, entities, frame) {
             return {c: row.map((value, index) => {
                 return _.assign({
                     v: value
+                }, !isForecast(index) ? {} : {
+                    v: !value
                 }, isForecast(index) || index === 0 ? {} : {
                     f: formatter(value)
                 }, index === 0 ? {
@@ -158,6 +160,8 @@ function formatFrameGoogle(dataset, unspecified, entities, frame) {
             return {c: row.map((value, index) => {
                 return _.assign({
                     v: value
+                }, !isForecast(index) ? {} : {
+                    v: !value
                 }, isForecast(index) || index === 0 ? {} : {
                     f: formatter(value)
                 });
