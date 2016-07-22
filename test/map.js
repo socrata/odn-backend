@@ -96,19 +96,12 @@ describe('/data/v1/map', () => {
             it('should have correct summary statistics', () => {
                 return response.then(response => {
                     const stats = response.body.summary_statistics;
-                    expect(stats.minimum).to.equal(570134);
-                    expect(stats.maximum).to.equal(37659181);
-                    expect(stats.average).to.be.within(570134, 37659181);
-                    return chakram.wait();
-                });
-            });
-
-            it('should have formatted summary statistics', () => {
-                return response.then(response => {
-                    const stats = response.body.summary_statistics;
-                    expect(stats.minimum_formatted).to.equal('570,134');
-                    expect(stats.maximum_formatted).to.equal('37,659,181');
-                    expect(stats.average_formatted).to.exist;
+                    expect(stats.names).to.deep.equal(['minimum', 'average', 'maximum']);
+                    expect(stats.values).to.have.lengthOf(3);
+                    expect(stats.values).to.be.ascending;
+                    expect(stats.values_formatted).to.have.lengthOf(3);
+                    expect(_.first(stats.values_formatted)).to.equal('570,134');
+                    expect(_.last(stats.values_formatted)).to.equal('37,659,181');
                     return chakram.wait();
                 });
             });
@@ -392,11 +385,20 @@ const newMapSchema = {
         summary_statistics: {
             type: 'object',
             properties: {
-                minimum: {type: 'number'},
-                average: {type: 'number'},
-                maximum: {type: 'number'}
+                names: {
+                    type: 'array',
+                    items: {type: 'string'}
+                },
+                values: {
+                    type: 'array',
+                    items: {type: 'number'}
+                },
+                values_formatted: {
+                    type: 'array',
+                    items: {type: 'string'}
+                }
             },
-            required: ['minimum', 'average', 'maximum']
+            required: ['names', 'values', 'values_formatted']
         },
         bounds: {
             type: 'array',

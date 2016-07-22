@@ -23,6 +23,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "devDependencies": {
+    "chai-sorted": "0.1.0",
     "chakram": "1.3.0",
     "csv": "1.1.0",
     "fast-csv": "2.0.1",

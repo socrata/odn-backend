@@ -93,15 +93,15 @@ function getSummaryStatistics(dataset, constraints, entityType, token) {
                 return Promise.reject(notFound(`no data found for variable ${variable.id}
                     with entity type ${entityType}`));
 
-            response = _.mapValues(response, parseFloat);
+            const names = ['minimum', 'average', 'maximum'];
+            const values = names.map(_.propertyOf(response)).map(parseFloat);
+            const valuesFormatted = values.map(formatter);
 
-            _(response)
-                .toPairs()
-                .forEach(([key, value]) => {
-                    response[`${key}_formatted`] = formatter(value);
-                });
-
-            return Promise.resolve(response);
+            return Promise.resolve({
+                names,
+                values,
+                values_formatted: valuesFormatted
+            });
         });
 }
 
