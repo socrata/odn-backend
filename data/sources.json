@@ -337,7 +337,7 @@
             "health_indicators": {
                 "name": "Health Indicators",
                 "fxf": "ph2b-gm84",
-                "constraints": ["year", "question_class", "question_topic", "question", "question_response", "break_out_category", "break_out"],
+                "constraints": ["year", "question", "question_response", "break_out"],
                 "variables": {
                     "confidence_limit_high": {},
                     "confidence_limit_low": {},
