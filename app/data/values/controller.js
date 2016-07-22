@@ -102,8 +102,12 @@ function formatFrame(format, dataset, unspecified, entities, frame) {
 }
 
 function formatFrameGoogle(dataset, unspecified, entities, frame) {
-    const forecast = frame.data.length > 2 && _.last(frame.data[0]) === 'forecast' ? 1 : 0;
+    const forecast = frame.data.length > 2 && _.last(frame.data[0]) === 'forecast';
     const entityLookup = _.keyBy(entities, 'id');
+
+    const isForecast = index => {
+        return forecast && index > 0 && index % 2 === 0;
+    };
 
     const columns = frame.data[0].map((column, index, columns) => {
         if (index === 0) {
@@ -111,19 +115,19 @@ function formatFrameGoogle(dataset, unspecified, entities, frame) {
                 id: column,
                 type: 'string'
             };
-        } else if (index < columns.length - forecast) {
+        } else if (isForecast(index)) {
+            return {
+                id: column,
+                type: 'boolean',
+                role: 'certainty'
+            };
+        } else {
             return _.assign({
                 id: column,
                 type: 'number'
             }, column in entityLookup ? {
                 label: entityLookup[column].name
             } : {});
-        } else {
-            return {
-                id: column,
-                type: 'boolean',
-                role: 'certainty'
-            };
         }
     });
 
@@ -135,7 +139,7 @@ function formatFrameGoogle(dataset, unspecified, entities, frame) {
             return {c: row.map((value, index) => {
                 return _.assign({
                     v: value
-                }, !(index > 0 && index < row.length - forecast) ? {} : {
+                }, isForecast(index) || index === 0 ? {} : {
                     f: formatter(value)
                 }, index === 0 ? {
                     f: variable.name
@@ -154,9 +158,9 @@ function formatFrameGoogle(dataset, unspecified, entities, frame) {
             return {c: row.map((value, index) => {
                 return _.assign({
                     v: value
-                }, (index > 0 && index < row.length - forecast) ? {
+                }, isForecast(index) || index === 0 ? {} : {
                     f: formatter(value)
-                }: {});
+                });
             })};
         });
 
@@ -258,11 +262,16 @@ function forecast(response, steps) {
         if (!_.isNumber(body[0][0]))
             return reject(invalid('cannot forecast data for a non-numerical type'));
 
-        const forecastHeader = header.concat(['forecast']);
+        const forecastHeader = header.slice();
+        _.range(header.length, 1, -1)
+            .forEach(index => forecastHeader.splice(index, 0, 'forecast'));
         const forecastBody = _(body)
             .unzip()
-            .map(series => series.concat(Forecast.linear(steps, series)))
-            .concat([_.times(body.length + steps, index => index >= body.length)])
+            .flatMap((series, index) => {
+                const forecasted = series.concat(Forecast.linear(steps, series));
+                if (index === 0) return [forecasted];
+                return [forecasted, _.times(forecasted.length, index => index >= series.length)];
+            })
             .unzip()
             .value();
         const forecastFrame = [forecastHeader].concat(forecastBody);
