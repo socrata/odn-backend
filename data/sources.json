@@ -10,7 +10,8 @@
                     "change": {
                         "name": "annual population change",
                         "description": "Percent change from the previous year",
-                        "type": "percent"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],

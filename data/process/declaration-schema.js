@@ -8,7 +8,9 @@ module.exports = {
                 id: {type: 'string'},
                 name: {type: 'string'},
                 description: {type: 'string'},
-                type: {type: 'string'}
+                type: {type: 'string'},
+                stoplight: {type: 'boolean'},
+                reverse: {type: 'boolean'}
             },
             required: ['id', 'name', 'type'],
             additionalProperties: false
