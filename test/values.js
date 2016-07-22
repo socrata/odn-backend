@@ -270,7 +270,12 @@ describe('/data/v1/values', () => {
         });
     });
 
-
+    it('should format the data as a google chart data table if format=google', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&format=google').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(googleDataTableSchema);
+        });
+    });
 });
 
 function header(response) {
@@ -297,5 +302,49 @@ const valuesSchema = {
         },
         required: ['data']
     }
+};
+
+const googleDataTableSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            properties: {
+                cols: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: {type: 'string'},
+                            type: {type: 'string'},
+                            label: {type: 'string'}
+                        },
+                        required: ['id', 'type']
+                    }
+                },
+                rows: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            c: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        v: {},
+                                        f: {type: 'string'}
+                                    },
+                                    required: ['v']
+                                }
+                            }
+                        },
+                        required: ['c']
+                    }
+                }
+            },
+            required: ['cols', 'rows']
+        }
+    },
+    required: ['data']
 };
 

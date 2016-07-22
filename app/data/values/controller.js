@@ -6,6 +6,7 @@ const EntityLookup = require('../../entity-lookup');
 const Exception = require('../../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
+const server = Exception.server;
 
 const SOQL = require('../../soql');
 const Constants = require('../../constants');
@@ -13,6 +14,52 @@ const Sources = require('../../sources');
 const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
 const Describe = require('./describe');
+const format = require('./format');
+
+/**
+ * Specify any number of entities
+ *
+ * Generates a data frame in the form:
+ *
+ * [{variable or constraint name},{entity id},{entity_id}...],
+ * [{variable or constraint value},{value for entity},{value for entity}],
+ * ...
+ *
+ * The data frame can be constrained by variables, entities, or dataset
+ * constraints.
+ */
+module.exports = (request, response) => {
+    const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
+
+    Promise.all([
+        getDataset(request),
+        getEntities(request),
+        getFormat(request)
+    ]).then(([dataset, entities, format]) => {
+
+        if (_.isNil(dataset))
+            return errorHandler(invalid('must specify a variable'));
+
+        getConstraints(request, dataset).then(constraints => {
+            getUnspecified(dataset, constraints).then(unspecified => {
+                getValues(dataset, constraints, entities, unspecified, token).then(rows => {
+                    if (rows.length === 0) throw notFound(`no data found for the given entities
+                        with ${_(constraints).toPairs().map(pair => pair.join('=')).join(' and ')}`);
+
+                    const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
+                    const framePromise = getFrame(unspecified, rows)
+                        .then(_.partial(getForecast, request))
+                        .then(_.curry(formatFrame)(format)(dataset)(unspecified)(entities));
+
+                    Promise.all([descriptionPromise, framePromise]).then(([description, frame]) => {
+                        response.json(_.assign(frame, description));
+                    }).catch(errorHandler);
+                }).catch(errorHandler);
+            }).catch(errorHandler);
+        }).catch(errorHandler);
+    }).catch(errorHandler);
+};
 
 function getDataset(request) {
     return new Promise((resolve, reject) => {
@@ -44,9 +91,84 @@ function getEntities(request) {
     return EntityLookup.byIDs(request.query.entity_id, request.token);
 }
 
+function getFormat(request) {
+    return request.query.format === 'google' ? 'google' : null;
+}
+
+function formatFrame(format, dataset, unspecified, entities, frame) {
+    if (format === 'google')
+        return formatFrameGoogle(dataset, unspecified, entities, frame);
+    return Promise.resolve(frame);
+}
+
+function formatFrameGoogle(dataset, unspecified, entities, frame) {
+    const forecast = frame.data.length > 2 && _.last(frame.data[0]) === 'forecast' ? 1 : 0;
+    const entityLookup = _.keyBy(entities, 'id');
+
+    const columns = frame.data[0].map((column, index, columns) => {
+        if (index === 0) {
+            return {
+                id: column,
+                type: 'string'
+            };
+        } else if (index < columns.length - forecast) {
+            return _.assign({
+                id: column,
+                type: 'number'
+            }, column in entityLookup ? {
+                label: entityLookup[column].name
+            } : {});
+        } else {
+            return {
+                id: column,
+                type: 'boolean',
+                role: 'certainty'
+            };
+        }
+    });
+
+    if (unspecified === 'variable') {
+        const rows = _.tail(frame.data).map(row => {
+            const variable = dataset.variables[row[0]];
+            const formatter = format(variable.type);
+
+            return {c: row.map((value, index) => {
+                return _.assign({
+                    v: value
+                }, !(index > 0 && index < row.length - forecast) ? {} : {
+                    f: formatter(value)
+                }, index === 0 ? {
+                    f: variable.name
+                } : {});
+            })};
+        });
+
+        return Promise.resolve({data: {rows, cols: columns}});
+    } else {
+        if (_.size(dataset.variables) !== 1)
+            return Promise.reject(server('should not have multiple variables if constraint not specified'));
+        const variable = _.first(_.values(dataset.variables));
+        const formatter = format(variable.type);
+
+        const rows = _.tail(frame.data).map(row => {
+            return {c: row.map((value, index) => {
+                return _.assign({
+                    v: value
+                }, (index > 0 && index < row.length - forecast) ? {
+                    f: formatter(value)
+                }: {});
+            })};
+        });
+
+        return Promise.resolve({data: {rows, cols: columns}});
+    }
+
+    return Promise.resolve(frame);
+}
+
 function getConstraints(request, dataset) {
     return new Promise((resolve, reject) => {
-        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast', 'describe', 'app_token']);
+        const constraints = _.omit(request.query, ['variable', 'entity_id', 'forecast', 'describe', 'app_token', 'format']);
 
         _.keys(constraints).forEach(constraint => {
             if (!_.includes(dataset.constraints, constraint))
@@ -84,45 +206,6 @@ function getUnspecified(dataset, constraints) {
     });
 }
 
-/**
- * Specify any number of entities
- *
- * Generates a data frame in the form:
- *
- * [{variable or constraint name},{entity id},{entity_id}...],
- * [{variable or constraint value},{value for entity},{value for entity}],
- * ...
- *
- * The data frame can be constrained by variables, entities, or dataset
- * constraints.
- */
-module.exports = (request, response) => {
-    const errorHandler = Exception.getHandler(request, response);
-    const token = request.token;
-
-    Promise.all([getDataset(request), getEntities(request)]).then(([dataset, entities]) => {
-
-        if (_.isNil(dataset))
-            return errorHandler(invalid('must specify a variable'));
-
-        getConstraints(request, dataset).then(constraints => {
-            getUnspecified(dataset, constraints).then(unspecified => {
-                getValues(dataset, constraints, entities, unspecified, token).then(rows => {
-                    if (rows.length === 0) throw notFound(`no data found for the given entities
-                        with ${_(constraints).toPairs().map(pair => pair.join('=')).join(' and ')}`);
-
-                    const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
-                    const framePromise = getFrame(unspecified, rows)
-                        .then(_.partial(getForecast, request));
-
-                    Promise.all([descriptionPromise, framePromise]).then(([description, frame]) => {
-                        response.json(_.assign(frame, description));
-                    }).catch(errorHandler);
-                }).catch(errorHandler);
-            }).catch(errorHandler);
-        }).catch(errorHandler);
-    }).catch(errorHandler);
-};
 
 function getDescription(request, dataset, entities, constraints, unspecified, rows) {
     if (request.query.describe === 'true')
