@@ -73,13 +73,19 @@ function getBoundingBox(entities, entityType, token) {
         });
 }
 
-function getSummaryStatistics(dataset, constraints, entityType, token) {
+/**
+ *
+ */
+function getSummaryStatistics(dataset, constraints, entityType, token, minimum, maximum) {
     const variable = _.values(dataset.variables)[0];
     const formatter = format(variable.type);
+    const recurse = _.curry(getSummaryStatistics)(dataset)(constraints)(entityType)(token);
 
     return new SOQL(dataset.url)
         .token(token)
         .whereIn('type', [entityType, _.last(entityType.split('.'))])
+        .where(_.isNil(minimum) ? null : `value >= ${minimum}`)
+        .where(_.isNil(maximum) ? null : `value <= ${maximum}`)
         .equal('variable', _.last(variable.id.split('.')))
         .selectAs('avg(value)', 'average')
         .selectAs('min(value)', 'minimum')
@@ -93,16 +99,37 @@ function getSummaryStatistics(dataset, constraints, entityType, token) {
                 return Promise.reject(notFound(`no data found for variable ${variable.id}
                     with entity type ${entityType}`));
 
-            const names = ['minimum', 'average', 'maximum'];
-            const values = names.map(_.propertyOf(response)).map(parseFloat);
-            const valuesFormatted = values.map(formatter);
+            if (_.isNil(minimum) && _.isNil(maximum)) {
+                return Promise.all([
+                    recurse(response.minimum, response.average),
+                    recurse(response.average, response.maximum)
+                ]).then(([low, high]) => {
+                    const names = ['minimum', '', 'average', '', 'maximum'];
+                    const values = merge(low.values, high.values);
+                    const valuesFormatted = merge(low.values_formatted, high.values_formatted);
 
-            return Promise.resolve({
-                names,
-                values,
-                values_formatted: valuesFormatted
-            });
+                    return Promise.resolve({
+                        names,
+                        values,
+                        values_formatted: valuesFormatted
+                    });
+                });
+            } else {
+                const names = ['minimum', 'average', 'maximum'];
+                const values = names.map(_.propertyOf(response)).map(parseFloat);
+                const valuesFormatted = values.map(formatter);
+
+                return Promise.resolve({
+                    names,
+                    values,
+                    values_formatted: valuesFormatted
+                });
+            }
         });
+}
+
+function merge(low, high) {
+    return low.concat(high.slice(1));
 }
 
 function getEntities(request) {
