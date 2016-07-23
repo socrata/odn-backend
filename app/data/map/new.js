@@ -31,7 +31,7 @@ module.exports = (request, response) => {
             Promise.all([
                 getSessionID(dataset, constraints, entityType, entities, token),
                 getBoundingBox(entities, entityType, token),
-                getSummaryStatisticsRecursive(dataset, constraints, entityType, token, 3)
+                getSummaryStatistics(dataset, constraints, entityType, token)
             ]).then(([sessionID, boundingBox, summaryStats]) => {
                 response.json({
                     session_id: sessionID,
@@ -73,77 +73,56 @@ function getBoundingBox(entities, entityType, token) {
         });
 }
 
-function getSummaryStatistics(dataset, constraints, entityType, token, minimum, maximum) {
+function getSummaryStatistics(dataset, constraints, entityType, token) {
     const variable = _.values(dataset.variables)[0];
     const formatter = format(variable.type);
-    const recurse = _.curry(getSummaryStatistics)(dataset)(constraints)(entityType)(token);
-
-    return new SOQL(dataset.url)
+    const baseQuery = new SOQL(dataset.url)
         .token(token)
         .whereIn('type', [entityType, _.last(entityType.split('.'))])
-        .where(_.isNil(minimum) ? null : `value >= ${minimum}`)
-        .where(_.isNil(maximum) ? null : `value <= ${maximum}`)
         .equal('variable', _.last(variable.id.split('.')))
-        .selectAs('avg(value)', 'average')
-        .selectAs('min(value)', 'minimum')
-        .selectAs('max(value)', 'maximum')
-        .equals(constraints)
-        .send()
-        .then(response => {
-            response = response[0];
+        .equals(constraints);
 
-            if (_.isEmpty(response))
-                return Promise.reject(notFound(`no data found for variable ${variable.id}
-                    with entity type ${entityType}`));
+    return getCount(baseQuery).then(count => {
+        const indexes = getIndexes(count);
 
-            const names = ['minimum', 'average', 'maximum'];
-            const values = names.map(_.propertyOf(response)).map(parseFloat);
-            const valuesFormatted = values.map(formatter);
-
+        return Promise.all(indexes.map(index => getAtIndex(baseQuery, index))).then(values => {
             return Promise.resolve({
-                names,
-                values,
-                values_formatted: valuesFormatted
-            });
-        });
-}
-
-function getSummaryStatisticsRecursive(dataset, constraints, entityType, token, level, bounds) {
-    level = level || 0;
-    bounds = bounds || [];
-    const [min, max] = bounds;
-
-    const stats = getSummaryStatistics(dataset, constraints, entityType, token, min, max);
-    if (level <= 1) return stats;
-
-    return stats.then(response => {
-        const nextBounds = pairs(response.values);
-        const promises = pairs(response.values)
-            .map(bounds => getSummaryStatisticsRecursive(dataset, constraints, entityType, token, level - 1, bounds));
-
-        return Promise.all(promises).then(([low, high]) => {
-            const names = low.names.slice();
-            names.splice(names.length - 1, 0, '');
-            names.splice(1, 0, '');
-            const values = merge(low.values, high.values);
-            const valuesFormatted = merge(low.values_formatted, high.values_formatted);
-
-            return Promise.resolve({
-                names,
-                values,
-                values_formatted: valuesFormatted
+                values: values.map(parseFloat),
+                values_formatted: values.map(formatter),
+                names: Constants.SUMMARY_STAT_NAMES
             });
         });
     });
 }
 
-// [1,2,3] -> [[1,2], [2,3]]
-function pairs(array) {
-    return _.initial(array).map((value, index) => [value, array[index + 1]]);
+function getAtIndex(baseQuery, index) {
+    return baseQuery
+        .clone()
+        .select('value')
+        .offset(index)
+        .limit(1)
+        .order('value')
+        .send()
+        .then(response => Promise.resolve(response[0].value));
 }
 
-function merge(low, high) {
-    return low.concat(high.slice(1));
+// given n, find indexes of minimum, lower quartile, median, upper quartile, maximum
+function getIndexes(count) {
+    return [
+        0,
+        count * (1/4),
+        count * (1/2),
+        count * (3/4),
+        count - 1
+    ].map(Math.floor);
+}
+
+function getCount(baseQuery) {
+    return baseQuery
+        .clone()
+        .selectAs('count(value)', 'count')
+        .send()
+        .then(response => Promise.resolve(response[0].count || 0));
 }
 
 function getEntities(request) {

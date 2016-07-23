@@ -96,10 +96,10 @@ describe('/data/v1/map', () => {
             it('should have correct summary statistics', () => {
                 return response.then(response => {
                     const stats = response.body.summary_statistics;
-                    expect(stats.names).to.deep.equal(['minimum', '', '', 'average', '', '', 'maximum']);
-                    expect(stats.values).to.have.lengthOf(9);
+                    expect(stats.names).to.deep.equal(['minimum', 'lower quartile', 'average', 'upper quartile', 'maximum']);
+                    expect(stats.values).to.have.lengthOf(5);
                     expect(stats.values).to.be.ascending;
-                    expect(stats.values_formatted).to.have.lengthOf(9);
+                    expect(stats.values_formatted).to.have.lengthOf(5);
                     expect(_.first(stats.values_formatted)).to.equal('570,134');
                     expect(_.last(stats.values_formatted)).to.equal('37,659,181');
                     return chakram.wait();

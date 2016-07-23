@@ -14,10 +14,10 @@ const tokenKey = Constants.APP_TOKEN_HEADER;
  *
  */
 class SOQL {
-    constructor(url) {
+    constructor(url, headers, query) {
         this.url = url;
-        this.headers = {};
-        this.query = {};
+        this.headers = headers || {};
+        this.query = query || {};
     }
 
     token(token) {
@@ -88,6 +88,10 @@ class SOQL {
         if (!_.isNil(column))
             this.query.$group = join(',', this.query.$group, column);
         return this;
+    }
+
+    clone() {
+        return new SOQL(this.url, _.cloneDeep(this.headers), _.cloneDeep(this.query));
     }
 
     send() {
