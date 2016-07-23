@@ -16,11 +16,13 @@ module.exports = (request, response) => {
 
     Promise.all([
         getRelation(request),
-        getEntity(request, token),
-        getLimit(request)
-    ]).then(([relation, entity, limit]) => {
-        relationPromise(entity, relation, limit, token).then(json => {
-            response.json(json);
+        getLimit(request),
+        getEntityID(request)
+    ]).then(([relation, limit, entityID]) => {
+        EntityLookup.byID(entityID, token).then(entity => {
+            relationPromise(entity, relation, limit, token).then(json => {
+                response.json(json);
+            }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
@@ -49,8 +51,10 @@ function getRelation(request) {
     return Promise.resolve(relation);
 }
 
-function getEntity(request, token) {
-    return EntityLookup.byID(request.query.entity_id, token);
+function getEntityID(request) {
+    const id = request.query.entity_id;
+    if (_.isEmpty(id)) return Promise.reject(invalid(`entity id required`));
+    return Promise.resolve(id);
 }
 
 function getLimit(request) {

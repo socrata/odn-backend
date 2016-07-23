@@ -15,15 +15,18 @@ module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
     Promise.all([
-        getEntities(request),
-        getSearchTerms(request),
         getLimit(request),
         getOffset(request)
-    ]).then(([entities, searchTerms, limit, offset]) => {
+    ]).then(([limit, offset]) => {
         if (limit === 0) return response.json({datasets: []});
 
-        searchDatasets(entities, searchTerms, limit, offset).then(datasets => {
-            response.json({datasets});
+        Promise.all([
+            getEntities(request),
+            getSearchTerms(request)
+        ]).then(([entities, searchTerms]) => {
+            searchDatasets(entities, searchTerms, limit, offset).then(datasets => {
+                response.json({datasets});
+            }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
