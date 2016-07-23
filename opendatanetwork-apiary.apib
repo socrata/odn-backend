@@ -500,7 +500,7 @@ Get constraints for the given variable and entities.
           ]
         }
 
-## Data Values [/data/v1/values{?variable}{?entity_id}{?constraint}{?forecast}{?describe}{?app_token}]
+## Data Values [/data/v1/values{?variable}{?entity_id}{?constraint}{?forecast}{?describe}{?format}{?app_token}]
 
 Retrieve the values for available data about entities.
 
@@ -549,6 +549,16 @@ Retrieve the values for available data about entities.
         Descriptions are not available if no entities are specified.
 
         + Default `false`
+        
+    + format (optional, string)
+
+        If format is set to `google`, the data frame will be formatted
+        as a [Google Visualizations data table](https://developers.google.com/chart/interactive/docs/reference#datatable-class).
+        If the format is not provided or invalid, then the frame
+        will be formatted normally.
+
+        + Values
+            + `google`
 
     + app_token (optional, string)
 
@@ -575,66 +585,75 @@ Retrieve the values for available data about entities.
 + Response 200 (application/json)
 
         {
-            "data": [
-                [
-                    "year",
-                    "0100000US",
-                    "0400000US53",
-                    "forecast"
-                ],
-                [
-                    2009,
-                    301461533,
-                    6465755,
-                    false
-                ],
-                [
-                    2010,
-                    303965272,
-                    6561297,
-                    false
-                ],
-                [
-                    2011,
-                    306603772,
-                    6652845,
-                    false
-                ],
-                [
-                    2012,
-                    309138711,
-                    6738714,
-                    false
-                ],
-                [
-                    2013,
-                    311536594,
-                    6819579,
-                    false
-                ],
-                [
-                    2014,
-                    314055359.25,
-                    6908035,
-                    true
-                ],
-                [
-                    2015,
-                    316574124.5,
-                    6996491,
-                    true
-                ],
-                [
-                    2016,
-                    319092889.75,
-                    7084947,
-                    true
-                ]
+          "data": [
+            [
+              "year",
+              "0100000US",
+              "forecast",
+              "0400000US53",
+              "forecast"
             ],
-            "forecast_info": {
-                "algorithm_name": "linear",
-                "algorithm_url": "https://en.wikipedia.org/wiki/Extrapolation#Linear_extrapolation"
-            }
+            [
+              2009,
+              301461533,
+              false,
+              6465755,
+              false
+            ],
+            [
+              2010,
+              303965272,
+              false,
+              6561297,
+              false
+            ],
+            [
+              2011,
+              306603772,
+              false,
+              6652845,
+              false
+            ],
+            [
+              2012,
+              309138711,
+              false,
+              6738714,
+              false
+            ],
+            [
+              2013,
+              311536594,
+              false,
+              6819579,
+              false
+            ],
+            [
+              2014,
+              314055359.25,
+              true,
+              6908035,
+              true
+            ],
+            [
+              2015,
+              316574124.5,
+              true,
+              6996491,
+              true
+            ],
+            [
+              2016,
+              319092889.75,
+              true,
+              7084947,
+              true
+            ]
+          ],
+          "forecast_info": {
+            "algorithm_name": "linear",
+            "algorithm_url": "https://en.wikipedia.org/wiki/Extrapolation#Linear_extrapolation"
+          }
         }
         
 ## Map Creation [/data/v1/map/new{?variable}{?entity_id}{?constraint}{?app_token}]
