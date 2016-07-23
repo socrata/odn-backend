@@ -6,6 +6,8 @@ const util = require('util');
 
 const Constants = require('../app/constants');
 
+const recurseFields = ['datasets', 'variables', 'topics'];
+
 /**
  * Paths must all be the same length.
  */
@@ -21,8 +23,8 @@ function pick(tree, paths) {
         .toPairs()
         .value();
 
-    const invalid = grouped.some(([key, subpaths]) => {
-        if (!(key in tree)) return true;
+    grouped.forEach(([key, subpaths]) => {
+        if (!(key in tree)) return;
 
         subpaths = subpaths.map(_.tail);
         const subtree = tree[key];
@@ -31,20 +33,21 @@ function pick(tree, paths) {
             return;
         }
 
-        const recurse = ['datasets', 'variables', 'topics']
-            .filter(field => field in subtree);
-        if (recurse.length === 0) return true;
+        const recurse = recurseFields.filter(field => field in subtree);
+        if (recurse.length === 0) return;
 
-        picked[key] = _.omit(subtree, recurse);
-
-        return recurse.some(field => {
+        const subtrees = recurse.map(field => {
             const pickedSubtree = pick(subtree[field], subpaths);
-            if (_.isNil(pickedSubtree)) return true;
-            picked[key][field] = pickedSubtree;
-        });
+            return _.isNil(pickedSubtree) ? null : {[field]: pickedSubtree};
+        }).filter(_.negate(_.isNil));
+
+        if (subtrees.length === 0) return;
+        picked[key] = _.omit(subtree, recurse);
+        subtrees.forEach(subtree => _.assign(picked[key], subtree));
     });
 
-    return invalid ? null : picked;
+    if (_.size(picked) > 0) return picked;
+    return null;
 }
 
 function mapTree(tree, iteratee, parents) {
