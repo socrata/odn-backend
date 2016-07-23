@@ -20,6 +20,8 @@ module.exports = (request, response) => {
         getLimit(request),
         getOffset(request)
     ]).then(([entities, searchTerms, limit, offset]) => {
+        if (limit === 0) return response.json({datasets: []});
+
         searchDatasets(entities, searchTerms, limit, offset).then(datasets => {
             response.json({datasets});
         }).catch(errorHandler);

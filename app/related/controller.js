@@ -6,31 +6,26 @@ const Constants = require('../constants');
 const Request = require('../request');
 const EntityLookup = require('../entity-lookup');
 const Exception = require('../error');
+const notFound = Exception.notFound;
+const invalid = Exception.invalidParam;
 const Relatives = require('./relatives');
 
-function validateRequest(request) {
-    return new Promise((resolve, reject) => {
-        const relation = request.params.relation;
-        const id = request.query.entity_id;
-        const limitString = _.isNil(request.query.limit) ?
-            Constants.RELATED_COUNT_DEFAULT : request.query.limit;
+module.exports = (request, response) => {
+    const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
-        if (isNaN(limitString))
-            reject(Exception.invalidParam('limit must be an integer'));
-        const limit = parseInt(limitString);
-
-        if (limit < 1)
-            reject(Exception.invalidParam('limit must be at least 1'));
-        if (limit > Constants.RELATED_COUNT_MAX)
-            reject(Exception.invalidParam(`limit cannot be greater than ${Constants.RELATED_COUNT_MAX}`));
-
-        resolve([relation, id, limit]);
-    });
-}
+    Promise.all([
+        getRelation(request),
+        getEntity(request, token),
+        getLimit(request)
+    ]).then(([relation, entity, limit]) => {
+        relationPromise(entity, relation, limit, token).then(json => {
+            response.json(json);
+        }).catch(errorHandler);
+    }).catch(errorHandler);
+};
 
 function relationPromise(entity, relation, n, token) {
-    relation = relation.toLowerCase();
-
     if (relation === 'parent') {
         return Relatives.parents(entity, n, token);
     } else if (relation === 'child') {
@@ -40,21 +35,37 @@ function relationPromise(entity, relation, n, token) {
     } else if (relation === 'peer') {
         return Relatives.peers(entity, n);
     } else {
-        return Promise.reject(Exception.notFound(`relation type not found: '${relation}', \
-must be 'parent', 'child', 'sibling', or 'peer'`));
+        return Promise.reject(notFound(`relation type not found: ${relation}`));
     }
 }
 
-module.exports = (request, response) => {
-    const errorHandler = Exception.getHandler(request, response);
-    const token = request.token;
+const validRelations = new Set(['parent', 'child', 'sibling', 'peer']);
 
-    validateRequest(request).then(([relation, id, limit]) => {
-        EntityLookup.byID(id, token).then(entity => {
-            relationPromise(entity, relation, limit, token).then(json => {
-                response.json(json);
-            }).catch(errorHandler);
-        }).catch(errorHandler);
-    }).catch(errorHandler);
-};
+function getRelation(request) {
+    const relation = request.params.relation.toLowerCase();
+    if (!validRelations.has(relation))
+        return Promise.reject(notFound(`relation type not found: ${relation},
+            must be one of ${validRelations}`));
+    return Promise.resolve(relation);
+}
+
+function getEntity(request, token) {
+    return EntityLookup.byID(request.query.entity_id, token);
+}
+
+function getLimit(request) {
+    const limitString = _.isNil(request.query.limit) ?
+        Constants.RELATED_COUNT_DEFAULT : request.query.limit;
+
+    if (isNaN(limitString))
+        return Promise.reject(invalid('limit must be an integer'));
+    const limit = parseInt(limitString);
+
+    if (limit < 1)
+        return Promise.reject(invalid('limit must be at least 1'));
+    if (limit > Constants.RELATED_COUNT_MAX)
+        return Promise.reject(invalid(`limit cannot be greater than ${Constants.RELATED_COUNT_MAX}`));
+
+    return Promise.resolve(limit);
+}
 
