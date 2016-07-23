@@ -29,6 +29,7 @@
     "fast-csv": "2.0.1",
     "jshint": "2.9.2",
     "mocha": "2.5.3",
+    "mocha-parallel-tests": "0.5.3",
     "nodemon": "1.9.2",
     "ogr2ogr": "0.5.1"
   },
@@ -43,7 +44,7 @@
   },
   "homepage": "https://github.com/socrata/odn-backend.com#readme",
   "scripts": {
-    "test": "mocha --timeout 30000",
+    "test": "mocha-parallel-tests test --timeout 30000",
     "lint": "jshint .",
     "server": "nodemon"
   }

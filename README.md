@@ -38,7 +38,7 @@ It will automatically restart when the source is changed.
 REST API tests are written using [Chakram](https://github.com/dareid/chakram)
 and run with [Mocha](https://mochajs.org/).
 They are available in the `test` directory.
-Run tests using `npm test` or `mocha`.
+Run tests using `npm test`.
 
 Sometimes, running tests will trigger a webserver restart which
 will then cause many tests to fail.
