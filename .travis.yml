@@ -7,6 +7,9 @@ script:
 - node app.js & npm test
 services:
 - memcached
+cache:
+  directories:
+  - node_modules
 notifications:
   email:
   - deep.dhillon@socrata.com
