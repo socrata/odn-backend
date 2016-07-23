@@ -258,8 +258,8 @@ describe('/data/v1/values', () => {
             expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.have.all.keys(['data', 'description']);
             expect(response.body.description).to.have.string('United States');
-            expect(response.body.description).to.have.string('population');
-            expect(response.body.description).to.have.string('annual population change');
+            expect(response.body.description).to.have.string('Population');
+            expect(response.body.description).to.have.string('Population Rate of Change');
             expect(response.body.description).to.have.string('2013');
         });
     });

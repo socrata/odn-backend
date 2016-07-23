@@ -6,9 +6,9 @@
                 "fxf": "9jg8-ki9x",
                 "constraints": ["year"],
                 "variables": {
-                    "count": {"name": "population"},
+                    "count": {"name": "Population Count"},
                     "change": {
-                        "name": "annual population change",
+                        "name": "Population Rate of Change",
                         "description": "Percent change from the previous year",
                         "type": "percent",
                         "stoplight": true
@@ -28,121 +28,121 @@
                 "variables": {
                     "percent_less_than_9th_grade": {
                         "type": "percent",
-                        "name": "percent of people who did not finish the 9th grade"
+                        "name": "Percent of people who did not finish the 9th grade"
                     },
                     "male_percent_associates_degree": {
                         "type": "percent",
-                        "name": "percent of males with an associates degree"
+                        "name": "Percent of males with an associates degree"
                     },
                     "male_percent_bachelors_degree": {
                         "type": "percent",
-                        "name": "percent of males with a bachelor's degree"
+                        "name": "Percent of males with a bachelor's degree"
                     },
                     "male_percent_high_school_graduate_or_higher": {
                         "type": "percent",
-                        "name": "percent of males with at least a high school diploma"
+                        "name": "Percent of males with at least a high school diploma"
                     },
                     "female_percent_high_school_graduate": {
                         "type": "percent",
-                        "name": "percent of females who graduated high school"
+                        "name": "Percent of females who graduated high school"
                     },
                     "percent_graduate_or_professional_degree": {
                         "type": "percent",
-                        "name": "percent of people with a graduate or professional degree"
+                        "name": "Percent of people with a graduate or professional degree"
                     },
                     "percent_some_college": {
                         "type": "percent",
-                        "name": "percent of people with some college education"
+                        "name": "Percent of people with some college education"
                     },
                     "male_percent_less_than_9th_grade": {
                         "type": "percent",
-                        "name": "percent of males who did not finish the 9th grade"
+                        "name": "Percent of males who did not finish the 9th grade"
                     },
                     "percent_bachelors_degree": {
                         "type": "percent",
-                        "name": "percent of people with a bachelor's degree"
+                        "name": "Percent of people with a bachelor's degree"
                     },
                     "percent_high_school_graduate_or_higher": {
                         "type": "percent",
-                        "name": "percent of people with at least a high school diploma"
+                        "name": "Percent of people with at least a high school diploma"
                     },
                     "female_percent_bachelors_degree_or_higher": {
                         "type": "percent",
-                        "name": "percent of females with at least a bachelor's degree"
+                        "name": "Percent of females with at least a bachelor's degree"
                     },
                     "percent_associates_degree": {
                         "type": "percent",
-                        "name": "percent of people with an associate's degree"
+                        "name": "Percent of people with an associate's degree"
                     },
                     "population": {},
                     "male_percent_9th_to_12th_grade_no_diploma": {
                         "type": "percent",
-                        "name": "percent of males with some high school education but no diploma"
+                        "name": "Percent of males with some high school education but no diploma"
                     },
                     "male_percent_some_college": {
                         "type": "percent",
-                        "name": "percent of males with some college education"
+                        "name": "Percent of males with some college education"
                     },
                     "percent_9th_to_12th_grade_no_diploma": {
                         "type": "percent",
-                        "name": "percent of people with some high school education but no diploma"
+                        "name": "Percent of people with some high school education but no diploma"
                     },
                     "female_percent_some_college": {
                         "type": "percent",
-                        "name": "percent of females with some college education"
+                        "name": "Percent of females with some college education"
                     },
                     "percent_bachelors_degree_or_higher": {
                         "type": "percent",
-                        "name": "percent of people with at least a bachelor's degree"
+                        "name": "Percent of people with at least a bachelor's degree"
                     },
                     "female_percent_9th_to_12th_grade_no_diploma": {
                         "type": "percent",
-                        "name": "percent of females with some high school education but no diploma"
+                        "name": "Percent of females with some high school education but no diploma"
                     },
                     "percent_high_school_graduate": {
                         "type": "percent",
-                        "name": "percent of people who graduated high school"
+                        "name": "Percent of people who graduated high school"
                     },
                     "female_percent_associates_degree": {
                         "type": "percent",
-                        "name": "percent of females with an associate's degree"
+                        "name": "Percent of females with an associate's degree"
                     },
                     "male_percent_high_school_graduate": {
                         "type": "percent",
-                        "name": "percent of males who graduated high school"
+                        "name": "Percent of males who graduated high school"
                     },
                     "female_percent_bachelors_degree": {
                         "type": "percent",
-                        "name": "percent of females with a bachelor's degree"
+                        "name": "Percent of females with a bachelor's degree"
                     },
                     "female_percent_graduate_or_professional_degree": {
                         "type": "percent",
-                        "name": "percent of females with a graduate or professional degree"
+                        "name": "Percent of females with a graduate or professional degree"
                     },
                     "male_percent_bachelors_degree_or_higher": {
                         "type": "percent",
-                        "name": "percent of males with at least a bachelor's degree"
+                        "name": "Percent of males with at least a bachelor's degree"
                     },
                     "total_ranks": {},
                     "percent_high_school_graduate_or_higher_rank": {
                         "type": "rank",
-                        "name": "ranking of high school graduation rate"
+                        "name": "Ranking of high school graduation rate"
                     },
                     "female_percent_less_than_9th_grade": {
                         "type": "percent",
-                        "name": "percent of females who did not finish the 9th grade"
+                        "name": "Percent of females who did not finish the 9th grade"
                     },
                     "female_percent_high_school_graduate_or_higher": {
                         "type": "percent",
-                        "name": "percent of females with at least a high school diploma"
+                        "name": "Percent of females with at least a high school diploma"
                     },
                     "percent_bachelors_degree_or_higher_rank": {
                         "type": "rank",
-                        "name": "ranking of college graduation rate"
+                        "name": "Ranking of college graduation rate"
                     },
                     "male_percent_graduate_or_professional_degree": {
                         "type": "percent",
-                        "name": "percent of males with a graduate or professional degree"
+                        "name": "Percent of males with a graduate or professional degree"
                     }
                 },
                 "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],
@@ -200,17 +200,21 @@
                 "variables": {
                     "female_earners": {},
                     "female_full_time_median_earnings": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Median Female Earnings (Full Time)"
                     },
                     "female_median_earnings": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Median Female Earnings"
                     },
                     "male_earners": {},
                     "male_full_time_median_earnings": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Median Male Earnings (Full Time)"
                     },
                     "male_median_earnings": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Median Male Earnings"
                     },
                     "median_earnings": {
                         "type": "dollar"
@@ -231,42 +235,41 @@
                         "type": "dollar"
                     },
                     "percent_with_earnings_10000_to_14999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $10,000 to $14,999"
                     },
                     "percent_with_earnings_15000_to_24999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $15,000 to $24,999"
                     },
                     "percent_with_earnings_1_to_9999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning less than $10,000"
                     },
                     "percent_with_earnings_25000_to_34999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $25,000 to $34,999"
                     },
                     "percent_with_earnings_35000_to_49999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $35,000 to $49,999"
                     },
                     "percent_with_earnings_50000_to_64999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $50,000 to $64,999"
                     },
                     "percent_with_earnings_65000_to_74999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $65,000 to $74,999"
                     },
                     "percent_with_earnings_75000_to_99999": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning $75,000 to $99,999"
                     },
                     "percent_with_earnings_over_100000": {
-                        "type": "percent"
+                        "type": "percent",
+                        "name": "Percent Earning over $100,000"
                     },
-                    "population": {},
-                    "ratio_bachelor_to_median": {},
-                    "ratio_female_earners": {},
-                    "ratio_full_time_median_male_to_female_earnings": {},
-                    "ratio_graduate_to_median": {},
-                    "ratio_high_school_to_median": {},
-                    "ratio_less_than_high_school_to_median": {},
-                    "ratio_male_earners": {},
-                    "ratio_median_male_to_female_earnings": {},
-                    "ratio_some_college_or_associates_to_median": {},
                     "total_earners": {}
                 },
                 "searchTerms": ["revenue", "budget", "dividend", "wage", "income", "compensation", "assets", "salary", "earnings"],
@@ -278,13 +281,13 @@
                 "constraints": ["year"],
                 "variables": {
                     "jobs-prox-idx-mean": {
-                        "name": "mean job proximity index"
+                        "Name": "Mean Job Proximity Index"
                     },
                     "jobs-prox-idx-median": {
-                        "name": "median job proximity index"
+                        "Name": "Median Job Proximity Index"
                     },
                     "jobs-prox-idx-stdev": {
-                        "name": "job proximity index standard deviation"
+                        "Name": "Job Proximity Index Standard Deviation"
                     }
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
@@ -321,13 +324,13 @@
                 "constraints": ["year"],
                 "variables": {
                     "env-health-idx-mean": {
-                        "name": "mean environmental health index"
+                        "Name": "Mean Environmental Health Index"
                     },
                     "env-health-idx-median": {
-                        "name": "median environmental health index"
+                        "Name": "Median Environmental Health Index"
                     },
                     "env-health-idx-stdev": {
-                        "name": "environmental health index standard deviation"
+                        "Name": "Environmental Health Index Standard Deviation"
                     }
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
@@ -340,10 +343,7 @@
                 "fxf": "ph2b-gm84",
                 "constraints": ["year", "question", "question_response", "break_out"],
                 "variables": {
-                    "confidence_limit_high": {},
-                    "confidence_limit_low": {},
-                    "data_value": {},
-                    "sample_size": {}
+                    "data_value": {}
                 },
                 "searchTerms": ["health", "asthma", "arthritis", "cardiac", "cancer", "copd", "diabetes", "disease", "chronic"],
                 "description": "The CDC's Behavioral Risk Factor Surveillance System (BRFSS) is the nation's premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services. Established in 1984 with 15 states, BRFSS now collects data in all 50 states as well as the District of Columbia and three U.S. territories. BRFSS completes more than 400,000 adult interviews each year, making it the largest continuously conducted health survey system in the world.",
@@ -442,7 +442,7 @@
                         "type": "dollar"
                     },
                     "per_capita_gdp_percent_change": {
-                        "name": "annual change in GDP",
+                        "name": "Annual change in GDP",
                         "type": "percent"
                     }
                 },
@@ -456,7 +456,7 @@
                 "constraints": ["year"],
                 "variables": {
                     "expenditures_percent_change": {
-                        "name": "annual change in personal consumption expenditures",
+                        "name": "Annual change in personal consumption expenditures",
                         "type": "percent"
                     },
                     "personal_consumption_expenditures": {

@@ -4,7 +4,8 @@ const _ = require('lodash');
 const fs = require('fs');
 const util = require('util');
 
-const Constants = require('../app/constants');
+const Constants = require('./constants');
+const name = require('./name');
 
 const recurseFields = ['datasets', 'variables', 'topics'];
 
@@ -69,13 +70,6 @@ function getPath(id) {
     return id.split('.');
 }
 
-function formatName(id) {
-    return id
-        .replace(/[_-]/g, ' ')
-        .replace(/\b(\w)(\w{3,})/g, (all, first, rest) => `${first.toUpperCase()}${rest}`)
-        .replace(/\b\d+\b/g, number => parseInt(number).toLocaleString());
-}
-
 function readJSON(path) {
     return JSON.parse(fs.readFileSync(path));
 }
@@ -87,7 +81,7 @@ class Sources {
                 value.id = parents.length === 0 ? key : `${_.last(parents).id}.${key}`;
 
                 if (!('name' in value))
-                    value.name = formatName(key);
+                    value.name = name(key);
             }
 
             return value;
