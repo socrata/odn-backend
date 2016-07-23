@@ -109,7 +109,7 @@ function getAtIndex(baseQuery, index) {
 // given n, find indexes of minimum, lower quartile, median, upper quartile, maximum
 function getIndexes(count) {
     const steps = Constants.SUMMARY_STAT_STEPS;
-    const mid = _.range(1, steps - 1).map(n => Math.floor(count * n / steps));
+    const mid = _.range(1, steps - 1).map(n => Math.floor(count * n / (steps - 1)));
     return _.concat(0, mid, count - 1);
 }
 
