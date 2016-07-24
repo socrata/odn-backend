@@ -26,6 +26,6 @@ function capitalize(word) {
 
 function formatNumber(string) {
     return string
-        .replace(/\d+/g, number => parseInt(number).toLocaleString());
+        .replace(/\d+/g, number => parseInt(number, 10).toLocaleString());
 }
 

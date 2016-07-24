@@ -59,10 +59,6 @@ describe('/entity/v1/related', () => {
         return expect(related('parent?entity_id=0400000US53&limit=-1')).to.have.status(422);
     });
 
-    it('should not accept a zero limit', () => {
-        return expect(related('parent?entity_id=0400000US53&limit=0')).to.have.status(422);
-    });
-
     it('should not accept a huge limit', () => {
         return expect(related('parent?entity_id=0400000US53&limit=50001')).to.have.status(422);
     });

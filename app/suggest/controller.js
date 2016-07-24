@@ -3,37 +3,28 @@
 const _ = require('lodash');
 
 const Exception = require('../error');
+const invalid = Exception.invalidParam;
+const notFound = Exception.notFound;
 const Constants = require('../constants');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
+const ParseRequest = require('../parse-request');
 
-function validateRequest(request) {
-    return new Promise((resolve, reject) => {
-        const type = request.params.type;
+module.exports = (request, response) => {
+    const errorHandler = Exception.getHandler(request, response);
 
-        if (_.isNil(type))
-            reject(Exception.invalidParam('type of result to suggest required'));
+    return Promise.all([
+        getType(request),
+        getQuery(request),
+        getLimit(request)
+    ]).then(([type, query, limit]) => {
+        query = Stopwords.strip(query);
 
-        const query = request.query.query;
-
-        if (_.isNil(query))
-            reject(Exception.invalidParam('query parameter required'));
-
-        const limitString = _.isNil(request.query.limit) ?
-            Constants.SUGGEST_COUNT_DEFAULT : request.query.limit;
-
-        if (isNaN(limitString))
-            reject(Exception.invalidParam('limit must be an integer'));
-        const limit = parseInt(limitString);
-
-        if (limit < 0)
-            reject(Exception.invalidParam('limit must be at least 0'));
-        if (limit > Constants.SUGGEST_COUNT_MAX)
-            reject(Exception.invalidParam(`limit cannot be greater than ${Constants.SUGGEST_COUNT_MAX}`));
-
-        resolve([type.toLowerCase(), query, limit]);
-    });
-}
+        suggestPromise(type, query, limit).then(json => {
+            response.json(json);
+        }).catch(errorHandler);
+    }).catch(errorHandler);
+};
 
 function suggestPromise(type, query, limit) {
     if (type in AutosuggestSources) {
@@ -46,15 +37,27 @@ function suggestPromise(type, query, limit) {
     }
 }
 
-module.exports = (request, response) => {
-    const errorHandler = Exception.getHandler(request, response);
+function getType(request) {
+    const type = request.params.type;
 
-    validateRequest(request).then(([type, query, limit]) => {
-        query = Stopwords.strip(query);
+    if (_.isNil(type))
+        return Promise.reject(invalid('type of result to suggest required'));
 
-        suggestPromise(type, query, limit).then(json => {
-            response.json(json);
-        }).catch(errorHandler);
-    }).catch(errorHandler);
-};
+    return Promise.resolve(type.toLowerCase());
+}
+
+function getQuery(request) {
+    const query = request.query.query;
+
+    if (_.isNil(query))
+        return Promise.reject(invalid('query parameter required'));
+
+    return Promise.resolve(query);
+}
+
+function getLimit(request) {
+    return ParseRequest.getLimit(request,
+            Constants.SUGGEST_COUNT_DEFAULT,
+            Constants.SUGGEST_COUNT_MAX);
+}
 

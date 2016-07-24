@@ -263,14 +263,24 @@ function getBounds(query) {
 
     if (_.isString(bounds)) bounds = bounds.split(',');
     bounds = bounds.map(parseFloat);
+
+    if (bounds.length !== 4)
+        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
+
+    if (_.some(bounds, isNaN))
+        return Promise.reject(invalid('bounds must be numbers'));
+
     const [nwlat, nwlong, selat, selong] = bounds;
 
-    if (bounds.length !== 4 ||
-        _.isNil(nwlat) || _.isNil(nwlong) || _.isNil(selat) || _.isNil(selong) ||
-        Math.abs(nwlat) > 90 || Math.abs(nwlong) > 180 ||
-        Math.abs(selat) > 90 || Math.abs(selong) > 180 ||
-        nwlat < selat || nwlong > selong)
-        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
+
+    if (Math.abs(nwlat) > 90 || Math.abs(selat) > 90)
+        return Promise.reject(invalid('latitude must be in the range (-90, 90)'));
+
+    if (Math.abs(nwlong) > 180 || Math.abs(selong) > 180)
+        return Promise.reject(invalid('longitude must be in the range (-180, 180)'));
+
+    if (nwlat < selat || nwlong > selong)
+        return Promise.reject(invalid('bounds out of order'));
 
     return Promise.resolve([nwlat, nwlong, selat, selong]);
 }

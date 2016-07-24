@@ -9,6 +9,7 @@ const Exception = require('../error');
 const notFound = Exception.notFound;
 const invalid = Exception.invalidParam;
 const Relatives = require('./relatives');
+const ParseRequest = require('../parse-request');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -16,10 +17,9 @@ module.exports = (request, response) => {
 
     Promise.all([
         getRelation(request),
-        getLimit(request),
-        getEntityID(request)
-    ]).then(([relation, limit, entityID]) => {
-        EntityLookup.byID(entityID, token).then(entity => {
+        getLimit(request)
+    ]).then(([relation, limit]) => {
+        ParseRequest.getEntity(request).then(entity => {
             relationPromise(entity, relation, limit, token).then(json => {
                 response.json(json);
             }).catch(errorHandler);
@@ -58,18 +58,7 @@ function getEntityID(request) {
 }
 
 function getLimit(request) {
-    const limitString = _.isNil(request.query.limit) ?
-        Constants.RELATED_COUNT_DEFAULT : request.query.limit;
-
-    if (isNaN(limitString))
-        return Promise.reject(invalid('limit must be an integer'));
-    const limit = parseInt(limitString);
-
-    if (limit < 1)
-        return Promise.reject(invalid('limit must be at least 1'));
-    if (limit > Constants.RELATED_COUNT_MAX)
-        return Promise.reject(invalid(`limit cannot be greater than ${Constants.RELATED_COUNT_MAX}`));
-
-    return Promise.resolve(limit);
+    return ParseRequest.getLimit(request,
+            Constants.RELATED_COUNT_DEFAULT, Constants.RELATED_COUNT_MAX);
 }
 

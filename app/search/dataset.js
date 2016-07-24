@@ -4,26 +4,25 @@ const _ = require('lodash');
 const Exception = require('../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
-const EntityLookup = require('../entity-lookup');
 const Sources = require('../sources');
 const Stopwords = require('../stopwords');
 const Aliases = require('../aliases');
 const Constants = require('../constants');
 const Request = require('../request');
+const ParseRequest = require('../parse-request');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
 
     Promise.all([
-        getLimit(request),
-        getOffset(request)
-    ]).then(([limit, offset]) => {
+        ParseRequest.getLimit(request),
+        ParseRequest.getOffset(request),
+        ParseRequest.getDataset(request)
+    ]).then(([limit, offset, dataset]) => {
         if (limit === 0) return response.json({datasets: []});
 
-        Promise.all([
-            getEntities(request),
-            getSearchTerms(request)
-        ]).then(([entities, searchTerms]) => {
+        ParseRequest.getEntities(request).then(entities => {
+            const searchTerms = _.isNil(dataset) ? [] : dataset.searchTerms || [];
             searchDatasets(entities, searchTerms, limit, offset).then(datasets => {
                 response.json({datasets});
             }).catch(errorHandler);
@@ -141,38 +140,5 @@ function getSearchTerms(request) {
 
     const dataset = _.first(_.values(topic.datasets));
     return Promise.resolve(dataset.searchTerms || []);
-}
-
-function getEntities(request) {
-    const ids = request.query.entity_id;
-    if (_.isNil(ids)) return Promise.resolve([]);
-    if (ids === '') return Promise.reject(notFound('entity_id cannot be empty'));
-    return EntityLookup.byIDs(ids, request.token);
-}
-
-function getQuery(request) {
-    return Promise.resolve(request.query.query || '');
-}
-
-function getOffset(request) {
-    return getPositiveInteger('offset', request.query.offset, 0);
-}
-
-function getLimit(request) {
-    return getPositiveInteger('limit', request.query.limit, Constants.CATALOG_LIMIT_DEFAULT).then(limit => {
-        if (limit > Constants.CATALOG_LIMIT_MAX)
-            return Promise.reject(invalid(`limit cannot be greater than ${Constants.CATALOG_LIMIT_MAX}`));
-        return Promise.resolve(limit);
-    });
-}
-
-function getPositiveInteger(name, value, defaultValue) {
-    if (_.isNil(value)) return Promise.resolve(defaultValue);
-
-    value = parseInt(value);
-    if (isNaN(value)) return Promise.reject(invalid(`${name} must be an integer`));
-    if (value < 0) return Promise.reject(invalid(`${name} must be greater than or equal to zero`));
-
-    return Promise.resolve(value);
 }
 
