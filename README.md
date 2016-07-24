@@ -1,6 +1,7 @@
 # ODN Backend
 
 [![Build Status](https://travis-ci.org/socrata/odn-backend.svg?branch=master)](https://travis-ci.org/socrata/odn-backend)
+[![Code Climate](https://codeclimate.com/github/socrata/odn-backend/badges/gpa.svg)](https://codeclimate.com/github/socrata/odn-backend)
 
 A REST API for the Open Data Network.
 Available at [odn-backend.herokuapp.com](http://odn-backend.herokuapp.com).
