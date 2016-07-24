@@ -23,8 +23,7 @@ class Cache {
      * Flushes the cache if in production to prevent stale data.
      */
     flushOnStart() {
-        const env = process.env.NODE_ENV || 'development';
-        if (env === 'production') this.flush();
+        if (process.isProduction) this.flush();
     }
 
     flush() {

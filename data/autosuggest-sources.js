@@ -121,16 +121,6 @@ const occupationNames = {
     'business_and_finance': 'Business and Finance'
 };
 
-function urlEscape(string) {
-    return string
-        .replace(/,/g, '')
-        .replace(/[ \/]/g, '_');
-}
-
-function path(elements) {
-    return `http://opendatanetwork.com/${elements.map(urlEscape).join('/')}`;
-}
-
 const datasets = _.mapValues(declarations, declaration => {
     return new AutosuggestDataset(declaration.domain, declaration.fxf,
         declaration.column, declaration.encoded, declaration.sort,

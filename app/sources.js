@@ -113,10 +113,6 @@ class Sources {
         });
     }
 
-    getTopics() {
-        return _.cloneDeep(this.topics);
-    }
-
     search(id) {
         return this.searchMany([id]);
     }

@@ -44,6 +44,15 @@ Sometimes, running tests will trigger a webserver restart which
 will then cause many tests to fail.
 If this happens, start the server using `node app.js`.
 
+### Code Coverage
+
+Code coverage reports are available while the app is in development mode.
+Just start the server, run the tests, and then go to
+[localhost:3001/coverage](http://localhost:3001/coverage)
+to see the coverage reports.
+
+Code coverage is disabled in production.
+
 ### Deployment
 
 The ODN backend is hosted on Heroku.

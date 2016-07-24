@@ -1,5 +1,11 @@
 'use strict';
 
+process.isDevelopment = process.env.NODE_ENV === 'development';
+process.isProduction = !process.isDevelopment;
+
+const istanbul = require('istanbul-middleware');
+if (process.isDevelopment) istanbul.hookLoader(__dirname);
+
 const compression = require('compression');
 const express = require('express');
 const cors = require('cors');
@@ -9,6 +15,8 @@ const ws = require('express-ws')(app);
 
 app.use(compression());
 app.use(cors());
+
+if (process.isDevelopment) app.use('/coverage', istanbul.createHandler());
 
 app.get('/', require('./app/home'));
 

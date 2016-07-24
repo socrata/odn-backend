@@ -186,5 +186,18 @@ describe('SOQL', () => {
         expect(query.query).to.be.empty;
         expect(query.headers).to.be.empty;
     });
+
+    it('should return a 403 if no app token is specified', () => {
+        return new SOQL(Constants.ENTITY_URL)
+            .send()
+            .catch(error => expect(error.statusCode).to.equal(403));
+    });
+
+    it('should return a 403 with an invalid app token', () => {
+        return new SOQL(Constants.ENTITY_URL)
+            .token('asd')
+            .send()
+            .catch(error => expect(error.statusCode).to.equal(403));
+    });
 });
 
