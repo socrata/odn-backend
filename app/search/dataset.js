@@ -125,20 +125,3 @@ function paren(query) {
     return `(${query})`;
 }
 
-function getSearchTerms(request) {
-    const datasetID = request.query.dataset_id;
-    if (_.isNil(datasetID)) return Promise.resolve([]);
-    if (datasetID === '') return Promise.reject(notFound('dataset_id cannot be empty'));
-
-    const tree = Sources.search(datasetID);
-    if (_.isNil(tree))
-        return Promise.reject(notFound(`dataset not found: ${datasetID}`));
-
-    const topic = _.first(_.values(tree));
-    if (_.size(topic.datasets) !== 1)
-        return Promise.reject(invalid(`expected variable but found topic: ${datasetID}`));
-
-    const dataset = _.first(_.values(topic.datasets));
-    return Promise.resolve(dataset.searchTerms || []);
-}
-

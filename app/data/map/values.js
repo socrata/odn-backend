@@ -272,7 +272,6 @@ function getBounds(query) {
 
     const [nwlat, nwlong, selat, selong] = bounds;
 
-
     if (Math.abs(nwlat) > 90 || Math.abs(selat) > 90)
         return Promise.reject(invalid('latitude must be in the range (-90, 90)'));
 
