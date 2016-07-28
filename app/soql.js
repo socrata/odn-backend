@@ -52,6 +52,10 @@ class SOQL {
         return this.where(`${column} in (${options.map(quote).join(',')})`);
     }
 
+    whereEntities(entities) {
+        return this.whereIn('id', entities.map(_.property('id')));
+    }
+
     order(column, ordering) {
         if (_.isNil(column)) return this;
         return this.append('$order', join(' ', column, ordering), ',');

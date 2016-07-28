@@ -33,7 +33,7 @@ class Availability {
 function getVariables(entities, token) {
     return new SOQL(Constants.VARIABLE_URL)
         .token(token)
-        .whereIn('id', entities.map(_.property('id')))
+        .whereEntities(entities)
         .select('variable')
         .select('count(variable)')
         .group('variable')

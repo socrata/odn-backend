@@ -38,7 +38,7 @@ module.exports = (request, response) => {
         Constraint.validateConstraints(dataset, constraint, constraints).then(() => {
             new SOQL(dataset.url)
                 .token(token)
-                .whereIn('id', entities.map(_.property('id')))
+                .whereEntities(entities)
                 .group(constraint)
                 .select(constraint)
                 .order(constraint)

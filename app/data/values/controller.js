@@ -309,7 +309,7 @@ function getForecastSteps(request) {
 function getValues(dataset, constraints, entities, unspecified, token) {
     return new SOQL(dataset.url)
         .token(token)
-        .whereIn('id', entities.map(_.property('id')))
+        .whereEntities(entities)
         .whereIn('variable', _.values(dataset.variables).map(variableID))
         .select('id')
         .select('value')
