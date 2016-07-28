@@ -96,6 +96,7 @@ class SOQL {
 
     send() {
         if (!(tokenKey in this.headers)) return Promise.reject(missingAppToken());
+        if (!('$limit' in this.query)) this.query.$limit = 1000;
         const url = Request.buildURL(this.url, this.query);
         const options = {url, headers: this.headers};
         return Request.getJSON(options).catch(error => {
