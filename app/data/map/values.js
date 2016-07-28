@@ -256,32 +256,8 @@ function getSession(query) {
 }
 
 function getBounds(query) {
-    let bounds = query.bounds;
-
-    if (_.isEmpty(bounds))
-        return Promise.reject(invalid('parameter bounds required'));
-
-    if (_.isString(bounds)) bounds = bounds.split(',');
-    bounds = bounds.map(parseFloat);
-
-    if (bounds.length !== 4)
-        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
-
-    if (_.some(bounds, isNaN))
-        return Promise.reject(invalid('bounds must be numbers'));
-
-    const [nwlat, nwlong, selat, selong] = bounds;
-
-    if (Math.abs(nwlat) > 90 || Math.abs(selat) > 90)
-        return Promise.reject(invalid('latitude must be in the range (-90, 90)'));
-
-    if (Math.abs(nwlong) > 180 || Math.abs(selong) > 180)
-        return Promise.reject(invalid('longitude must be in the range (-180, 180)'));
-
-    if (nwlat < selat || nwlong > selong)
-        return Promise.reject(invalid('bounds out of order'));
-
-    return Promise.resolve([nwlat, nwlong, selat, selong]);
+    return parseBounds(query)
+        .then(validateBounds);
 }
 
 function getZoomLevel(query) {
@@ -302,5 +278,45 @@ function getZoomLevel(query) {
     zoomLevel = zoomLevel - zoomLevel % 2;
 
     return Promise.resolve(zoomLevel);
+}
+
+function parseBounds(query) {
+    let bounds = query.bounds;
+
+    if (_.isEmpty(bounds))
+        return Promise.reject(invalid('parameter bounds required'));
+
+    if (_.isString(bounds)) bounds = bounds.split(',');
+    bounds = bounds.map(parseFloat);
+
+    if (bounds.length !== 4)
+        return Promise.reject(invalid('bounds must be in the form: {NW lat},{NW long},{SE lat},{SE long}'));
+
+    if (_.some(bounds, isNaN))
+        return Promise.reject(invalid('bounds must be numbers'));
+
+    return Promise.resolve(bounds);
+}
+
+const latRange = _.curry(inRange)('latitude', 90);
+const longRange = _.curry(inRange)('longitude', 180);
+
+function validateBounds(bounds) {
+    const [nwlat, nwlong, selat, selong] = bounds;
+
+    return Promise.all([
+        latRange(nwlat), latRange(selat),
+        longRange(nwlong), longRange(selong)
+    ]).then(() => {
+        if (nwlat < selat || nwlong > selong)
+            return Promise.reject(invalid('bounds out of order'));
+        return Promise.resolve(bounds);
+    });
+}
+
+function inRange(name, max, value) {
+    if (Math.abs(value) > max)
+        return Promise.reject(invalid(`${name} must be in the range (-${max}, ${max})`));
+    return Promise.resolve(value);
 }
 
