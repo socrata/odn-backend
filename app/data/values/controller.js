@@ -242,9 +242,8 @@ function getFrame(unspecified, json) {
 
 // Parses the value as a number if possible.
 function parseNumber(value) {
-    const asNumber = parseFloat(value);
-    if (isNaN(asNumber)) return value;
-    return asNumber;
+    if (isNaN(value)) return value;
+    return parseFloat(value);
 }
 
 function getForecast(request, frame) {
