@@ -27,9 +27,7 @@ class SOQL {
     }
 
     select(column) {
-        if (!_.isNil(column))
-            this.query.$select = join(',', this.query.$select, column);
-        return this;
+        return this.append('$select', column, ',');
     }
 
     selectAs(column, alias) {
@@ -38,21 +36,15 @@ class SOQL {
     }
 
     limit(number) {
-        if (!_.isNil(number))
-            this.query.$limit = number;
-        return this;
+        return this.equal('$limit', number);
     }
 
     offset(number) {
-        if (!_.isNil(number))
-            this.query.$offset = number;
-        return this;
+        return this.equal('$offset', number);
     }
 
     where(condition) {
-        if (!_.isNil(condition))
-            this.query.$where = join(' AND ', this.query.$where, condition);
-        return this;
+        return this.append('$where', condition, ' AND ');
     }
 
     whereIn(column, options) {
@@ -61,33 +53,26 @@ class SOQL {
     }
 
     order(column, ordering) {
-        if (!_.isNil(column))
-            this.query.$order = join(',', this.query.$order, join(' ', column, ordering));
-        return this;
+        if (_.isNil(column)) return this;
+        return this.append('$order', join(' ', column, ordering), ',');
     }
 
     equal(column, value) {
-        if (!(_.isNil(column) || _.isNil(value)))
-            this.query[column] = value;
+        if (!(_.isNil(column) || _.isNil(value))) this.query[column] = value;
         return this;
     }
 
     equals(constraints) {
-        _.forIn(constraints, (value, key) => {
-            this.equal(key, value);
-        });
+        _.forIn(constraints, (value, key) => this.equal(key, value));
         return this;
     }
 
     q(string) {
-        if (!_.isEmpty(string)) this.query.$q = string;
-        return this;
+        return this.equal('$q', string);
     }
 
     group(column) {
-        if (!_.isNil(column))
-            this.query.$group = join(',', this.query.$group, column);
-        return this;
+        return this.append('$group', column, ',');
     }
 
     clone() {
@@ -104,6 +89,11 @@ class SOQL {
                 return Promise.reject(invalidAppToken(this.headers[tokenKey]));
             return Promise.reject(error);
         });
+    }
+
+    append(column, value, separator) {
+        if (_.isEmpty(column) || _.isEmpty(value) || _.isEmpty(separator)) return this;
+        return this.equal(column, join(separator, this.query[column], value));
     }
 }
 
