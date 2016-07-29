@@ -41,13 +41,14 @@ function relationPromise(entity, relation, n, token) {
     }
 }
 
-const validRelations = new Set(['parent', 'child', 'sibling', 'peer']);
+const validRelationsList = ['parent', 'child', 'sibling', 'peer'];
+const validRelations = new Set(validRelationsList);
 
 function getRelation(request) {
     const relation = request.params.relation.toLowerCase();
     if (!validRelations.has(relation))
         return Promise.reject(notFound(`relation type not found: ${relation},
-            must be one of ${validRelations}`));
+            must be one of ${validRelationsList.join(', ')}`));
     return Promise.resolve(relation);
 }
 
