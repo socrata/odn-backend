@@ -20,4 +20,4 @@ addons:
   code_climate:
     repo_token: 3c2166fe6675d244c885d6f8835f1d5c7c02603d313963c71850985405bfd411
 after_script:
-- update-coverage
+- ./update-coverage
