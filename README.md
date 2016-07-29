@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/socrata/odn-backend.svg?branch=master)](https://travis-ci.org/socrata/odn-backend)
 [![Code Climate](https://codeclimate.com/github/socrata/odn-backend/badges/gpa.svg)](https://codeclimate.com/github/socrata/odn-backend)
+[![Test Coverage](https://codeclimate.com/github/socrata/odn-backend/badges/coverage.svg)](https://codeclimate.com/github/socrata/odn-backend/coverage)
 
 A REST API for the Open Data Network.
 Available at [odn-backend.herokuapp.com](http://odn-backend.herokuapp.com).
@@ -45,14 +46,15 @@ Sometimes, running tests will trigger a webserver restart which
 will then cause many tests to fail.
 If this happens, start the server using `node app.js`.
 
-### Code Coverage
+#### Test Coverage
 
-Code coverage reports are available while the app is in development mode.
-Just start the server, run the tests, and then go to
+Test coverage reports for `master` are available on
+[Code Climate](https://codeclimate.com/github/socrata/odn-backend/coverage).
+
+To view test coverage while in development:
+start the server, run the tests, and then go to
 [localhost:3001/coverage](http://localhost:3001/coverage)
-to see the coverage reports.
-
-Code coverage is disabled in production.
+to see the reports.
 
 ### Deployment
 
