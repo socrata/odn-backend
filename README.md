@@ -5,7 +5,7 @@
 [![Test Coverage](https://codeclimate.com/github/socrata/odn-backend/badges/coverage.svg)](https://codeclimate.com/github/socrata/odn-backend/coverage)
 
 A REST API for the Open Data Network.
-Available at [odn-backend.herokuapp.com](http://odn-backend.herokuapp.com).
+Available at [api.opendatanetwork.com](http://api.opendatanetwork.com).
 
 ## Documentation
 
