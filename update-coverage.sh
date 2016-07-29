@@ -9,5 +9,5 @@ cd .coverage
 wget -O coverage.zip localhost:3001/coverage/download
 unzip -o -q coverage.zip
 
-codeclimate-test-reporter < lcov.info
+../node_modules/.bin/codeclimate-test-reporter < lcov.info
 
