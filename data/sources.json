@@ -509,7 +509,7 @@
                 "sources": ["fbi_ucr"]
             }
         }
-    }
+    },
 
     "michigan": {
         "datasets": {
@@ -566,18 +566,15 @@
                     "general_fund_health": {
                         "name": "General Fund Health",
                         "type": "dollar"
-                    }
-                    ,
+                    },
                     "pension_health": {
                         "name": "Pension Health",
                         "type": "dollar"
-                    }
-                    ,
+                    },
                     "property_tax_health": {
                         "name": "Property Tax Health",
                         "type": "dollar"
-                    }
-                    ,
+                    },
                     "debt_health": {
                         "name": "Debt Health",
                         "type": "dollar"
