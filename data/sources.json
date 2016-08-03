@@ -582,7 +582,7 @@
                 },
                 "searchTerms": ["michigan", "financial indicators", "debt service", "liquidity ratio", "expenditures", "revenue", "total taxable value", "unfunded pension liability", "unrestricted revenue", "total general fund expenditures", "general fund health", "total general fund revenue", "debt health", "property tax health", "pension health", "general fund health"],
                 "description": "Michigan Department of Treasury Financial Indicators",
-                "sources": ["F65"]
+                "sources": ["f65"]
             }
         }
     }
