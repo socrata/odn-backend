@@ -241,11 +241,12 @@ For example, this is the source declaration for the `demographics.population` da
 #### Generate Variables
 
 After adding the source declaration, use the use the
-[`variables.sh`](https://github.com/socrata/odn-backend/blob/424ee5c4ef8af6a63ec5ee93663a1749546dc191/data/process/variables.sh)
+[`variables.js`](https://github.com/socrata/odn-backend/blob/424ee5c4ef8af6a63ec5ee93663a1749546dc191/data/process/variables.js)
 script to extract all of the variables from the dataset.
+Make sure you run the script from the base of the project.
 
 ```sh
-% ./variables.sh
+% node data/process/variables.js
 Usage: variables.js {datasetID} {outputFile}
 ```
 
@@ -253,7 +254,7 @@ For example, if we want to get the variables for the `demographics.population`
 dataset dataset and output them to `population-variables.csv`:
 
 ```sh
-% ./variables.sh demographics.population population-variables.csv
+% node data/process/variables.js demographics.population population-variables.csv
 found dataset: odn.data.socrata.com:9jg8-ki9x
 processed 50000 rows...
 processed 100000 rows...
@@ -268,6 +269,8 @@ processed 500000 rows...
 processed 527786 rows...
 done
 ```
+
+If you get some out of memory error, try passing `--max-old-space-size=8192` to `node`
 
 Then, we have to append `population-variables.csv` to the
 [ODN Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
