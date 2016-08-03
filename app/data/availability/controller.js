@@ -17,6 +17,8 @@ module.exports = (request, response) => {
             return Promise.reject(invalid('at least one entity required'));
 
         Availability.get(entities, token).then(variables => {
+            if (_.isEmpty(variables)) return response.json({topics: []});
+
             const topics = Availability.topicTree(variables, entities);
             response.json({topics});
         }).catch(errorHandler);
