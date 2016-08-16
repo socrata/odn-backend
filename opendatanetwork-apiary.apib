@@ -47,10 +47,10 @@ interaction where suggestions are provided as a user types.
 
         + Default: `5`
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get suggestions [GET]
 
@@ -113,10 +113,10 @@ Search for datasets related to an ODN dataset or set of entities.
 
         + Default: `0`
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get datasets [GET]
 
@@ -197,10 +197,10 @@ Search for questions related to an ODN dataset or set of entities.
 
         + Default: `0`
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get questions [GET]
 
@@ -263,10 +263,10 @@ and that it is up to the client to decide which one is the best fit.
 
         Type of the entity.
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 
 ### Get Entities [GET]
@@ -327,10 +327,10 @@ For example, region entities are sorted in descending order by population.
 
         + Default: `10`
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Find the relatives of an entity [GET]
 
@@ -373,10 +373,10 @@ for all of the given entities.
 
         Comma separated list of entity IDs.
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Find all available data for some entities [GET]
 
@@ -456,10 +456,10 @@ Get constraints for the given variable and entities.
 
         Constraint to use.
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 
 ### Get constraint permutations for entities [GET]
@@ -560,10 +560,10 @@ Retrieve the values for available data about entities.
         + Values
             + `google`
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get values [GET]
 
@@ -681,10 +681,10 @@ data. Note: session IDs expire after 24 hours.
         For example, to generate map data for `demographics.population.count`,
         you must specify a value for `year` by passing `year=2013`.
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Create a map [GET]
 
@@ -751,10 +751,10 @@ Check out a reference websocket implementation [here](http://jsfiddle.net/w4nxL4
         + latitude of SE point
         + longitude of SE point
 
-    + app_token (required, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get map data [GET]
 
