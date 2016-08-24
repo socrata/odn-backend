@@ -8,7 +8,7 @@ module.exports = (request, response) => {
     response.send(`
         Welcome to the ODN API. \
         Documentation is available
-        <a href="http://docs.odn.apiary.io/">here</a>.
+        <a href="http://docs.odn.apiary.io/">HERE</a>.
     `);
 };
 

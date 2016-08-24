@@ -28,121 +28,23 @@
                 "variables": {
                     "percent_less_than_9th_grade": {
                         "type": "percent",
-                        "name": "Percent of people who did not finish the 9th grade"
-                    },
-                    "male_percent_associates_degree": {
-                        "type": "percent",
-                        "name": "Percent of males with an associates degree"
-                    },
-                    "male_percent_bachelors_degree": {
-                        "type": "percent",
-                        "name": "Percent of males with a bachelor's degree"
-                    },
-                    "male_percent_high_school_graduate_or_higher": {
-                        "type": "percent",
-                        "name": "Percent of males with at least a high school diploma"
-                    },
-                    "female_percent_high_school_graduate": {
-                        "type": "percent",
-                        "name": "Percent of females who graduated high school"
+                        "name": "Percent who did not finish the 9th grade"
                     },
                     "percent_graduate_or_professional_degree": {
                         "type": "percent",
-                        "name": "Percent of people with a graduate or professional degree"
-                    },
-                    "percent_some_college": {
-                        "type": "percent",
-                        "name": "Percent of people with some college education"
-                    },
-                    "male_percent_less_than_9th_grade": {
-                        "type": "percent",
-                        "name": "Percent of males who did not finish the 9th grade"
-                    },
-                    "percent_bachelors_degree": {
-                        "type": "percent",
-                        "name": "Percent of people with a bachelor's degree"
+                        "name": "Percent with a graduate or professional degree"
                     },
                     "percent_high_school_graduate_or_higher": {
                         "type": "percent",
-                        "name": "Percent of people with at least a high school diploma"
-                    },
-                    "female_percent_bachelors_degree_or_higher": {
-                        "type": "percent",
-                        "name": "Percent of females with at least a bachelor's degree"
+                        "name": "High School Graduation Rate"
                     },
                     "percent_associates_degree": {
                         "type": "percent",
-                        "name": "Percent of people with an associate's degree"
-                    },
-                    "population": {},
-                    "male_percent_9th_to_12th_grade_no_diploma": {
-                        "type": "percent",
-                        "name": "Percent of males with some high school education but no diploma"
-                    },
-                    "male_percent_some_college": {
-                        "type": "percent",
-                        "name": "Percent of males with some college education"
-                    },
-                    "percent_9th_to_12th_grade_no_diploma": {
-                        "type": "percent",
-                        "name": "Percent of people with some high school education but no diploma"
-                    },
-                    "female_percent_some_college": {
-                        "type": "percent",
-                        "name": "Percent of females with some college education"
+                        "name": "Percent with an associate's degree"
                     },
                     "percent_bachelors_degree_or_higher": {
                         "type": "percent",
-                        "name": "Percent of people with at least a bachelor's degree"
-                    },
-                    "female_percent_9th_to_12th_grade_no_diploma": {
-                        "type": "percent",
-                        "name": "Percent of females with some high school education but no diploma"
-                    },
-                    "percent_high_school_graduate": {
-                        "type": "percent",
-                        "name": "Percent of people who graduated high school"
-                    },
-                    "female_percent_associates_degree": {
-                        "type": "percent",
-                        "name": "Percent of females with an associate's degree"
-                    },
-                    "male_percent_high_school_graduate": {
-                        "type": "percent",
-                        "name": "Percent of males who graduated high school"
-                    },
-                    "female_percent_bachelors_degree": {
-                        "type": "percent",
-                        "name": "Percent of females with a bachelor's degree"
-                    },
-                    "female_percent_graduate_or_professional_degree": {
-                        "type": "percent",
-                        "name": "Percent of females with a graduate or professional degree"
-                    },
-                    "male_percent_bachelors_degree_or_higher": {
-                        "type": "percent",
-                        "name": "Percent of males with at least a bachelor's degree"
-                    },
-                    "total_ranks": {},
-                    "percent_high_school_graduate_or_higher_rank": {
-                        "type": "rank",
-                        "name": "Ranking of high school graduation rate"
-                    },
-                    "female_percent_less_than_9th_grade": {
-                        "type": "percent",
-                        "name": "Percent of females who did not finish the 9th grade"
-                    },
-                    "female_percent_high_school_graduate_or_higher": {
-                        "type": "percent",
-                        "name": "Percent of females with at least a high school diploma"
-                    },
-                    "percent_bachelors_degree_or_higher_rank": {
-                        "type": "rank",
-                        "name": "Ranking of college graduation rate"
-                    },
-                    "male_percent_graduate_or_professional_degree": {
-                        "type": "percent",
-                        "name": "Percent of males with a graduate or professional degree"
+                        "name": "College Graduation Rate"
                     }
                 },
                 "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],
@@ -154,16 +56,20 @@
                 "constraints": ["year"],
                 "variables": {
                     "administration-salaries": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Total Administration Salaries"
                     },
                     "capital-expenditures": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Total Capital Expenditures"
                     },
                     "capital-expenditures-per-student": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Capital Expenditure Per Student"
                     },
                     "instruction-salaries": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "name": "Total Instruction Related Salaries"
                     },
                     "instruction-salaries-per-student": {
                         "type": "dollar"
@@ -456,10 +362,11 @@
                 "constraints": ["year"],
                 "variables": {
                     "expenditures_percent_change": {
-                        "name": "Annual change in personal consumption expenditures",
+                        "name": "Annual change in PCE",
                         "type": "percent"
                     },
                     "personal_consumption_expenditures": {
+                        "name": "Personal Consumption Expenditure",
                         "type": "dollar"
                     }
                 },
@@ -474,12 +381,13 @@
                 "constraints": ["year", "component"],
                 "variables": {
                     "index": {
-                        "name": "cost of living index"
+                        "name": "cost of living index",
+                        "type": "count"
                     },
                     "rank": {
-                        "type": "rank"
-                    },
-                    "total_ranks": {}
+                        "name": "cost of living rank",
+                        "type": "count"
+                    }
                 },
                 "searchTerms": ["cost of living", "rent", "housing", "consumer price index", "expensive", "inexpensive", "housing cost", "home price"],
                 "description": "The cost of living index measures the difference in the price levels of goods and services across regions. The average cost of living index in the U.S. is 100, with higher values corresponding to costlier goods and services. Data is available for U.S. states and metropolitan areas.",
