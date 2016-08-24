@@ -104,7 +104,6 @@
                 "fxf": "j8a6-qa8k",
                 "constraints": ["year"],
                 "variables": {
-                    "female_earners": {},
                     "female_full_time_median_earnings": {
                         "type": "dollar",
                         "name": "Median Female Earnings (Full Time)"
@@ -113,7 +112,6 @@
                         "type": "dollar",
                         "name": "Median Female Earnings"
                     },
-                    "male_earners": {},
                     "male_full_time_median_earnings": {
                         "type": "dollar",
                         "name": "Median Male Earnings (Full Time)"
@@ -175,8 +173,7 @@
                     "percent_with_earnings_over_100000": {
                         "type": "percent",
                         "name": "Percent Earning over $100,000"
-                    },
-                    "total_earners": {}
+                    }
                 },
                 "searchTerms": ["revenue", "budget", "dividend", "wage", "income", "compensation", "assets", "salary", "earnings"],
                 "sources": ["acs"]
@@ -261,9 +258,18 @@
                 "fxf": "csbu-um39",
                 "constraints": ["year"],
                 "variables": {
-                    "access_to_exercise_opportunities_value": {},
-                    "adult_obesity_value": {},
-                    "adult_smoking_value": {},
+                    "access_to_exercise_opportunities_value": {
+                        "type": "percent",
+                        "name": "Access to Exercise Opportunities Rate"
+                    },
+                    "adult_obesity_value": {
+                        "type": "percent",
+                        "name": "Adult Obesity Rate"
+                    },
+                    "adult_smoking_value": {
+                        "type": "percent",
+                        "name": "Adult Smoking Rate"
+                    },
                     "air_pollution_particulate_matter_value": {},
                     "alcohol_impaired_driving_deaths_value": {},
                     "child_mortality_value": {},
@@ -278,7 +284,10 @@
                     "drinking_water_violations_value": {},
                     "driving_alone_to_work_value": {},
                     "drug_poisoning_deaths_value": {},
-                    "excessive_drinking_value": {},
+                    "excessive_drinking_value": {
+                        "type": "percent",
+                        "name": "Excessive Drinking Rate"
+                    },
                     "food_environment_index_value": {},
                     "food_insecurity_value": {},
                     "health_care_costs_value": {},
@@ -307,7 +316,10 @@
                     "percent_of_population_that_is_native_hawaiian_or_other_pacific_islander": {},
                     "percent_of_population_that_is_non_hispanic_african_american": {},
                     "percent_of_population_that_is_non_hispanic_white": {},
-                    "physical_inactivity_value": {},
+                    "physical_inactivity_value": {
+                        "type": "percent",
+                        "name": "Physical Inactivity Rate"
+                    },
                     "poor_mental_health_days_value": {},
                     "poor_or_fair_health_value": {},
                     "poor_physical_health_days_value": {},
