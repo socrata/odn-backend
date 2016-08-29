@@ -131,8 +131,8 @@ describe('/data/v1/values', () => {
             expect(response).to.comprise.of.json({
                 data: [
                     ['variable', '0100000US'],
-                    ['percent_high_school_graduate'],
-                    ['percent_high_school_graduate_or_higher']
+                    ['percent_high_school_graduate_or_higher'],
+                    ['percent_bachelors_degree_or_higher']
                 ]
             });
         });
