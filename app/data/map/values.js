@@ -11,29 +11,7 @@ const SOQL = require('../../soql');
 const SessionManager = require('./session-manager');
 const format = require('../values/format');
 
-module.exports = {
-    http: handleHTTP,
-    websocket: handleWebsocket
-};
-
-function handleHTTP(request, response) {
-    const errorHandler = Exception.getHandler(request, response);
-
-    parseQuery(request.query).then(([session, bounds, zoomLevel]) => {
-        idsToSend(session, bounds, zoomLevel).then(groups => {
-            const valuesPromise = getDataChunked(session, groups);
-            const geodataPromise = getGeodataChunked(session, zoomLevel, groups);
-
-            Promise.all([valuesPromise, geodataPromise]).then(([values, geojson]) => {
-                geojson = joinGeoWithData(geojson, values);
-
-                response.json({geojson});
-            }).catch(errorHandler);
-        }).catch(errorHandler);
-    }).catch(errorHandler);
-}
-
-function handleWebsocket(socket, request) {
+module.exports = socket => {
     socket.on('message', messageString => {
         const errorHandler = Exception.getSocketHandler(socket, messageString);
 
@@ -57,7 +35,11 @@ function handleWebsocket(socket, request) {
                 }).catch(errorHandler);
         }).catch(errorHandler);
     });
-}
+
+    socket.on('error', error => {
+        console.error(error);
+    });
+};
 
 /**
  * Finds the IDs of the entities in the given bounds that have not

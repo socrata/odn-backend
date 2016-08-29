@@ -6,15 +6,12 @@ process.isProduction = !process.isDevelopment;
 const istanbul = require('istanbul-middleware');
 if (process.isDevelopment) istanbul.hookLoader(__dirname);
 
-const compression = require('compression');
-const express = require('express');
-const cors = require('cors');
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-const app = express();
-const ws = require('express-ws')(app);
-
-app.use(compression());
-app.use(cors());
+app.use(require('compression')());
+app.use(require('cors')());
 
 if (process.isDevelopment) app.use('/coverage', istanbul.createHandler());
 
@@ -22,9 +19,7 @@ app.get('/', require('./app/home'));
 
 // Map values can be retrieved over HTTP or using Websockets.
 // Since map sessions store app tokens, they do not need app tokens.
-const mapValues = require('./app/data/map/values');
-app.ws('/data/v1/map/values', mapValues.websocket);
-app.get('/data/v1/map/values', mapValues.http);
+io.on('connection', require('./app/data/map/values'));
 
 // Every endpoint after this requires an app token parameter or header.
 app.use(require('./app/token'));
@@ -42,5 +37,5 @@ app.use(require('./app/error').respond);
 
 const port = Number(process.env.PORT || 3001);
 
-app.listen(port);
+http.listen(port);
 

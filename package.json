@@ -7,16 +7,15 @@
     "cors": "2.7.1",
     "crypto": "0.0.3",
     "express": "4.14.0",
-    "express-ws": "2.0.0-rc.1",
     "geojson-merge": "0.1.0",
+    "istanbul-middleware": "0.2.2",
     "lodash": "4.13.1",
     "memjs": "0.10.0",
     "numeral": "1.5.3",
     "querystring": "0.2.0",
     "request-promise": "3.0.0",
-    "winston": "2.2.0",
-    "ws": "1.1.1",
-    "istanbul-middleware": "0.2.2"
+    "socket.io": "1.4.8",
+    "winston": "2.2.0"
   },
   "engines": {
     "node": "6.2.2"
