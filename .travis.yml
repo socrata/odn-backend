@@ -4,7 +4,7 @@ node_js:
 install:
 - npm install
 script:
-- node app.js & npm test
+- node app.js & travis_retry npm test
 services:
 - memcached
 cache:
