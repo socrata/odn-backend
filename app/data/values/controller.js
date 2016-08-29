@@ -83,6 +83,9 @@ function getDataset(request) {
         const dataset =  _.head(_.values(topic.datasets));
         const variables = _.values(dataset.variables);
 
+        if (variables.length < variableIDs.length)
+            return reject(notFound(`at least one variable not found: ${variableIDs}`));
+
         resolve(dataset);
     });
 }

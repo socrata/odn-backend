@@ -35,8 +35,13 @@ describe('/data/v1/values', () => {
         });
     });
 
-    it('should not accept two variables from different datasets', () => {
+    it('should not accept a valid variable and an invalid variable', () => {
         return expect(us('variable=demographics.population.change,education.education.percent_high_school_graduate'))
+            .to.have.status(404);
+    });
+
+    it('should not accept two variables from different datasets', () => {
+        return expect(us('variable=demographics.population.change,education.education.percent_high_school_graduate_or_higher'))
             .to.have.status(422);
     });
 
