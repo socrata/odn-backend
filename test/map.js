@@ -1,8 +1,10 @@
 
 const _ = require('lodash');
 const WebSocket = require('ws');
+const io = require('socket.io-client');
 const chakram = require('chakram');
 const expect = chakram.expect;
+const should = chakram.should;
 const get = require('./get');
 
 function map(path) {
@@ -107,22 +109,26 @@ describe('/data/v1/map', () => {
             });
 
             describe('getting states in the western US', () => {
-                let valuesResponse, names;
+                let names;
 
                 before(() => {
                     return response.then(response => {
-                        return map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=6`).then(resp => {
-                            expect(resp).to.have.status(200);
-                            valuesResponse = resp;
-                            names = resp.body.geojson.features
-                                .map(feature => feature.properties.name);
-                            return resp;
+                        return openSocket('http://localhost:3001', {
+                            transports: ['websocket'],
+                            'force new connection': true
+                        }).then(socket => {
+                            socket.send(JSON.stringify({
+                                session_id: sessionID,
+                                bounds: westernUS,
+                                zoom_level: 6
+                            }));
+
+                            return new SocketIterator(socket).next().then(resp => {
+                                names = resp.geojson.features
+                                    .map(feature => feature.properties.name);
+                            });
                         });
                     });
-                });
-
-                it('should return a 200', () => {
-                    return expect(valuesResponse).to.have.status(200);
                 });
 
                 it('should include states that are fully within the bounds', () => {
@@ -190,90 +196,190 @@ describe('/data/v1/map', () => {
         });
     });
 
-    describe('/data/v1/map/values over http', () => {
-        let response, sessionID;
+    describe('/data/v1/map/values', () => {
+        let response, sessionID, socket, send, messages;
 
-        before(() => {
-            return newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
+        before(done => {
+            const mapCreated = newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
                 expect(response).to.have.status(200);
                 response = response;
                 sessionID = response.body.session_id;
-                return response;
+                return Promise.resolve();
+            });
+
+            const socketOpened = openSocket('http://localhost:3001', {
+                transports: ['websocket'],
+                'force new connection': true
+            }).then(socketIO => {
+                socket = socketIO;
+                send = message => socket.send(JSON.stringify(message));
+                messages = new SocketIterator(socket);
+                return Promise.resolve();
+            });
+
+            Promise.all([mapCreated, socketOpened])
+                .then(() => done())
+                .catch(error => done(error));
+        });
+
+        it('should reject invalid JSON', () => {
+            socket.send('asd');
+
+            return messages.next().then(response => {
+                expect(response.message).to.equal('asd');
+                expect(response.type).to.equal('error');
+                expect(response.error.statusCode).to.equal(422);
+                expect(response.error.message).to.contain('invalid JSON');
             });
         });
 
         it('should require parameters', () => {
-            return expect(map('')).to.have.status(422);
+            send({});
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should require zoom level', () => {
-            return expect(map(`session_id=${sessionID}&bounds=${westernUS}`))
-                .to.have.status(422);
+            send({
+                session_id: sessionID,
+                bounds: westernUS
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should require bounds', () => {
-            return expect(map(`session_id=${sessionID}&zoom_level=5`))
-                .to.have.status(422);
+            send({
+                session_id: sessionID,
+                zoom_level: 5
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should require a session id', () => {
-            return expect(map(`zoom_level=5&bounds=${westernUS}`))
-                .to.have.status(422);
+            send({
+                zoom_level: 5,
+                bounds: westernUS
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject an invalid session id', () => {
-            return expect(map(`zoom_level=5&bounds=${westernUS}&session_id=1`))
-                .to.have.status(404);
+            send({
+                zoom_level: 5,
+                bounds: westernUS,
+                session_id: 1
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(404);
+            });
         });
 
         it('should reject a negative zoom level', () => {
-            return expect(map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=-1`))
-                .to.have.status(422);
+            send({
+                zoom_level: -1,
+                bounds: westernUS,
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject a large zoom level', () => {
-            return expect(map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=19`))
-                .to.have.status(422);
+            send({
+                zoom_level: 19,
+                bounds: westernUS,
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject a non-numeric zoom level', () => {
-            return expect(map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=a`))
-                .to.have.status(422);
+            send({
+                zoom_level: 'a',
+                bounds: westernUS,
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject a single number as bounds', () => {
-            return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=50`))
-                .to.have.status(422);
+            send({
+                zoom_level: 5,
+                bounds: 50,
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject a single coordinate as bounds', () => {
-            return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=50,50`))
-                .to.have.status(422);
+            send({
+                zoom_level: 5,
+                bounds: '50,50',
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject three numbers as bounds', () => {
-            return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=50,50,60`))
-                .to.have.status(422);
+            send({
+                zoom_level: 5,
+                bounds: '50,50,50',
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject more than two coordinates as bounds', () => {
-            return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=50,50,60,60,10`))
-                .to.have.status(422);
+            send({
+                zoom_level: 5,
+                bounds: '50,50,60,60,10',
+                session_id: sessionID
+            });
+
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should reject invalid coordinates as bounds', () => {
-            return expect(map(`session_id=${sessionID}&zoom_level=5&bounds=1000,50,60,60`))
-                .to.have.status(422);
-        });
+            send({
+                zoom_level: 5,
+                bounds: '1000,50,60,60',
+                session_id: sessionID
+            });
 
-        it('should not return the same data twice', () => {
-            const url = `session_id=${sessionID}&bounds=${westernUS}&zoom_level=6`;
-
-            return map(url)
-                .then(() => map(url))
-                .then(response => {
-                    return expect(response.body.geojson.features).to.be.empty;
-                });
+            return messages.next().then(response => {
+                expect(response.error.statusCode).to.equal(422);
+            });
         });
 
         it('should return the same entities for different zoom levels', () => {
@@ -283,16 +389,19 @@ describe('/data/v1/map', () => {
 
                 const sessionID = response.body.session_id;
 
-                const urls = _.range(1, 18).filter(n => n % 2).map(zoomLevel => {
-                    return `session_id=${sessionID}&bounds=${washingtonOregon}&zoom_level=${zoomLevel}`;
-                });
+                const zoomLevels = _.range(1, 18).filter(n => n % 2);
 
-                return Promise.all(urls.map(map)).then(responses => {
+                zoomLevels.map(zoomLevel => {
+                    return {
+                        session_id: sessionID,
+                        bounds: washingtonOregon,
+                        zoom_level: zoomLevel
+                    };
+                }).forEach(send);
+
+                return Promise.all(zoomLevels.map(() => messages.next())).then(responses => {
                     const allIDs = responses.map(response => {
-                        expect(response).to.have.status(200);
-                        expect(response).to.have.schema(mapValuesSchema);
-
-                        return response.body.geojson.features.map(_.property('properties.id'));
+                        return response.geojson.features.map(_.property('properties.id'));
                     });
 
                     const baseIDs = allIDs[0];
@@ -304,81 +413,40 @@ describe('/data/v1/map', () => {
                 });
             });
         });
-
-        it('should always return data for the selected entities if it is available', () => {
-            // Loomis is a town in northern washington with only 138 people
-            return newMap('entity_id=1600000US5340350&variable=demographics.population.count&year=2013').then(sessionResponse => {
-                const sessionID = sessionResponse.body.session_id;
-
-                return map(`session_id=${sessionID}&bounds=${westernUS}&zoom_level=5`).then(valuesResponse => {
-                    expect(valuesResponse).to.have.status(200);
-                    expect(valuesResponse).to.have.schema(mapValuesSchema);
-
-                    const ids = valuesResponse.body.geojson.features.map(feature => feature.properties.id);
-                    return expect(ids).to.include.members(['1600000US5340350']);
-                });
-            });
-        });
-    });
-
-    describe('/data/v1/map/values over websocket', () => {
-        let response, sessionID, ws;
-
-        before(() => {
-            return newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
-                expect(response).to.have.status(200);
-                response = response;
-                sessionID = response.body.session_id;
-
-                ws = mapWS();
-                return new Promise((resolve, reject) => {
-                    ws.on('open', () => {
-                        resolve();
-                    });
-                });
-            });
-        });
-
-        it('should return an error if the message is not JSON', () => {
-            ws.send('invalid-json');
-
-            return next(ws).then(response => {
-                expect(response.type).to.equal('error');
-                expect(response.message).to.equal('invalid-json');
-            });
-        });
-
-        it('should return an error if the message is missing parameters', () => {
-            ws.send(JSON.stringify({}));
-
-            return next(ws).then(response => {
-                expect(response.type).to.equal('error');
-            });
-        });
-
-        it('should return geojson for a valid request', () => {
-            ws.send(JSON.stringify({
-                session_id: sessionID,
-                zoom_level: 4,
-                bounds: washingtonOregon.split(',')
-            }));
-
-            return next(ws).then(response => {
-                expect(response.type).to.equal('geojson');
-                expect(response.message).to.exist;
-                expect(response.geojson).to.exist;
-            });
-        });
     });
 });
 
-// Promise with the next response of the websocket in JSON.
-function next(socket) {
+function openSocket(url, options) {
     return new Promise((resolve, reject) => {
-        socket.on('message', data => {
-            resolve(JSON.parse(data));
-        });
+        const socket = io.connect(url, options || {});
+        socket.on('connect', () => resolve(socket));
+        socket.on('error', reject);
     });
+}
+
+class SocketIterator {
+    constructor(socket) {
+        this.socket = socket;
+        this.callbacks = [];
+        this.messages = [];
+
+        this.socket.on('message', message => {
+            this.messages.push(message);
+            this.update();
+        });
+    }
+
+    next() {
+        return new Promise((resolve, reject) => {
+            this.callbacks.push(message => resolve(JSON.parse(message)));
+            this.update();
+        });
+    }
+
+    update() {
+        if (this.callbacks.length > 0 && this.messages.length > 0)
+            this.callbacks.shift()(this.messages.shift());
+    }
 }
 
 const newMapSchema = {
@@ -457,5 +525,4 @@ const mapValuesSchema = {
     },
     required: ['geojson']
 };
-
 
