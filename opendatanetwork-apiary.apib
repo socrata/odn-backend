@@ -3,19 +3,37 @@ HOST: http://api.opendatanetwork.com/
 
 # ODN API
 
-The ODN REST API exposes public data and functionality available on OpenDataNetwork.com provided by
-hundreds of government and other public sector agencies.
-In addition to search and autosuggest capabilities in finding datasets, the ODN API exposes detailed
-entity level data which enables data based comparisons across geographical regions such as states,
-counties, metropolitan areas, cities and zip codes using highly vetted data providers such as US Census,
-BEA, HUD and others. The ODN API does not duplicate API endpoints or services provided by public sector
-agencies, but rather, returns context relevant pre-populated REST URLs so the caller can access the
-data directly from the source.
+The ODN REST API exposes public data, often continuosly updated and enhanced, from many thousands of public 
+government and non profit agencies. 
+
+Much of this data originating from independent sources is fused together to create new, and often 
+powerful, entity level data. The API, in addition to search and autosuggest capabilities for finding datasets, 
+enables data based comparisons across geographical regions such as states, counties, metropolitan areas, 
+cities and zip codes using highly vetted data providers such as US Census, BEA, HUD and others. Comparison data
+is preformatted for easy and efficient display on a chart, graph or interactive map.
+
+The API also exposes data organized by narrative style questions a human might ask. The questions can 
+be rapidly found using an autosuggest style index, and then used to directly access all data needed to 
+thoroughly and authoritatively answer the question. Retrieved data includes time series (temporally aligned), 
+tabular, map heavy (includes spatial boundaries), and auto generated unstructured descriptive text.
+
+The ODN API does not duplicate API endpoints or services provided by public sector agencies, but rather, 
+returns context relevant pre-populated REST URLs, when appropriate, so the caller can access data 
+directly from the source.
+
+The [open source](http://github.com/socrata/odn-backend) API powers [OpenDataNetwork.com]
+(http://OpenDataNetwork.com), an [open source](http://github.com/socrata/opendatanetwork.com) 
+site; the site highlights myriad uses and provides API badges with contextually relevant API example 
+REST endpoints and documentation pointers.
+
+Finally, we continuosly add new data sources which appear automatically in the API, so if your favorite data
+source is not available, check back soon. You can also join us [HERE](http://www.opendatanetwork.com/join-open-data-network) 
+and receive updates or let us know which data sources you are most interested in.
 
 ## App Tokens
 
 Registering for and including a [Socrata application token](https://dev.socrata.com/docs/app-tokens.html)
-grants you a much higher quota of API requests. They can be passed either using the `app_token` parameter
+is _required_ for the ODN API. They can be passed either using the `app_token` parameter
 or the `X-App-Token` HTTP header.
 
 ## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}]
@@ -47,10 +65,10 @@ interaction where suggestions are provided as a user types.
 
         + Default: `5`
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get suggestions [GET]
 
@@ -113,10 +131,10 @@ Search for datasets related to an ODN dataset or set of entities.
 
         + Default: `0`
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get datasets [GET]
 
@@ -197,10 +215,10 @@ Search for questions related to an ODN dataset or set of entities.
 
         + Default: `0`
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get questions [GET]
 
@@ -263,10 +281,10 @@ and that it is up to the client to decide which one is the best fit.
 
         Type of the entity.
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 
 ### Get Entities [GET]
@@ -327,10 +345,10 @@ For example, region entities are sorted in descending order by population.
 
         + Default: `10`
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Find the relatives of an entity [GET]
 
@@ -373,10 +391,10 @@ for all of the given entities.
 
         Comma separated list of entity IDs.
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Find all available data for some entities [GET]
 
@@ -456,10 +474,10 @@ Get constraints for the given variable and entities.
 
         Constraint to use.
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 
 ### Get constraint permutations for entities [GET]
@@ -560,12 +578,12 @@ Retrieve the values for available data about entities.
         + Values
             + `google`
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
-### Get values [GET]
+### Get values for variables [GET]
 
 + Request
 
@@ -681,10 +699,10 @@ data. Note: session IDs expire after 24 hours.
         For example, to generate map data for `demographics.population.count`,
         you must specify a value for `year` by passing `year=2013`.
 
-    + app_token (optional, string)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Create a map [GET]
 
@@ -751,10 +769,10 @@ Check out a reference websocket implementation [here](http://jsfiddle.net/w4nxL4
         + latitude of SE point
         + longitude of SE point
 
-    + app_token (optional, string, `CGxaHQoQlgQSev4zyUh5aR5J3`)
+    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. Can also be passed via the `X-App-Token` HTTP header.
+        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
 
 ### Get map data [GET]
 
