@@ -353,7 +353,7 @@
             "fbi_ucr": {
                 "name": "FBI Uniform Crime Reporting Program",
                 "fxf": "eds5-udzt",
-                "constraints": ["year"],
+                "constraints": ["year", "crime_type"],
                 "variables": {
                     "rate": {
                         "name": "Crime incident rate per 100,000 people",
