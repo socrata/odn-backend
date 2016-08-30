@@ -234,10 +234,26 @@ describe('/data/v1/values', () => {
                 }
             });
             expect(response.body.data).to.have.lengthOf(9);
+            expect(response.body).to.not.have.keys('forecast_descriptions');
 
             // make sure it predicts increasing population
             const values = _.tail(response.body.data).map(_.last);
             expect(values).to.deep.equal(_.sortBy(values));
+        });
+    });
+
+    it('should describe forecasted data if data is forecasted and describe is true', () => {
+        return values('variable=demographics.population.count&entity_id=0100000US&forecast=3&describe=true').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(valuesSchema);
+            expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
+            expect(response.body.forecast_descriptions).to.have.lengthOf(1);
+            expect(response.body.forecast_descriptions[0]).to.have.string('United States');
+            expect(response.body.forecast_descriptions[0]).to.have.string('Population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('0.7%');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2009');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2016');
         });
     });
 
@@ -246,6 +262,7 @@ describe('/data/v1/values', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.not.have.keys('description');
+            expect(response.body).to.not.have.keys('forecast_descriptions');
         });
     });
 
@@ -254,6 +271,7 @@ describe('/data/v1/values', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.not.have.keys('description');
+            expect(response.body).to.not.have.keys('forecast_descriptions');
         });
     });
 
@@ -266,6 +284,7 @@ describe('/data/v1/values', () => {
             expect(response.body.description).to.have.string('Population');
             expect(response.body.description).to.have.string('Population Rate of Change');
             expect(response.body.description).to.have.string('2013');
+            expect(response.body).to.not.have.keys('forecast_descriptions');
         });
     });
 

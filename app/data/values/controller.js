@@ -47,13 +47,18 @@ module.exports = (request, response) => {
                     if (rows.length === 0) throw notFound(`no data found for the given entities
                         with ${_(constraints).toPairs().map(pair => pair.join('=')).join(' and ')}`);
 
-                    const descriptionPromise = getDescription(request, dataset, entities, constraints, unspecified, rows);
-                    const framePromise = getFrame(unspecified, rows)
-                        .then(_.partial(getForecast, request))
-                        .then(_.curry(formatFrame)(format)(dataset)(unspecified)(entities));
+                    Promise.all([
+                        getDescription(request, dataset, entities, constraints, unspecified, rows),
+                        getFrame(unspecified, rows).then(_.partial(getForecast, request))
+                    ]).then(([description, frame]) => {
+                        const variable = _.first(_.values(dataset.variables));
 
-                    Promise.all([descriptionPromise, framePromise]).then(([description, frame]) => {
-                        response.json(_.assign(frame, description));
+                        Promise.all([
+                            formatFrame(format, dataset, unspecified, entities, frame),
+                            getForecastDescription(request, frame, entities, variable)
+                        ]).then(([formattedFrame, forecastDescription]) => {
+                            response.json(_.assign(formattedFrame, description, forecastDescription));
+                        }).catch(errorHandler);
                     }).catch(errorHandler);
                 }).catch(errorHandler);
             }).catch(errorHandler);
@@ -222,6 +227,19 @@ function getDescription(request, dataset, entities, constraints, unspecified, ro
     if (request.query.describe === 'true')
         return Describe.describe(dataset, entities, constraints, unspecified, rows);
     return Promise.resolve({});
+}
+
+function getForecastDescription(request, frame, entities, variable) {
+    return getForecastSteps(request).then(steps => {
+        if (steps <= 0 || request.query.describe !== 'true')
+            return Promise.resolve({});
+
+        return Describe.describeForecast(frame, entities, variable).then(description => {
+            return Promise.resolve({
+                forecast_descriptions: description,
+            });
+        });
+    });
 }
 
 function getFrame(unspecified, json) {
