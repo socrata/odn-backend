@@ -3,6 +3,7 @@
   "description": "Open Data Network API",
   "private": true,
   "dependencies": {
+    "chai-as-promised": "5.3.0",
     "compression": "1.6.2",
     "cors": "2.7.1",
     "crypto": "0.0.3",

@@ -7,7 +7,6 @@
 const _ = require('lodash');
 const memjs = require('memjs');
 
-const Constants = require('./constants');
 const Exception = require('./error');
 const noCache = new Exception('cache not set up', 500);
 const miss = key => new Exception(`cache miss: ${key}`, 500);
@@ -15,7 +14,6 @@ const miss = key => new Exception(`cache miss: ${key}`, 500);
 class Cache {
     constructor(configString, options) {
         this.client = memjs.Client.create(configString, options);
-
         this.flushOnStart();
     }
 
@@ -27,10 +25,13 @@ class Cache {
     }
 
     flush() {
-        if (_.isNil(this.client)) return;
+        return new Promise((resolve, reject) => {
+            if (_.isNil(this.client)) return reject(noCache);
 
-        this.client.flush(error => {
-            if (!_.isNil(error)) console.error(`error flushing cache: ${error}`);
+            this.client.flush(error => {
+                if (!_.isNil(error)) return reject(new Exception(`error flushing cache: ${error}`));
+                resolve();
+            });
         });
     }
 
@@ -39,13 +40,10 @@ class Cache {
      */
     get(key) {
         return new Promise((resolve, reject) => {
-            if (_.isNil(this.client))
-                return reject(noCache());
-
             this.client.get(key, (error, value) => {
                 if (value) return resolve(value.toString());
                 if (_.isNil(error)) return reject(miss(key));
-                reject(error);
+                return reject(error);
             });
         });
     }
@@ -61,11 +59,8 @@ class Cache {
      */
     set(key, value, expiration) {
         return new Promise((resolve, reject) => {
-            if (_.isNil(this.client))
-                return reject(noCache());
-
             this.client.set(key, value, (error, value) => {
-                if (value) resolve();
+                if (value) return resolve();
                 reject(error);
             }, expiration);
         });
@@ -77,16 +72,13 @@ class Cache {
 
     append(key, value) {
         return new Promise((resolve, reject) => {
-            if (_.isNil(this.client))
-                return reject(noCache());
-
             this.client.append(key, value, (error, value) => {
-                if (_.isNil(error)) resolve();
+                if (_.isNil(error)) return resolve();
                 reject(error);
             });
         });
     }
 }
 
-module.exports = new Cache(null, Constants.CACHE_OPTIONS);
+module.exports = Cache;
 

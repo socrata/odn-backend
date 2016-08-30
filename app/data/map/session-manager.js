@@ -4,7 +4,8 @@ const Constants = require('../../constants');
 const Exception = require('../../error');
 const notFound = Exception.notFound;
 const Session = require('./session');
-const cache = require('../../cache');
+const Cache = require('../../cache');
+const cache = new Cache(null, Constants.CACHE_OPTIONS);
 
 class SessionManager {
     static add(session) {

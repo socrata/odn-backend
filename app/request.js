@@ -8,7 +8,8 @@ const crypto = require('crypto');
 
 const Exception = require('./error');
 const Constants = require('./constants');
-const cache = require('./cache');
+const Cache = require('./cache');
+const cache = new Cache(null, Constants.CACHE_OPTIONS);
 
 class Request {
     /**

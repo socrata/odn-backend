@@ -2,8 +2,9 @@
 
 const _ = require('lodash');
 
-const cache = require('../../cache');
 const Constants = require('../../constants');
+const Cache = require('../../cache');
+const cache = new Cache(null, Constants.CACHE_OPTIONS);
 
 class Session {
     constructor(dataset, constraints, entityType, entities, token, id) {
