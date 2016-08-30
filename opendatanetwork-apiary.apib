@@ -3,31 +3,31 @@ HOST: http://api.opendatanetwork.com/
 
 # ODN API
 
-The ODN REST API exposes public data, often continuosly updated and enhanced, from many thousands of public 
-government and non profit agencies. 
+The ODN REST API exposes public data, often continuosly updated and enhanced, from many thousands of public
+government and non profit agencies.
 
-Much of this data originating from independent sources is fused together to create new, and often 
-powerful, entity level data. The API, in addition to search and autosuggest capabilities for finding datasets, 
-enables data based comparisons across geographical regions such as states, counties, metropolitan areas, 
+Much of this data originating from independent sources is fused together to create new, and often
+powerful, entity level data. The API, in addition to search and autosuggest capabilities for finding datasets,
+enables data based comparisons across geographical regions such as states, counties, metropolitan areas,
 cities and zip codes using highly vetted data providers such as US Census, BEA, HUD and others. Comparison data
 is preformatted for easy and efficient display on a chart, graph or interactive map.
 
-The API also exposes data organized by narrative style questions a human might ask. The questions can 
-be rapidly found using an autosuggest style index, and then used to directly access all data needed to 
-thoroughly and authoritatively answer the question. Retrieved data includes time series (temporally aligned), 
+The API also exposes data organized by narrative style questions a human might ask. The questions can
+be rapidly found using an autosuggest style index, and then used to directly access all data needed to
+thoroughly and authoritatively answer the question. Retrieved data includes time series (temporally aligned),
 tabular, map heavy (includes spatial boundaries), and auto generated unstructured descriptive text.
 
-The ODN API does not duplicate API endpoints or services provided by public sector agencies, but rather, 
-returns context relevant pre-populated REST URLs, when appropriate, so the caller can access data 
+The ODN API does not duplicate API endpoints or services provided by public sector agencies, but rather,
+returns context relevant pre-populated REST URLs, when appropriate, so the caller can access data
 directly from the source.
 
 The [open source](http://github.com/socrata/odn-backend) API powers [OpenDataNetwork.com]
-(http://OpenDataNetwork.com), an [open source](http://github.com/socrata/opendatanetwork.com) 
-site; the site highlights myriad uses and provides API badges with contextually relevant API example 
+(http://OpenDataNetwork.com), an [open source](http://github.com/socrata/opendatanetwork.com)
+site; the site highlights myriad uses and provides API badges with contextually relevant API example
 REST endpoints and documentation pointers.
 
 Finally, we continuosly add new data sources which appear automatically in the API, so if your favorite data
-source is not available, check back soon. You can also join us [HERE](http://www.opendatanetwork.com/join-open-data-network) 
+source is not available, check back soon. You can also join us [HERE](http://www.opendatanetwork.com/join-open-data-network)
 and receive updates or let us know which data sources you are most interested in.
 
 ## App Tokens
@@ -518,9 +518,15 @@ Get constraints for the given variable and entities.
           ]
         }
 
-## Data Values [/data/v1/values{?variable}{?entity_id}{?constraint}{?forecast}{?describe}{?format}{?app_token}]
+## Data Values [/data/v1/values{?variable}{?entity_id}{?forecast}{?describe}{?format}{?app_token}]
 
 Retrieve the values for available data about entities.
+
+To retrieve values for multiple variables, values must be specified
+for every constraint in the dataset. For example, to get all of the variables
+in the `jobs.occupations` dataset, we would need to specify values
+for both `year` and `occupation` by setting passing `year=2013` and
+`occupation=Engineering`.
 
 + Parameters
 
@@ -541,15 +547,7 @@ Retrieve the values for available data about entities.
         Note that since there is currently no results pagination,
         retrieving values for all entities may produce incomplete results.
 
-    + constraint (optional, string)
-
-        To retrieve values for multiple variables, values must be specified
-        for every constraint in the dataset. For example, to get all of the variables
-        in the `jobs.occupations` dataset, we would need to specify values
-        for both `year` and `occupation` by setting passing `year=2013` and
-        `occupation=Engineering`.
-
-    + forecast (optional, number)
+    + forecast (optional, number, `3`)
 
         Number of steps to forecast.
         Must be an integer between 0 and 20.
@@ -560,7 +558,7 @@ Retrieve the values for available data about entities.
 
         + Default `0`
 
-    + describe (optional, boolean)
+    + describe (optional, boolean, `false`)
 
         Whether or not to produce a description of the data.
         Set to `true` to produce a description.
