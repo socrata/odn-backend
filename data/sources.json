@@ -24,6 +24,7 @@
         "datasets": {
             "education": {
                 "fxf": "7mfb-7yvj",
+                "name": "Graduation Rates",
                 "constraints": ["year"],
                 "variables": {
                     "percent_less_than_9th_grade": {
