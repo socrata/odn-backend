@@ -57,7 +57,7 @@ describe('/data/v1/values', () => {
             expect(response).to.comprise.of.json({
                 data: [
                     ['year', '0100000US', '0200000US1'],
-                    [2009]
+                    [2010]
                 ]
             });
             const values = _(response.body.data).tail().flatten().value();
