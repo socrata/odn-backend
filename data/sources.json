@@ -54,6 +54,7 @@
 
             "education_expenditures": {
                 "fxf": "nxzi-u9nr",
+                "name": "Expenditures",
                 "constraints": ["year"],
                 "variables": {
                     "administration-salaries": {
