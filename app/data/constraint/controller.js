@@ -43,6 +43,7 @@ module.exports = (request, response) => {
                 .select(constraint)
                 .order(constraint)
                 .equals(constraints)
+                .equal('variable', _.last(variable.id.split('.')))
                 .send()
                 .then(json => {
                     const options = json.map(option => {
