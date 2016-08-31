@@ -103,14 +103,18 @@ function getAtIndex(baseQuery, index) {
         .limit(1)
         .order('value')
         .send()
-        .then(response => Promise.resolve(response[0].value));
+        .then(response => {
+            if (response.length === 0)
+                return Promise.reject(notFound('no data found to generate map'));
+            return Promise.resolve(response[0].value);
+        });
 }
 
 // given n, find indexes of minimum, lower quartile, median, upper quartile, maximum
 function getIndexes(count) {
     const steps = Constants.SUMMARY_STAT_STEPS;
     const mid = _.range(1, steps - 1).map(n => Math.floor(count * n / (steps - 1)));
-    return _.concat(0, mid, count - 1);
+    return _.concat(0, mid, count < 1 ? 0 : count - 1);
 }
 
 function getCount(baseQuery) {

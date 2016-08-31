@@ -7,13 +7,10 @@ module.exports = new winston.Logger({
         new winston.transports.Console({
             level: 'error',
             timestamp: true,
-            json: true
-        })
-    ],
-    exceptionHandlers: [
-        new winston.transports.Console({
-            timestamp: true,
-            json: true
+            json: true,
+            handleExceptions: true,
+            prettyPrint: false,
+            stringify: JSON.stringify
         })
     ],
     exitOnError: false
