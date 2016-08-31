@@ -202,7 +202,7 @@
 
             "occupations": {
                 "fxf": "y8sk-t74p",
-                "constraints": ["year", "occupation"],
+                "constraints": ["occupation", "year"],
                 "variables": {
                     "employed": {},
                     "employed_rank": {
@@ -212,7 +212,6 @@
                     "percent_employed_rank": {
                         "type": "rank"
                     },
-                    "population": {},
                     "total_employed": {},
                     "total_ranks": {}
                 },
@@ -246,7 +245,7 @@
             "health_indicators": {
                 "name": "Health Indicators",
                 "fxf": "ph2b-gm84",
-                "constraints": ["year", "question", "question_response", "break_out"],
+                "constraints": ["question", "question_response", "break_out", "year"],
                 "variables": {
                     "data_value": {}
                 },
@@ -330,7 +329,7 @@
             "cost_of_living": {
                 "name": "Cost of Living",
                 "fxf": "t64z-nedn",
-                "constraints": ["year", "component"],
+                "constraints": ["component", "year"],
                 "variables": {
                     "index": {
                         "name": "cost of living index",
@@ -353,7 +352,7 @@
             "fbi_ucr": {
                 "name": "FBI Uniform Crime Reporting Program",
                 "fxf": "eds5-udzt",
-                "constraints": ["year", "crime_type"],
+                "constraints": ["crime_type", "year"],
                 "variables": {
                     "rate": {
                         "name": "Crime incident rate per 100,000 people",
