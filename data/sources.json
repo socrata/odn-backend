@@ -4,7 +4,7 @@
         "datasets": {
             "population": {
                 "fxf": "9jg8-ki9x",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "count": {"name": "Population Count"},
                     "change": {
@@ -25,7 +25,7 @@
             "education": {
                 "fxf": "7mfb-7yvj",
                 "name": "Graduation Rates",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "percent_less_than_9th_grade": {
                         "type": "percent",
@@ -55,7 +55,7 @@
             "education_expenditures": {
                 "fxf": "nxzi-u9nr",
                 "name": "Expenditures",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "administration-salaries": {
                         "type": "dollar",
@@ -90,7 +90,7 @@
 
             "classroom_statistics": {
                 "fxf": "kx62-ayme",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "student-teacher-ratio": {}
                 },
@@ -104,7 +104,7 @@
         "datasets": {
             "earnings": {
                 "fxf": "j8a6-qa8k",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "female_full_time_median_earnings": {
                         "type": "dollar",
@@ -183,7 +183,7 @@
 
             "job_proximity": {
                 "fxf": "5pnb-mvzq",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "jobs-prox-idx-mean": {
                         "Name": "Mean Job Proximity Index"
@@ -202,7 +202,7 @@
 
             "occupations": {
                 "fxf": "y8sk-t74p",
-                "constraints": ["occupation", "year"],
+                "constraints": ["occupation", ["year", "desc"]],
                 "variables": {
                     "employed": {},
                     "employed_rank": {
@@ -225,7 +225,7 @@
         "datasets": {
             "environmental_health": {
                 "fxf": "nax7-t6ga",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "env-health-idx-mean": {
                         "Name": "Mean Environmental Health Index"
@@ -245,7 +245,12 @@
             "health_indicators": {
                 "name": "Health Indicators",
                 "fxf": "ph2b-gm84",
-                "constraints": ["question", "question_response", "break_out", "year"],
+                "constraints": [
+                    "question",
+                    ["question_response", ["Yes"]],
+                    ["break_out", ["Overall"]],
+                    ["year", "desc"]
+                ],
                 "variables": {
                     "data_value": {}
                 },
@@ -257,7 +262,7 @@
             "health": {
                 "name": "Health Behaviors",
                 "fxf": "csbu-um39",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "access_to_exercise_opportunities_value": {
                         "type": "ratio",
@@ -292,7 +297,7 @@
             "gdp": {
                 "name": "Gross Domestic Product",
                 "fxf": "jm8e-8hhx",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "per_capita_gdp": {
                         "name": "GDP per capita",
@@ -310,7 +315,7 @@
 
             "consumption": {
                 "fxf": "skua-q4dv",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "expenditures_percent_change": {
                         "name": "Annual change in PCE",
@@ -329,7 +334,7 @@
             "cost_of_living": {
                 "name": "Cost of Living",
                 "fxf": "t64z-nedn",
-                "constraints": ["component", "year"],
+                "constraints": ["component", ["year", "desc"]],
                 "variables": {
                     "index": {
                         "name": "cost of living index",
@@ -352,7 +357,7 @@
             "fbi_ucr": {
                 "name": "FBI Uniform Crime Reporting Program",
                 "fxf": "eds5-udzt",
-                "constraints": ["crime_type", "year"],
+                "constraints": ["crime_type", ["year", "desc"]],
                 "variables": {
                     "rate": {
                         "name": "Crime incident rate per 100,000 people",
@@ -376,7 +381,7 @@
                 "name": "Michigan Financial Indicators",
                 "fxf": "yfe2-qvup",
                 "domain": "mi-treasury.data.socrata.com",
-                "constraints": ["year"],
+                "constraints": [["year", "desc"]],
                 "variables": {
                     "debt_service": {
                         "name": "Debt Service",

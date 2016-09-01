@@ -1,7 +1,10 @@
 
+const _ = require('lodash');
 const chakram = require('chakram');
 const expect = chakram.expect;
 const get = require('./get');
+
+require('chai').use(require('chai-sorted'));
 
 const constraintSchema = {
     definitions: {
@@ -94,7 +97,7 @@ describe('/data/v1/constraint', () => {
         return expect(populationUS('constraint=age')).to.have.status(404);
     });
 
-    it('should return all years with population data for the united states', () => {
+    it('should return all years with population data for the united states in descending order', () => {
         return populationUS('constraint=year').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(constraintSchema);
@@ -105,6 +108,8 @@ describe('/data/v1/constraint', () => {
                     }
                 ]
             });
+            const years = response.body.permutations.map(_.property('constraint_value'));
+            expect(years).to.deep.equal(['2013', '2012', '2011', '2010', '2009']);
         });
     });
 

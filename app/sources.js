@@ -94,6 +94,11 @@ class Sources {
                 dataset.searchTerms = [];
             if (!('description' in dataset))
                 dataset.description = '';
+            dataset.constraintOrdering = _.fromPairs(dataset.constraints.filter(_.isArray));
+            dataset.constraints = dataset.constraints.map(stringOrTuple => {
+                if (_.isArray(stringOrTuple)) return _.first(stringOrTuple);
+                return stringOrTuple;
+            });
 
             dataset.url = `https://${dataset.domain}/resource/${dataset.fxf}.json`;
             dataset.sources = dataset.sources.map(source => {

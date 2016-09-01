@@ -46,9 +46,13 @@ module.exports = (request, response) => {
                 .equal('variable', _.last(variable.id.split('.')))
                 .send()
                 .then(json => {
-                    const options = json.map(option => {
+                    const ordering = (dataset.constraintOrdering || {})[constraint];
+                    let options = json.map(_.property(constraint));
+                    options = toNumbers(options);
+                    options = sortOptions(options, ordering);
+                    options = options.map(option => {
                         return {
-                            constraint_value: option[constraint]
+                            constraint_value: String(option)
                         };
                     });
 
@@ -58,4 +62,22 @@ module.exports = (request, response) => {
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
+
+function toNumbers(strings) {
+    const numbers = strings.map(_.toNumber);
+    return _.some(numbers, isNaN) ? strings : numbers;
+}
+
+function sortOptions(options, ordering) {
+    if (_.isString(ordering))
+        return _.orderBy(options, _.identity, ordering);
+    if (_.isArray(ordering))
+        return sortWithHint(options, ordering);
+    return options;
+}
+
+function sortWithHint(options, ordering) {
+    return ordering.filter(value => _.includes(options, value))
+        .concat(options.filter(value => !_.includes(ordering, value)));
+}
 
