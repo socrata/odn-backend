@@ -28,12 +28,15 @@ You can check your node version using `node --version`.
 The ODN backend uses [memcached](https://memcached.org/)
 to cache responses from the Socrata backend and store map sessions.
 To install memcached on a mac, use `brew install memcached`.
+To see how to run it: brew info memcached
+To run it: /usr/local/opt/memcached/bin/memcached
 
 ### Server
 
 Use `npm run server` to start the development
 server at [localhost:3001](http://localhost:3001/).
 It will automatically restart when the source is changed.
+Start a local memcached server to get maps to work.
 
 ### Tests
 
