@@ -457,24 +457,6 @@
                 "sources": ["f65"]
             }
         }
-    },
-
-    "crime": {
-        "datasets": {
-            "city_crime": {
-                "fxf": "https://dev.socrata.com/foundry/odn.data.socrata.com/eds5-udzt",
-                "constraints": [["year", "crime_type"]],
-                "variables": {
-                    "count": {"name": "Crime Count"},
-                    "rate": {
-                      "name": "Crime Rate",
-                      "type": "ratio"
-                    }
-                },
-                "searchTerms": ["crime", "police", "public safety"],
-                "sources": ["fbi_ucr"]
-            }
-        }
     }
 }
 
