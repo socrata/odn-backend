@@ -26,10 +26,11 @@ if (args.length !== 2) {
     console.log(`found dataset: ${datasetJSON.domain}:${datasetJSON.fxf}`);
 
     const dataset = Dataset.fromJSON(datasetJSON);
+    const variableIDs = _.keys(datasetJSON.variables);
     const datasetView = new DatasetView(dataset, {
         '$select': 'id,variable',
         '$group': 'id,variable',
-        '$where': 'value IS NOT NULL'
+        '$where': `value IS NOT NULL AND ${whereIn('variable', variableIDs)}`
     });
     const csvWriter = new CSVWriter(outputFile, ['id', 'variable', 'row_id']);
 
@@ -51,5 +52,13 @@ if (args.length !== 2) {
             });
         });
     });
+}
+
+function whereIn(column, values) {
+    return `${column} in (${values.map(quote)})`;
+}
+
+function quote(string) {
+    return `'${string}'`;
 }
 
