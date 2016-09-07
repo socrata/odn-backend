@@ -36,12 +36,12 @@ describe('/data/v1/values', () => {
     });
 
     it('should not accept a valid variable and an invalid variable', () => {
-        return expect(us('variable=demographics.population.change,education.education.percent_high_school_graduate'))
+        return expect(us('variable=demographics.population.change,education.graduation_rates.percent_high_school_graduate'))
             .to.have.status(404);
     });
 
     it('should not accept two variables from different datasets', () => {
-        return expect(us('variable=demographics.population.change,education.education.percent_high_school_graduate_or_higher'))
+        return expect(us('variable=demographics.population.change,education.graduation_rates.percent_high_school_graduate_or_higher'))
             .to.have.status(422);
     });
 
@@ -130,7 +130,7 @@ describe('/data/v1/values', () => {
     });
 
     it('should allow specifying multiple variables if all constraints are fixed', () => {
-        return values('variable=education.education&year=2013&entity_id=0100000US').then(response => {
+        return values('variable=education.graduation_rates&year=2013&entity_id=0100000US').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
@@ -144,7 +144,7 @@ describe('/data/v1/values', () => {
     });
 
     it('should not allow specifying multiple variables if some constraints are not fixed', () => {
-        return values('variable=education.education&entity_id=0100000US').then(response => {
+        return values('variable=education.graduation_rates&entity_id=0100000US').then(response => {
             expect(response).to.have.status(422);
         });
     });

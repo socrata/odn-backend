@@ -22,7 +22,7 @@
 
     "education": {
         "datasets": {
-            "education": {
+            "graduation_rates": {
                 "fxf": "7mfb-7yvj",
                 "name": "Graduation Rates",
                 "constraints": [["year", "desc"]],
@@ -259,7 +259,7 @@
                 "sources": [["cdc", "http://www.cdc.gov/brfss/"]]
             },
 
-            "health": {
+            "health_behaviors": {
                 "name": "Health Behaviors",
                 "fxf": "csbu-um39",
                 "constraints": [["year", "desc"]],
