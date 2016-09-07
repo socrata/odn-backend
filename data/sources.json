@@ -266,31 +266,44 @@
                 "variables": {
                     "access_to_exercise_opportunities_value": {
                         "type": "ratio",
-                        "name": "Access to Exercise Opportunities Rate"
+                        "name": "Access to Exercise Opportunities Rate",
+                        "stoplight": true
                     },
                     "adult_obesity_value": {
                         "type": "ratio",
-                        "name": "Adult Obesity Rate"
+                        "name": "Adult Obesity Rate",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "adult_smoking_value": {
                         "type": "ratio",
-                        "name": "Adult Smoking Rate"
+                        "name": "Adult Smoking Rate",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "excessive_drinking_value": {
                         "type": "ratio",
-                        "name": "Excessive Drinking Rate"
+                        "name": "Excessive Drinking Rate",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "physical_inactivity_value": {
                         "type": "ratio",
-                        "name": "Physical Inactivity Rate"
+                        "name": "Physical Inactivity Rate",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "alcohol_impaired_driving_deaths_value": {
                         "type": "ratio",
-                        "name": "Percent of Traffic Deaths Involving Alcohol Impairment"
+                        "name": "Percent of Traffic Deaths Involving Alcohol Impairment",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "sexually_transmitted_infections_value": {
                         "type": "per1000",
-                        "name": "Sexually Transmitted Infections Rate"
+                        "name": "Sexually Transmitted Infections Rate",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
                 "searchTerms": ["health", "fitness", "smoking", "alcohol", "tobacco", "obesity", "tobacco", "exercise", "junk food"],
