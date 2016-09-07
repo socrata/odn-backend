@@ -186,13 +186,13 @@
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "jobs-prox-idx-mean": {
-                        "Name": "Mean Job Proximity Index"
+                        "name": "Mean Job Proximity Index"
                     },
                     "jobs-prox-idx-median": {
-                        "Name": "Median Job Proximity Index"
+                        "name": "Median Job Proximity Index"
                     },
                     "jobs-prox-idx-stdev": {
-                        "Name": "Job Proximity Index Standard Deviation"
+                        "name": "Job Proximity Index Standard Deviation"
                     }
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
@@ -228,35 +228,15 @@
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "env-health-idx-mean": {
-                        "Name": "Mean Environmental Health Index"
+                        "name": "Mean Environmental Health Hazard Index"
                     },
                     "env-health-idx-median": {
-                        "Name": "Median Environmental Health Index"
-                    },
-                    "env-health-idx-stdev": {
-                        "Name": "Environmental Health Index Standard Deviation"
+                        "name": "Median Environmental Health Hazard Index"
                     }
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
                 "description": "The environmental health hazard exposure index summarizes potential exposure to harmful toxins including carcinogenic, respiratory, and neurological hazards. Values are percentile ranked and range from 0 to 100, with higher values corresponding to less exposure to harmful toxins. Data is computed for U.S. counties by applying summary statistics across all census tracts present in a county and is current as of 2015.",
                 "sources": [["hud", "http://egis.hud.opendata.arcgis.com/datasets/53a856bef6f24356abee30653399e94a_0"]]
-            },
-
-            "health_indicators": {
-                "name": "Health Indicators",
-                "fxf": "ph2b-gm84",
-                "constraints": [
-                    "question",
-                    ["question_response", ["Yes"]],
-                    ["break_out", ["Overall"]],
-                    ["year", "desc"]
-                ],
-                "variables": {
-                    "data_value": {}
-                },
-                "searchTerms": ["health", "asthma", "arthritis", "cardiac", "cancer", "copd", "diabetes", "disease", "chronic"],
-                "description": "The CDC's Behavioral Risk Factor Surveillance System (BRFSS) is the nation's premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services. Established in 1984 with 15 states, BRFSS now collects data in all 50 states as well as the District of Columbia and three U.S. territories. BRFSS completes more than 400,000 adult interviews each year, making it the largest continuously conducted health survey system in the world.",
-                "sources": [["cdc", "http://www.cdc.gov/brfss/"]]
             },
 
             "health": {
