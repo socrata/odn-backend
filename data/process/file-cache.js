@@ -5,6 +5,7 @@
  * Socrata datasets.
  */
 
+const crypto = require('crypto');
 const fs = require('fs');
 const fsp = require('fs-promise');
 const mkdirp = require('mkdirp');
@@ -46,7 +47,7 @@ class FileCache {
 }
 
 function fileName(key) {
-    return key.replace(/\W/g, '');
+    return crypto.createHash('sha512').update(key).digest('base64').replace(/\W/g, '');
 }
 
 function getKeys(directory) {
