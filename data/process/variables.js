@@ -31,7 +31,7 @@ if (args.length !== 2) {
         '$group': 'id,variable',
         '$where': 'value IS NOT NULL'
     });
-    const csvWriter = new CSVWriter(outputFile, ['id', 'variable']);
+    const csvWriter = new CSVWriter(outputFile, ['id', 'variable', 'row_id']);
 
     let rowsProcessed = 0;
     datasetView.all(page => {
@@ -39,8 +39,16 @@ if (args.length !== 2) {
         console.log(`processed ${rowsProcessed} variables...`);
 
         page.forEach(row => {
+            const entityID = row.id;
+            const variableID = `${datasetID}.${row.variable}`;
+            const rowID = [entityID, variableID].join('-');
+
             row.variable = `${datasetID}.${row.variable}`;
-            csvWriter.appendObject(row);
+            csvWriter.appendObject({
+                id: entityID,
+                variable: variableID,
+                row_id: rowID
+            });
         });
     });
 }
