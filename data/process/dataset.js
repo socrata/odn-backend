@@ -4,6 +4,8 @@ const _ = require('lodash');
 const request = require('request-promise');
 
 const Request = require('../../app/request');
+const FileCache = require('./file-cache');
+const cache = new FileCache('.dataset-cache');
 
 class Dataset {
     constructor(domain, fxf) {
@@ -18,16 +20,30 @@ class Dataset {
             '$limit': pageSize
         }));
 
-        return new Promise((resolve, reject) => {
-            request(url).then(response => {
-                resolve(JSON.parse(response.toString()));
-            }).catch(reject);
-        });
+        return getJSON(url);
     }
 
     static fromJSON(json) {
         return new Dataset(json.domain, json.fxf);
     }
+}
+
+function getJSON(url) {
+    return cache.get(url).catch(() => {
+        return request(url).then(response => {
+            cache.set(url, response).catch(error => {
+                console.log(error);
+            });
+
+            return Promise.resolve(response);
+        });
+    }).then(buffer => {
+        return Promise.resolve(bufferToJSON(buffer));
+    });
+}
+
+function bufferToJSON(buffer) {
+    return Promise.resolve(JSON.parse(buffer.toString()));
 }
 
 module.exports = Dataset;
