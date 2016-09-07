@@ -23,7 +23,7 @@ const declarations = {
 
     question: {
         domain: Constants.ODN_DATA_DOMAIN,
-        fxf: 'gav2-me5f',
+        fxf: '234x-8y9w',
         column: 'question',
         encoded: ['regionName', 'regionID', 'regionPopulation',
                   'vector', 'source', 'variable', 'metric', 'index'],
