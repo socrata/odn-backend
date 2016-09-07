@@ -131,10 +131,9 @@ describe('/search/v1/question', () => {
         return search('dataset_id=demographics.population').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(questionSchema);
-            const variables = response.body.questions.map(_.property('variable_id'));
+            const variables = response.body.questions.map(_.property('metric'));
 
-            expect(variables).to.contain('demographics.population.population');
-            expect(variables).to.contain('demographics.population.population_change');
+            expect(variables).to.contain('population');
         });
     });
 });
@@ -155,11 +154,11 @@ const questionSchema = {
             type: 'object',
             properties: {
                 entity: {'$ref': '#/definitions/entity'},
-                variable_id: {type: 'string'},
-                constraints: {type: 'object'},
+                vector: {type: 'string'},
+                metric: {type: 'string'},
                 text: {type: 'string'}
             },
-            required: ['entity', 'variable_id', 'text']
+            required: ['entity', 'text', 'vector', 'metric']
         }
     },
     type: 'object',

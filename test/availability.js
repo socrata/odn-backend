@@ -110,22 +110,6 @@ describe('/data/v1/availability', () => {
         });
     });
 
-    it('should find health indicator data for south carolina', () => {
-        return availability('?entity_id=0400000US45').then(response => {
-            expect(response).to.have.status(200);
-            expect(response).to.have.schema(availabilitySchema);
-            expect(response).to.comprise.of.json({
-                'topics': {
-                    'health': {
-                        'datasets': {
-                            'health_indicators': {}
-                        }
-                    }
-                }
-            });
-        });
-    });
-
     it('should not include search terms for datasets', () => {
         return availability('?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);
@@ -136,19 +120,19 @@ describe('/data/v1/availability', () => {
     });
 
     it('should include sources with source urls', () => {
-        return availability('?entity_id=0400000US45').then(response => {
+        return availability('?entity_id=0500000US53033').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
             expect(response).to.comprise.of.json({
                 'topics': {
                     'health': {
                         'datasets': {
-                            'health_indicators': {
+                            'environmental_health': {
                                 'sources': [
                                     {
-                                        'name': 'Centers for Disease Control and Prevention',
-                                        'url': 'http://www.cdc.gov/',
-                                        'source_url': 'http://www.cdc.gov/brfss/'
+                                        'name': 'U.S. Department of Housing and Urban Development',
+                                        'url': 'http://www.hud.gov/',
+                                        'source_url': 'http://egis.hud.opendata.arcgis.com/datasets/53a856bef6f24356abee30653399e94a_0'
                                     }
                                 ]
                             }
