@@ -383,9 +383,9 @@
         }
     },
 
-    "michigan": {
+    "finance": {
         "datasets": {
-            "debt": {
+            "michigan_debt": {
                 "name": "Michigan Financial Indicators",
                 "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
@@ -409,7 +409,7 @@
                 "sources": ["f65"]
             },
 
-            "expenditures": {
+            "michigan_expenditures": {
                 "name": "Michigan Financial Indicators",
                 "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
@@ -429,7 +429,7 @@
                 "sources": ["f65"]
             },
 
-            "general_fund": {
+            "michigan_general_fund": {
                 "name": "Michigan Financial Indicators",
                 "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
@@ -453,7 +453,7 @@
                 "sources": ["f65"]
             },
 
-            "pensions": {
+            "michigan_pensions": {
                 "name": "Michigan Financial Indicators",
                 "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
@@ -473,7 +473,7 @@
                 "sources": ["f65"]
             },
 
-            "property_tax": {
+            "michigan_property_tax": {
                 "name": "Michigan Financial Indicators",
                 "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
@@ -497,7 +497,7 @@
                 "sources": ["f65"]
             },
 
-            "revenues": {
+            "michigan_revenues": {
                 "name": "Michigan Financial Indicators",
                 "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
