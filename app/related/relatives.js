@@ -110,19 +110,24 @@ function relatives(relation, ids, relativeType, n, token) {
  * Gets the peers of an entity.
  */
 function peers(entity, n) {
-    return new Promise((resolve, reject) => {
-        const url = Request.buildURL(`${Constants.PEERS_URL}/${entity.id}`, {n});
+    const url = Request.buildURL(`${Constants.PEERS_URL}/${entity.id}`, {n});
 
-        Request.getJSON(url).then(json => {
-            json.peers.forEach(entity => {
-                entity.type = `region.${entity.type}`;
-            });
+    return Request.getJSON(url).then(json => {
+        json.peers.forEach(entity => {
+            entity.type = `region.${entity.type}`;
+        });
 
-            resolve({
-                type: entity.type,
-                entities: json.peers
-            });
-        }).catch(reject);
+        return Promise.resolve({
+            type: entity.type,
+            entities: json.peers
+        });
+    }).catch(error => {
+        if (error.statusCode === 400) return Promise.resolve({
+            type: entity.type,
+            entities: []
+        });
+
+        return Promise.reject(error);
     });
 }
 

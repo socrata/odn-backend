@@ -166,12 +166,15 @@ function formatFrameGoogle(dataset, unspecified, entities, frame) {
 
         const rows = _.tail(frame.data).map(row => {
             return {c: row.map((value, index) => {
+                const show = (index !== 0 && forecast && !isForecast(index));
+                const after = show ? (row[index + 1] ? ' (Forecasted)' : ' (Measured)') : '';
+
                 return _.assign({
                     v: value
                 }, !isForecast(index) ? {} : {
                     v: !value
                 }, isForecast(index) || index === 0 ? {} : {
-                    f: formatter(value)
+                    f: formatter(value) + after
                 });
             })};
         });
