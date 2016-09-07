@@ -385,9 +385,9 @@
 
     "michigan": {
         "datasets": {
-            "finance": {
+            "debt": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "yfe2-qvup",
+                "fxf": "nz55-nag5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -395,64 +395,119 @@
                         "name": "Debt Service",
                         "type": "rate"
                     },
-                    "liquidity_ratio": {
-                        "name": "Liquidity Ratio",
-                        "type": "rate"
-                    },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
                         "type": "rate"
-                    },
-                    "unfunded_pension_liability": {
-                        "name": "Unfunded Pension Liability",
-                        "type": "dollar"
-                    },
-                    "unrestricted_revenue": {
-                        "name": "Unrestricted Revenue",
-                        "type": "rate"
-                    },
-                    "total_general_fund_expenditures": {
-                        "name": "Total General Fund Expenditures",
-                        "type": "dollar"
-                    },
-                    "total_general_fund_revenue": {
-                        "name": "Total General Fund Revenue",
-                        "type": "dollar"
-                    },
-                    "total_taxable_value": {
-                        "name": "Total Taxable Value",
-                        "type": "dollar"
-                    },
-                    "general_fund_balance": {
-                        "name": "General Fund Balance",
-                        "type": "dollar"
-                    },
-                    "debt_pct_taxable_value": {
-                        "name": "Debt as % of Taxable Value",
-                        "type": "rate"
-                    },
-                    "total_public_safety_fund_expenditures": {
-                        "name": "Total Public Safety Fund Expenditures",
-                        "type": "dollar"
-                    },
-                    "general_fund_health": {
-                        "name": "General Fund Health",
-                        "type": "dollar"
-                    },
-                    "pension_health": {
-                        "name": "Pension Health",
-                        "type": "dollar"
-                    },
-                    "property_tax_health": {
-                        "name": "Property Tax Health",
-                        "type": "dollar"
                     },
                     "debt_health": {
                         "name": "Debt Health",
                         "type": "dollar"
                     }
                 },
-                "searchTerms": ["michigan", "financial indicators", "debt service", "liquidity ratio", "expenditures", "revenue", "total taxable value", "unfunded pension liability", "unrestricted revenue", "total general fund expenditures", "general fund health", "total general fund revenue", "debt health", "property tax health", "pension health", "general fund health"],
+                "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "long term debt revenue"],
+                "description": "Michigan Department of Treasury Financial Indicators",
+                "sources": ["f65"]
+            },
+            "expenditures": {
+                "name": "Michigan Financial Indicators",
+                "fxf": "nz55-nag5",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "total_public_safety_fund_expenditures": {
+                        "name": "Total Public Safety Fund Expenditures",
+                        "type": "dollar"
+                    },
+                    "total_general_fund_expenditures": {
+                        "name": "Total General Fund Expenditures",
+                        "type": "dollar"
+                    }
+                },
+                "searchTerms": ["michigan", "financial indicators", "expenditures", "total general fund expenditures", "public safety fund expenditures", "public safety"],
+                "description": "Michigan Department of Treasury Financial Indicators",
+                "sources": ["f65"]
+            },
+             "general_fund": {
+                "name": "Michigan Financial Indicators",
+                "fxf": "nz55-nag5",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "general_fund_balance": {
+                        "name": "General Fund Balance",
+                        "type": "dollar"
+                    },
+                    "general_fund_health": {
+                        "name": "General Fund Health",
+                        "type": "dollar"
+                    },
+                     "liquidity_ratio": {
+                        "name": "Liquidity Ratio",
+                        "type": "rate"
+                    }
+                },
+                "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
+                "description": "Michigan Department of Treasury Financial Indicators",
+                "sources": ["f65"]
+            },
+            "pensions": {
+                "name": "Michigan Financial Indicators",
+                "fxf": "nz55-nag5",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "pension_health": {
+                        "name": "Pension Health",
+                        "type": "dollar"
+                    },
+                    "unfunded_pension_liability": {
+                        "name": "Unfunded Pension Liability",
+                        "type": "dollar"
+                    }
+                },
+                "searchTerms": ["michigan", "financial indicators", "unfunded pension liability", "pension health"],
+                "description": "Michigan Department of Treasury Financial Indicators",
+                "sources": ["f65"]
+            },
+             "property_tax": {
+                "name": "Michigan Financial Indicators",
+                "fxf": "nz55-nag5",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "debt_taxable_value": {
+                        "name": "Debt as % of Taxable Value",
+                        "type": "rate"
+                    },
+                    "property_tax_health": {
+                        "name": "Property Tax Health",
+                        "type": "dollar"
+                    },
+                     "total_taxable_value": {
+                        "name": "Total Taxable Value",
+                        "type": "dollar"
+                    }
+                },
+                "searchTerms": ["michigan", "financial indicators", "property tax", "total taxable value", "property tax health", "debt taxable value"],
+                "description": "Michigan Department of Treasury Financial Indicators",
+                "sources": ["f65"]
+            },
+            "revenues": {
+                "name": "Michigan Financial Indicators",
+                "fxf": "nz55-nag5",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "total_general_fund_revenue": {
+                        "name": "Total General Fund Revenue",
+                        "type": "dollar"
+                    },
+                    "unrestricted_revenue": {
+                        "name": "Unrestricted Revenue",
+                        "type": "rate"
+                    }
+                },
+                "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
                 "description": "Michigan Department of Treasury Financial Indicators",
                 "sources": ["f65"]
             }

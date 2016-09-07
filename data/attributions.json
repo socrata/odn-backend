@@ -37,8 +37,8 @@
       "url" : "https://www.fbi.gov/about-us/cjis/ucr/ucr"
     },
     "f65": {
-      "name" : "Michigan Department of Treasury",
-      "url" : "https://f65.mitreasury.msu.edu/"
+      "name" : "MICommunity Financial Dashboard",
+      "url" : "http://michigan.rc-insight-dashboard.socrata-qa.com"
     }
 }
 
