@@ -370,7 +370,7 @@
     "finance": {
         "datasets": {
             "michigan_debt": {
-                "name": "Michigan Financial Indicators",
+                "name": "Debt",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
@@ -394,7 +394,7 @@
             },
 
             "michigan_expenditures": {
-                "name": "Michigan Financial Indicators",
+                "name": "Expenditures",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
@@ -414,7 +414,7 @@
             },
 
             "michigan_general_fund": {
-                "name": "Michigan Financial Indicators",
+                "name": "General Fund",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
@@ -438,7 +438,7 @@
             },
 
             "michigan_pensions": {
-                "name": "Michigan Financial Indicators",
+                "name": "Pensions",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
@@ -458,7 +458,7 @@
             },
 
             "michigan_property_tax": {
-                "name": "Michigan Financial Indicators",
+                "name": "Property Tax",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
@@ -482,7 +482,7 @@
             },
 
             "michigan_revenues": {
-                "name": "Michigan Financial Indicators",
+                "name": "Revenues",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
