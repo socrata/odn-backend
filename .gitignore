@@ -18,4 +18,5 @@ node_modules
 
 .load-test-urls
 .coverage
+.dataset-cache
 

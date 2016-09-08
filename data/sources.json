@@ -22,7 +22,7 @@
 
     "education": {
         "datasets": {
-            "education": {
+            "graduation_rates": {
                 "fxf": "7mfb-7yvj",
                 "name": "Graduation Rates",
                 "constraints": [["year", "desc"]],
@@ -140,6 +140,10 @@
                     "median_earnings_some_college_or_associates": {
                         "type": "dollar"
                     },
+                    "percent_with_earnings_1_to_9999": {
+                        "type": "percent",
+                        "name": "Percent Earning less than $10,000"
+                    },
                     "percent_with_earnings_10000_to_14999": {
                         "type": "percent",
                         "name": "Percent Earning $10,000 to $14,999"
@@ -147,10 +151,6 @@
                     "percent_with_earnings_15000_to_24999": {
                         "type": "percent",
                         "name": "Percent Earning $15,000 to $24,999"
-                    },
-                    "percent_with_earnings_1_to_9999": {
-                        "type": "percent",
-                        "name": "Percent Earning less than $10,000"
                     },
                     "percent_with_earnings_25000_to_34999": {
                         "type": "percent",
@@ -190,9 +190,6 @@
                     },
                     "jobs-prox-idx-median": {
                         "name": "Median Job Proximity Index"
-                    },
-                    "jobs-prox-idx-stdev": {
-                        "name": "Job Proximity Index Standard Deviation"
                     }
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
@@ -204,16 +201,10 @@
                 "fxf": "y8sk-t74p",
                 "constraints": ["occupation", ["year", "desc"]],
                 "variables": {
-                    "employed": {},
-                    "employed_rank": {
-                        "type": "rank"
+                    "employed": {
+                        "name": "Number of Employees"
                     },
-                    "percent_employed": {},
-                    "percent_employed_rank": {
-                        "type": "rank"
-                    },
-                    "total_employed": {},
-                    "total_ranks": {}
+                    "percent_employed": {}
                 },
                 "searchTerms": ["occupations", "wage", "profession", "business", "work", "job", "profession", "employment", "labor", "avocation"],
                 "sources": ["acs"]
@@ -239,7 +230,7 @@
                 "sources": [["hud", "http://egis.hud.opendata.arcgis.com/datasets/53a856bef6f24356abee30653399e94a_0"]]
             },
 
-            "health": {
+            "health_behaviors": {
                 "name": "Health Behaviors",
                 "fxf": "csbu-um39",
                 "constraints": [["year", "desc"]],
@@ -376,11 +367,11 @@
         }
     },
 
-    "michigan": {
+    "finance": {
         "datasets": {
-            "debt": {
+            "michigan_debt": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -402,13 +393,13 @@
                 "sources": ["f65"]
             },
 
-            "expenditures": {
+            "michigan_expenditures": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "total_public_safety_fund_expenditures": {
+                    "public_safety_expenditures": {
                         "name": "Total Public Safety Fund Expenditures",
                         "type": "dollar"
                     },
@@ -422,9 +413,9 @@
                 "sources": ["f65"]
             },
 
-            "general_fund": {
+            "michigan_general_fund": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -446,9 +437,9 @@
                 "sources": ["f65"]
             },
 
-            "pensions": {
+            "michigan_pensions": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -466,9 +457,9 @@
                 "sources": ["f65"]
             },
 
-            "property_tax": {
+            "michigan_property_tax": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -490,9 +481,9 @@
                 "sources": ["f65"]
             },
 
-            "revenues": {
+            "michigan_revenues": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {

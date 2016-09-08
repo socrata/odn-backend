@@ -191,11 +191,11 @@ const questionSchema = {
             type: 'object',
             properties: {
                 entity: {'$ref': '#/definitions/entity'},
-                variable_id: {type: 'string'},
-                constraints: {type: 'object'},
+                vector: {type: 'string'},
+                metric: {type: 'string'},
                 text: {type: 'string'}
             },
-            required: ['entity', 'variable_id', 'text']
+            required: ['entity', 'text', 'vector', 'metric']
         }
     },
     type: 'object',

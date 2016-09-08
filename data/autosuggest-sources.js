@@ -33,26 +33,16 @@ const declarations = {
             return -(population - index);
         },
         transform: option => {
-            const datasetID = option.fields.vector;
-            const topicID = Sources.getTopic(datasetID);
-            let variableID = option.fields.metric;
-
-            const constraints = {};
-
-            if (datasetID === 'occupations') {
-                constraints.occupation = occupationNames[variableID] || variableID;
-                variableID = 'percent_employed';
-            }
-
-            return _.assign({
+            return {
                 entity: {
                     id: option.fields.regionID,
                     name: option.fields.regionName
                 },
-                variable_id: [topicID, datasetID, variableID].join('.'),
+                vector: option.fields.vector,
+                metric: option.fields.metric,
                 variable_name: option.fields.variable,
                 text: `What is the ${option.fields.variable} of ${option.fields.regionName}?`
-            }, _.isEmpty(constraints) ? {} : {constraints});
+            };
         }
     },
 
