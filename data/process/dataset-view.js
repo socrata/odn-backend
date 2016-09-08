@@ -13,18 +13,15 @@ class DatasetView {
      * Get a promise with the next page of results in the view.
      */
     next() {
-        return new Promise((resolve, reject) => {
-            if (this.done) {
-                reject('done');
-            } else {
-                this.dataset.getPage(this.pageNumber, this.pageSize, this.params).then(results => {
-                    if (results.length < this.pageSize) this.done = true;
-                    resolve(results);
-                }).catch(reject);
+        if (this.done) return Promise.reject('done');
 
-                this.pageNumber++;
-            }
+        const result = this.dataset.getPage(this.pageNumber, this.pageSize, this.params).then(results => {
+            if (results.length < this.pageSize) this.done = true;
+            return Promise.resolve(results);
         });
+
+        this.pageNumber++;
+        return result;
     }
 
     /**
