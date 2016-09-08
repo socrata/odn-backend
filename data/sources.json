@@ -387,7 +387,7 @@
         "datasets": {
             "michigan_debt": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -411,11 +411,11 @@
 
             "michigan_expenditures": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "total_public_safety_fund_expenditures": {
+                    "public_safety_expenditures": {
                         "name": "Total Public Safety Fund Expenditures",
                         "type": "dollar"
                     },
@@ -431,7 +431,7 @@
 
             "michigan_general_fund": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -455,7 +455,7 @@
 
             "michigan_pensions": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -475,7 +475,7 @@
 
             "michigan_property_tax": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -499,7 +499,7 @@
 
             "michigan_revenues": {
                 "name": "Michigan Financial Indicators",
-                "fxf": "nz55-nag5",
+                "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
