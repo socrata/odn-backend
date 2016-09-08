@@ -4,7 +4,7 @@ class DatasetView {
     constructor(dataset, params) {
         this.dataset = dataset;
         this.params = params;
-        this.pageSize = 50000;
+        this.pageSize = 10000;
         this.pageNumber = 0;
         this.done = false;
     }
@@ -28,11 +28,12 @@ class DatasetView {
      * Pipe the entire view to the given callback.
      */
     all(callback) {
-        this.next().then(response => {
+        return this.next().then(response => {
             callback(response);
             this.all(callback);
         }).catch(error => {
-            console.log(error);
+            if (error === 'done') return Promise.resolve();
+            return Promise.reject(error);
         });
     }
 }
