@@ -30,7 +30,8 @@ if (args.length !== 2) {
     const datasetView = new DatasetView(dataset, {
         '$select': 'id,variable',
         '$group': 'id,variable',
-        '$where': `value IS NOT NULL AND ${whereIn('variable', variableIDs)}`
+        '$order': 'id,variable',
+        '$where': `(value IS NOT NULL) AND (${whereIn('variable', variableIDs)})`
     });
     const csvWriter = new CSVWriter(outputFile, ['id', 'variable', 'row_id']);
 
@@ -55,7 +56,7 @@ if (args.length !== 2) {
 }
 
 function whereIn(column, values) {
-    return `${column} in (${values.map(quote)})`;
+    return `${column} in(${values.map(quote).join(',')})`;
 }
 
 function quote(string) {
