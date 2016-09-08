@@ -361,7 +361,7 @@
                     }
                 },
                 "searchTerms": ["crime", "policing", "public safety", "arrest", "warrant", "police"],
-                "description": "Crime statistics are sourced from the FBI Uniform Crime Reporting Program and aggregated across year and crime type. The FBI does not gather statistics for all jurisdictions, so some localities may be missing. Normalization is based on the population values published with the UCR data itself, so rather than on US Census data, as the jurisdiction of the data may vary. Crime rates are normalized on a per 100K basis; specifically, the crime count is divided by the population count, the result is then multiplied by 100K and rounded to the nearest integer value.",
+                "description": "Crime statistics are sourced from the FBI Uniform Crime Reporting Program and aggregated across year and crime type. The FBI does not gather statistics for all jurisdictions, so some localities may be missing. Normalization is based on the population values published with the UCR data itself, so rather than on US Census data, as the jurisdiction of the data may vary. Crime rates are normalized on a per 100K basis; specifically, the crime count is divided by the population count, the result is then multiplied by 100K and rounded to the nearest integer value. Latest data, displayed in charts and other visualizations, is from 2014.",
                 "sources": ["fbi_ucr"]
             }
         }
