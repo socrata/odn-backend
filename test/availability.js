@@ -123,7 +123,6 @@ describe('/data/v1/availability', () => {
         return availability('?entity_id=0500000US53033').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(availabilitySchema);
-            console.log(response.body)
             expect(response).to.comprise.of.json({
                 'topics': {
                     'health': {
