@@ -30,7 +30,7 @@ class DatasetView {
     all(callback) {
         return this.next().then(response => {
             callback(response);
-            this.all(callback);
+            return this.all(callback);
         }).catch(error => {
             if (error === 'done') return Promise.resolve();
             return Promise.reject(error);

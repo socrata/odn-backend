@@ -9,7 +9,6 @@ const SOQL = require('../../soql');
 class Availability {
     static get(entities, token) {
         return getVariables(entities, token).then(variables => {
-            console.log(variables.map(_.property('variable')));
             const availableVariables = variables
                 .filter(variable => variable.count_variable == entities.length)
                 .map(variable => variable.variable);

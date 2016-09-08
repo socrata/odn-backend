@@ -43,7 +43,18 @@ function getJSON(url) {
 }
 
 function bufferToJSON(buffer) {
-    return Promise.resolve(JSON.parse(buffer.toString()));
+    const string = buffer.toString();
+    return parseJSON(buffer.toString());
+}
+
+function parseJSON(string) {
+    if (string === '') return Promise.resolve([]);
+
+    try {
+        return Promise.resolve(JSON.parse(string));
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }
 
 module.exports = Dataset;

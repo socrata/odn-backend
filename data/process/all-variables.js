@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const mkdirp = require('mkdirp');
+const clear = require('clear');
 
 const Sources = require('../../app/sources');
 const CSVWriter = require('./csv-writer');
@@ -17,6 +18,8 @@ if (args.length !== 1) {
     mkdirp.sync(directory);
 
     const counts = {};
+    const completed = [];
+    let hasError = false;
 
     _.values(Sources.topics).forEach(topic => {
         _.values(topic.datasets).forEach(dataset => {
@@ -26,20 +29,35 @@ if (args.length !== 1) {
 
             processDataset(dataset, row => {
                 counts[dataset.id]++;
-                if (counts[dataset.id] % 10000 === 0) printStatus(counts);
+                if (counts[dataset.id] % 10000 === 0 && !hasError)
+                    printStatus(counts, completed);
 
                 row.row_id = [row.id, row.variable].join('-');
                 writer.appendObject(row);
             }).then(() => {
-                counts[dataset.id] = -1;
+                delete counts[dataset.id];
+                completed.push(dataset.id);
+                printStatus(counts, completed);
             }).catch(error => {
+                hasError = true;
                 throw error;
             });
         });
     });
 }
 
-function printStatus(counts) {
-    console.log(counts);
+function printStatus(counts, completed) {
+    clear();
+
+    if (_.size(counts) > 0) console.log(`processing ${_.size(counts)} datasets: `);
+    _.forOwn(counts, (count, dataset) => {
+        console.log(`  ${dataset}: ${count}`);
+    });
+
+    if (completed.length > 0) console.log(`completed processing ${completed.length} datasets: `);
+    completed.forEach(dataset => {
+        console.log(`  ${dataset}`);
+    });
+
 }
 
