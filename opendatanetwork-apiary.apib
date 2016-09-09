@@ -680,6 +680,79 @@ summary statistics of the variable across all entities of the same type (e.g.
 states, counties, etc.), and a session ID used to efficiently retrieve map
 data. Note: session IDs expire after 24 hours.
 
+Map data is transferred using [socket.io](http://socket.io/)
+which will use websockets if possible and fall back to HTTP on browsers that
+don't support it.
+
+To request map data, send a JSON-formatted message with the following fields:
++ `session_id`: The session ID from when the map was created.
+    This is used to keep track of information about the map and avoid
+    sending duplicate data.
++ `zoom_level`: An integer specifying the level of detail of the polygons
+    of the map where 0 is the least detailed and 18 is the most detailed.
+    Using Leaflet's zoom level works well for this.
++ `bounds`: Bounding box of the map in the following order:
+    + latitude of NW point
+    + longitude of NW point
+    + latitude of SE point
+    + longitude of SE point
+
+The server will eventually send back a JSON response with the following fields:
++ `type`: Type of the message, which should be `geojson`.
+    If the type is `error`, then there was a problem processing the request.
++ `message`: Message which the server is responding to.
++ `geojson`: GeoJSON features with the following properties: `id`, `name`, `type`,
+    `value`, and `value_formatted`.
+
+For example, the following message was to render a map around Idaho:
+
+```
+{
+    "bounds":[
+        50.88917404890332,
+        -133.35205078125003,
+        43.43696596521823,
+        -108.32519531250001
+    ],
+    "zoom_level":6,
+    "session_id":"6wb7grag543an42px2bvxtj4i"
+}
+```
+
+Which received the following response (edited for brevity):
+
+```
+{
+    "geojson":{
+        "type":"FeatureCollection",
+        "features":[
+            {
+                "properties":{
+                    "id":"0400000US16",
+                    "name":"Idaho",
+                    "value":"1583364",
+                    "value_formatted":"1,583,364"
+                }
+            }
+        ]
+    },
+    "message":{
+        "bounds":[
+            50.88917404890332,
+            -133.35205078125003,
+            43.43696596521823,
+            -108.32519531250001
+        ],
+        "zoom_level":6,
+        "session_id":"6wb7grag543an42px2bvxtj4i"
+    },
+    "type":"geojson"
+}
+```
+
+Check the [ODN Frontend](https://github.com/socrata/opendatanetwork.com/tree/staging/src/maps)
+for a reference implementation using Leaflet.
+
 + Parameters
 
     + variable (required, string, `demographics.population.count`)
@@ -732,80 +805,3 @@ data. Note: session IDs expire after 24 hours.
             ]
         }
 
-
-## Map Data [/data/v1/map/values{?session_id}{?bounds}{?zoom_level}{?app_token}]
-
-Retrieves GeoJSON map data including variable values and polygon boundaries for geographical
-regions like states, counties, cities, or zip codes.
-
-This endpoint is also available through [websockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket).
-After creating a map, connect to this endpoint using `ws` instead of `http`.
-To get values, send a JSON message with the same parameters as the HTTP endpoint.
-If the request was malformed, the server will send back a JSON object with the
-`type` field set to `error`.
-If the request was successful, the server will send a series of JSON objects in
-the same form as the HTTP endpoint.
-Check out a reference websocket implementation [here](http://jsfiddle.net/w4nxL46m/64/).
-
-+ Parameters
-
-    + session_id (required, string)
-
-        Unique session ID from the `map/new` endpoint.
-        Used to track previously sent data for increased efficiency.
-
-    + zoom_level (required, number, `2`)
-
-        Zoom level of the map.
-        Geometries are automatically simplified based on this zoom level.
-
-    + bounds (optional, string, `47.5998951,-122.33707,47.5942794,-122.3270522`)
-
-        Comma separated bounds of the area to search in the following order:
-        + latitude of NW point
-        + longitude of NW point
-        + latitude of SE point
-        + longitude of SE point
-
-    + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
-
-        The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be
-        used with your request. The `app_token` parameter is required if an app token is not passed via the `X-App-Token` HTTP header. Clients must [register for their own app tokens](https://dev.socrata.com/docs/app-tokens.html).
-
-### Get map data [GET]
-
-+ Request
-
-    Generate map data for state population.
-
-    - Parameters
-        - session_id: rhzpyxdvq56cc9cbg3ssb57b9
-        - bounds: 47.5998951,-122.33707,47.5942794,-122.3270522
-        - zoom_level: 6
-
-    - Headers
-
-            X-App-Token: cQovpGcdUT1CSzgYk0KPYdAI0
-
-+ Response 200 (application/json)
-
-        {
-            "geojson": {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                        "type": "MultiPolygon",
-                        "coordinates": [...],
-                        "properties": {
-                            "id": "0400000US53",
-                            "name": "Washington",
-                            "type": "region.state",
-                            "scale": 500000
-                            "value": 6982610
-                        }
-                    }
-                ]
-            }
-        }
