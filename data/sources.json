@@ -366,9 +366,10 @@
     },
 
     "crime": {
+        "name": "Public Safety",
         "datasets": {
             "fbi_ucr": {
-                "name": "FBI Uniform Crime Reporting Program",
+                "name": "Crime",
                 "fxf": "eds5-udzt",
                 "constraints": ["crime_type", ["year", "desc"]],
                 "variables": {
