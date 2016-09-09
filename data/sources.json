@@ -238,10 +238,12 @@
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "env-health-idx-mean": {
-                        "name": "Mean Environmental Health Hazard Index"
+                        "name": "Mean Environmental Health Hazard Index",
+                        "stoplight": true
                     },
                     "env-health-idx-median": {
-                        "name": "Median Environmental Health Hazard Index"
+                        "name": "Median Environmental Health Hazard Index",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
