@@ -196,10 +196,12 @@
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "jobs-prox-idx-mean": {
-                        "name": "Mean Job Proximity Index"
+                        "name": "Mean Job Proximity Index",
+                        "stoplight": true
                     },
                     "jobs-prox-idx-median": {
-                        "name": "Median Job Proximity Index"
+                        "name": "Median Job Proximity Index",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
@@ -214,7 +216,9 @@
                     "employed": {
                         "name": "Number of Employees"
                     },
-                    "percent_employed": {}
+                    "percent_employed": {
+                        "type": "percent"
+                    }
                 },
                 "searchTerms": ["occupations", "wage", "profession", "business", "work", "job", "profession", "employment", "labor", "avocation"],
                 "sources": ["acs"]
