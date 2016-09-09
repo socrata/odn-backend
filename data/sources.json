@@ -476,7 +476,7 @@
                     "debt_taxable_value": {
                         "name": "Debt as % of Taxable Value",
                         "type": "percent",
-                        "stoplight": true,
+                        "stoplight": true
                     },
                     "property_tax_health": {
                         "name": "Property Tax Health",
