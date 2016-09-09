@@ -15,7 +15,7 @@ module.exports = (request, response) => {
 
     return Promise.all([
         getType(request),
-        getQuery(request),
+        ParseRequest.getQuery(request),
         getLimit(request)
     ]).then(([type, query, limit]) => {
         query = Stopwords.strip(query);
@@ -44,15 +44,6 @@ function getType(request) {
         return Promise.reject(invalid('type of result to suggest required'));
 
     return Promise.resolve(type.toLowerCase());
-}
-
-function getQuery(request) {
-    const query = request.query.query;
-
-    if (_.isNil(query))
-        return Promise.reject(invalid('query parameter required'));
-
-    return Promise.resolve(query);
 }
 
 function getLimit(request) {

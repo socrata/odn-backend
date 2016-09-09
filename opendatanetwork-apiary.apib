@@ -187,19 +187,15 @@ Search for datasets related to an ODN dataset or set of entities.
           ]
         }
 
-## Search Questions [/search/v1/question{?entity_id}{?dataset_id}{?limit}{?offset}{?app_token}]
+## Search Questions [/search/v1/question{?query}{?limit}{?offset}{?app_token}]
 
-Search for questions related to an ODN dataset or set of entities.
+Search for questions related to the given query using full text search.
 
 + Parameters
 
-    + entity_id (optional, string, `0100000US`)
+    + query (required, string, `seattle`)
 
-        Set of entities to find questions for.
-
-    + dataset_id (optional, string, `demographics.population`)
-
-        Dataset to find questions for.
+        String to search against.
 
     + limit (optional, number)
 
@@ -224,11 +220,10 @@ Search for questions related to an ODN dataset or set of entities.
 
 + Request
 
-    Search for questions about population and the United States.
+    Search for questions about "seattle".
 
     - Parameters
-        - dataset_id: demographics.population
-        - entity_id: 0100000US
+        - query: seattle
 
     - Headers
 
@@ -237,26 +232,28 @@ Search for questions related to an ODN dataset or set of entities.
 + Response 200 (application/json)
 
         {
-          "questions": [
-            {
-              "entity": {
-                "id": "0100000US",
-                "name": "United States"
-              },
-              "variable_id": "demographics.population.population",
-              "variable_name": "population count",
-              "text": "What is the population count of United States?"
-            },
-            {
-              "entity": {
-                "id": "0100000US",
-                "name": "United States"
-              },
-              "variable_id": "demographics.population.population_change",
-              "variable_name": "population rate of change",
-              "text": "What is the population rate of change of United States?"
-            }
-          ]
+            "questions":[
+                {
+                    "entity":{
+                        "id":"310M200US42660",
+                        "name":"Seattle Metro Area (WA)"
+                    },
+                    "vector":"population",
+                    "metric":"population",
+                    "variable_name":"population count",
+                    "text":"What is the population count of Seattle Metro Area (WA)?"
+                },
+                {
+                    "entity":{
+                        "id":"310M200US42660",
+                        "name":"Seattle Metro Area (WA)"
+                    },
+                    "vector":"occupations",
+                    "metric":"business_and_finance",
+                    "variable_name":"business and finance employment rate",
+                    "text":"What is the business and finance employment rate of Seattle Metro Area (WA)?"
+                }
+            ]
         }
 
 ## Entity Lookup [/entity/v1{?entity_id}{?entity_name}{?entity_type}{?app_token}]
@@ -684,7 +681,7 @@ Map data is transferred using [socket.io](http://socket.io/)
 which will use websockets if possible and fall back to HTTP on browsers that
 don't support it.
 
-To request map data, send a JSON-formatted message with the following fields: 
+To request map data, send a JSON-formatted message with the following fields:
 + `session_id`: The session ID from when the map was created.
     This is used to keep track of information about the map and avoid
     sending duplicate data.
@@ -696,7 +693,7 @@ To request map data, send a JSON-formatted message with the following fields:
     + longitude of NW point
     + latitude of SE point
     + longitude of SE point
- 
+
 The server will eventually send back a JSON response with the following fields:
 + `type`: Type of the message, which should be `geojson`.
     If the type is `error`, then there was a problem processing the request.
@@ -719,7 +716,7 @@ For example, the following message was to render a map around Idaho:
 }
 ```
 
-Which received the following response (edited for brevity): 
+Which received the following response (edited for brevity):
 
 ```
 {
