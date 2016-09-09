@@ -29,11 +29,14 @@
                 "variables": {
                     "percent_less_than_9th_grade": {
                         "type": "percent",
-                        "name": "Percent who did not finish the 9th grade"
+                        "name": "Percent who did not finish the 9th grade",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "percent_high_school_graduate_or_higher": {
                         "type": "percent",
-                        "name": "High School Graduation Rate"
+                        "name": "High School Graduation Rate",
+                        "stoplight": true
                     },
                     "percent_associates_degree": {
                         "type": "percent",
@@ -41,11 +44,13 @@
                     },
                     "percent_bachelors_degree_or_higher": {
                         "type": "percent",
-                        "name": "College Graduation Rate"
+                        "name": "College Graduation Rate",
+                        "stoplight": true
                     },
                     "percent_graduate_or_professional_degree": {
                         "type": "percent",
-                        "name": "Percent with a graduate or professional degree"
+                        "name": "Percent with a graduate or professional degree",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],
