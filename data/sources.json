@@ -31,10 +31,6 @@
                         "type": "percent",
                         "name": "Percent who did not finish the 9th grade"
                     },
-                    "percent_graduate_or_professional_degree": {
-                        "type": "percent",
-                        "name": "Percent with a graduate or professional degree"
-                    },
                     "percent_high_school_graduate_or_higher": {
                         "type": "percent",
                         "name": "High School Graduation Rate"
@@ -46,6 +42,10 @@
                     "percent_bachelors_degree_or_higher": {
                         "type": "percent",
                         "name": "College Graduation Rate"
+                    },
+                    "percent_graduate_or_professional_degree": {
+                        "type": "percent",
+                        "name": "Percent with a graduate or professional degree"
                     }
                 },
                 "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],

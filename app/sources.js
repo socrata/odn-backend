@@ -10,44 +10,39 @@ const name = require('./name');
 const recurseFields = ['datasets', 'variables', 'topics'];
 
 /**
- * Paths must all be the same length.
+ * Paths must all be of length level.
  */
-function pick(tree, paths) {
+function pick(tree, paths, level) {
+    level = level || 3;
     if (_.isEmpty(paths)) return tree;
     if (_.isEmpty(tree) && !_.isEmpty(paths)) return null;
+    if (!_.isEmpty(paths.filter(path => path.length > level)))
+        return null;
 
-    const picked = {};
+    const currentPaths = new Set(paths.map(_.first));
+    const recurse = _.keys(tree).filter(key => currentPaths.has(key));
 
-    const grouped = _(paths)
-        .filter(_.negate(_.isEmpty))
-        .groupBy(_.first)
-        .toPairs()
-        .value();
+    if (level === 1) return _.pick(tree, recurse);
 
-    grouped.forEach(([key, subpaths]) => {
-        if (!(key in tree)) return;
+    const subpaths = paths.map(_.tail).filter(_.negate(_.isEmpty));
 
-        subpaths = subpaths.map(_.tail);
-        const subtree = tree[key];
-        if (subpaths[0].length === 0) {
-            picked[key] = subtree;
-            return;
-        }
+    const result = {};
 
-        const recurse = recurseFields.filter(field => field in subtree);
-        if (recurse.length === 0) return;
+    recurse.forEach(field => {
+        const picked = {};
 
-        const subtrees = recurse.map(field => {
-            const pickedSubtree = pick(subtree[field], subpaths);
-            return _.isNil(pickedSubtree) ? null : {[field]: pickedSubtree};
-        }).filter(_.negate(_.isNil));
+        recurseFields.forEach(recurseField => {
+            const subtree = pick(tree[field][recurseField], subpaths, level - 1);
+            if (_.size(subtree)) picked[recurseField] = subtree;
+        });
 
-        if (subtrees.length === 0) return;
-        picked[key] = _.omit(subtree, recurse);
-        subtrees.forEach(subtree => _.assign(picked[key], subtree));
+        if (_.size(picked) === 0) return;
+
+        _.assign(picked, _.omit(tree[field], recurseFields));
+        result[field] = picked;
     });
 
-    if (_.size(picked) > 0) return picked;
+    if (_.size(result)) return result;
     return null;
 }
 
