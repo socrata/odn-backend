@@ -61,6 +61,9 @@
                         "type": "dollar",
                         "name": "Total Administration Salaries"
                     },
+                    "administration-salaries-per-student": {
+                        "type": "dollar"
+                    },
                     "capital-expenditures": {
                         "type": "dollar",
                         "name": "Total Capital Expenditures"
@@ -74,9 +77,6 @@
                         "name": "Total Instruction Related Salaries"
                     },
                     "instruction-salaries-per-student": {
-                        "type": "dollar"
-                    },
-                    "administration-salaries-per-student": {
                         "type": "dollar"
                     }
                 },
@@ -106,38 +106,38 @@
                 "fxf": "j8a6-qa8k",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "female_full_time_median_earnings": {
-                        "type": "dollar",
-                        "name": "Median Female Earnings (Full Time)"
+                    "median_earnings": {
+                        "type": "dollar"
                     },
                     "female_median_earnings": {
                         "type": "dollar",
                         "name": "Median Female Earnings"
                     },
-                    "male_full_time_median_earnings": {
-                        "type": "dollar",
-                        "name": "Median Male Earnings (Full Time)"
-                    },
                     "male_median_earnings": {
                         "type": "dollar",
                         "name": "Median Male Earnings"
                     },
-                    "median_earnings": {
+                    "female_full_time_median_earnings": {
+                        "type": "dollar",
+                        "name": "Median Female Earnings (Full Time)"
+                    },
+                    "male_full_time_median_earnings": {
+                        "type": "dollar",
+                        "name": "Median Male Earnings (Full Time)"
+                    },
+                    "median_earnings_less_than_high_school": {
+                        "type": "dollar"
+                    },
+                    "median_earnings_high_school": {
+                        "type": "dollar"
+                    },
+                    "median_earnings_some_college_or_associates": {
                         "type": "dollar"
                     },
                     "median_earnings_bachelor_degree": {
                         "type": "dollar"
                     },
                     "median_earnings_graduate_or_professional_degree": {
-                        "type": "dollar"
-                    },
-                    "median_earnings_high_school": {
-                        "type": "dollar"
-                    },
-                    "median_earnings_less_than_high_school": {
-                        "type": "dollar"
-                    },
-                    "median_earnings_some_college_or_associates": {
                         "type": "dollar"
                     },
                     "percent_with_earnings_1_to_9999": {
@@ -309,13 +309,13 @@
                 "fxf": "skua-q4dv",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "expenditures_percent_change": {
-                        "name": "Annual change in PCE",
-                        "type": "percent"
-                    },
                     "personal_consumption_expenditures": {
                         "name": "Personal Consumption Expenditure",
                         "type": "dollar"
+                    },
+                    "expenditures_percent_change": {
+                        "name": "Annual change in PCE",
+                        "type": "percent"
                     }
                 },
                 "searchTerms": ["consumption", "consumer", "household consumption", "goods and services", "personal expenditure", "personal expenses", "pce"],
@@ -351,13 +351,13 @@
                 "fxf": "eds5-udzt",
                 "constraints": ["crime_type", ["year", "desc"]],
                 "variables": {
-                    "rate": {
-                        "name": "Crime incident rate per 100,000 people",
-                        "type": "rate"
-                    },
                     "count": {
                         "name": "Crime incident count",
                         "type": "count"
+                    },
+                    "rate": {
+                        "name": "Crime incident rate per 100,000 people",
+                        "type": "rate"
                     }
                 },
                 "searchTerms": ["crime", "policing", "public safety", "arrest", "warrant", "police"],
