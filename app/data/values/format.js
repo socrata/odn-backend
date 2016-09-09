@@ -6,9 +6,9 @@ const numeralFormatters = {
     number: '',
     rank: '',
     dollar: '$0,0',
-    percent: '0,0.0%',
-    ratio: '0,0.0%',
-    per1000: '0,0.0%'
+    percent: '0,0.00%',
+    ratio: '0,0.00%',
+    per1000: '0,0.00%'
 };
 
 function format(type) {

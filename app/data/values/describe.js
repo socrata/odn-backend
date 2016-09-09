@@ -53,7 +53,7 @@ function growthRate(frame) {
     if (measured.length < 2) return NaN;
     const [first, last] = [_.first(measured), _.last(measured)]
         .map(tuple => tuple[1]);
-    return 100 * ((last - first) / first / measured.length);
+    return 100 * ((last - first) / first / (measured.length - 1));
 }
 
 function getData(dataset, entities, constraints, unspecified) {
