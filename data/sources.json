@@ -107,38 +107,48 @@
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "median_earnings": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "female_median_earnings": {
                         "type": "dollar",
-                        "name": "Median Female Earnings"
+                        "name": "Median Female Earnings",
+                        "stoplight": true
                     },
                     "male_median_earnings": {
                         "type": "dollar",
-                        "name": "Median Male Earnings"
+                        "name": "Median Male Earnings",
+                        "stoplight": true
                     },
                     "female_full_time_median_earnings": {
                         "type": "dollar",
-                        "name": "Median Female Earnings (Full Time)"
+                        "name": "Median Female Earnings (Full Time)",
+                        "stoplight": true
                     },
                     "male_full_time_median_earnings": {
                         "type": "dollar",
-                        "name": "Median Male Earnings (Full Time)"
+                        "name": "Median Male Earnings (Full Time)",
+                        "stoplight": true
                     },
                     "median_earnings_less_than_high_school": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "median_earnings_high_school": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "median_earnings_some_college_or_associates": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "median_earnings_bachelor_degree": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "median_earnings_graduate_or_professional_degree": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "percent_with_earnings_1_to_9999": {
                         "type": "percent",
