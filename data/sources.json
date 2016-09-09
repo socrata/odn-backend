@@ -377,15 +377,18 @@
                 "variables": {
                     "debt_service": {
                         "name": "Debt Service",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
-                        "type": "rate"
+                        "type": "percent"
                     },
                     "debt_health": {
                         "name": "Debt Health",
-                        "type": "dollar"
+                        "type": "rate",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "long term debt revenue"],
@@ -421,15 +424,18 @@
                 "variables": {
                     "general_fund_balance": {
                         "name": "General Fund Balance",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "general_fund_health": {
                         "name": "General Fund Health",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
@@ -445,11 +451,15 @@
                 "variables": {
                     "pension_health": {
                         "name": "Pension Health",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "unfunded_pension_liability": {
                         "name": "Unfunded Pension Liability",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "unfunded pension liability", "pension health"],
@@ -465,11 +475,13 @@
                 "variables": {
                     "debt_taxable_value": {
                         "name": "Debt as % of Taxable Value",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true,
                     },
                     "property_tax_health": {
                         "name": "Property Tax Health",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                      "total_taxable_value": {
                         "name": "Total Taxable Value",
@@ -493,7 +505,8 @@
                     },
                     "unrestricted_revenue": {
                         "name": "Unrestricted Revenue",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
