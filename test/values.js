@@ -250,7 +250,7 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('United States');
             expect(response.body.forecast_descriptions[0]).to.have.string('Population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('0.7%');
+            expect(response.body.forecast_descriptions[0]).to.have.string('0.84%');
             expect(response.body.forecast_descriptions[0]).to.have.string('2009');
             expect(response.body.forecast_descriptions[0]).to.have.string('2013');
             expect(response.body.forecast_descriptions[0]).to.have.string('2016');
