@@ -4,6 +4,7 @@
         "datasets": {
             "population": {
                 "fxf": "9jg8-ki9x",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "count": {"name": "Population Count"},
@@ -24,6 +25,7 @@
         "datasets": {
             "graduation_rates": {
                 "fxf": "7mfb-7yvj",
+                "domain": "odn.data.socrata.com",
                 "name": "Graduation Rates",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -59,6 +61,7 @@
 
             "education_expenditures": {
                 "fxf": "nxzi-u9nr",
+                "domain": "odn.data.socrata.com",
                 "name": "Expenditures",
                 "constraints": [["year", "desc"]],
                 "variables": {
@@ -95,6 +98,7 @@
 
             "classroom_statistics": {
                 "fxf": "kx62-ayme",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "student-teacher-ratio": {}
@@ -109,6 +113,7 @@
         "datasets": {
             "earnings": {
                 "fxf": "j8a6-qa8k",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "median_earnings": {
@@ -198,6 +203,7 @@
 
             "job_proximity": {
                 "fxf": "5pnb-mvzq",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "jobs-prox-idx-mean": {
@@ -216,6 +222,7 @@
 
             "occupations": {
                 "fxf": "y8sk-t74p",
+                "domain": "odn.data.socrata.com",
                 "constraints": ["occupation", ["year", "desc"]],
                 "variables": {
                     "employed": {
@@ -235,6 +242,7 @@
         "datasets": {
             "environmental_health": {
                 "fxf": "nax7-t6ga",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "env-health-idx-mean": {
@@ -254,6 +262,7 @@
             "health_behaviors": {
                 "name": "Health Behaviors",
                 "fxf": "csbu-um39",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "access_to_exercise_opportunities_value": {
@@ -310,6 +319,7 @@
             "gdp": {
                 "name": "Gross Domestic Product",
                 "fxf": "jm8e-8hhx",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "per_capita_gdp": {
@@ -328,6 +338,7 @@
 
             "consumption": {
                 "fxf": "skua-q4dv",
+                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "personal_consumption_expenditures": {
@@ -347,6 +358,7 @@
             "cost_of_living": {
                 "name": "Cost of Living",
                 "fxf": "t64z-nedn",
+                "domain": "odn.data.socrata.com",
                 "constraints": ["component", ["year", "desc"]],
                 "variables": {
                     "index": {
@@ -370,6 +382,7 @@
             "fbi_ucr": {
                 "name": "FBI Uniform Crime Reporting Program",
                 "fxf": "eds5-udzt",
+                "domain": "odn.data.socrata.com",
                 "constraints": ["crime_type", ["year", "desc"]],
                 "variables": {
                     "count": {
@@ -398,15 +411,18 @@
                 "variables": {
                     "debt_service": {
                         "name": "Debt Service",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
-                        "type": "rate"
+                        "type": "percent"
                     },
                     "debt_health": {
                         "name": "Debt Health",
-                        "type": "dollar"
+                        "type": "rate",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "long term debt revenue"],
@@ -442,15 +458,18 @@
                 "variables": {
                     "general_fund_balance": {
                         "name": "General Fund Balance",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "general_fund_health": {
                         "name": "General Fund Health",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
@@ -466,11 +485,15 @@
                 "variables": {
                     "pension_health": {
                         "name": "Pension Health",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "unfunded_pension_liability": {
                         "name": "Unfunded Pension Liability",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "unfunded pension liability", "pension health"],
@@ -486,11 +509,13 @@
                 "variables": {
                     "debt_taxable_value": {
                         "name": "Debt as % of Taxable Value",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true
                     },
                     "property_tax_health": {
                         "name": "Property Tax Health",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                      "total_taxable_value": {
                         "name": "Total Taxable Value",
@@ -514,7 +539,8 @@
                     },
                     "unrestricted_revenue": {
                         "name": "Unrestricted Revenue",
-                        "type": "rate"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
