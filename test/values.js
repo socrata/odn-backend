@@ -249,7 +249,7 @@ describe('/data/v1/values', () => {
             expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('United States');
-            expect(response.body.forecast_descriptions[0]).to.have.string('Population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('population');
             expect(response.body.forecast_descriptions[0]).to.have.string('0.84%');
             expect(response.body.forecast_descriptions[0]).to.have.string('2009');
             expect(response.body.forecast_descriptions[0]).to.have.string('2013');
@@ -281,8 +281,8 @@ describe('/data/v1/values', () => {
             expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.have.all.keys(['data', 'description']);
             expect(response.body.description).to.have.string('United States');
-            expect(response.body.description).to.have.string('Population');
-            expect(response.body.description).to.have.string('Population Rate of Change');
+            expect(response.body.description).to.have.string('population');
+            expect(response.body.description).to.have.string('population rate of change');
             expect(response.body.description).to.have.string('2013');
             expect(response.body).to.not.have.keys('forecast_descriptions');
         });

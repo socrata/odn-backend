@@ -8,17 +8,15 @@ const format = require('./format');
 
 class Describe {
     static describe(dataset, entities, constraints, unspecified, rows) {
-        return new Promise((resolve, reject) => {
-            if (entities.length === 0) return reject(invalid(
-                'must specify entities to get a description'));
+        if (entities.length === 0)
+            return Promise.reject(invalid('must specify entities to get a description'));
 
-            const descriptions = rows
-                .map(getData(dataset, entities, constraints, unspecified))
-                .map(describe);
+        const descriptions = rows
+            .map(getData(dataset, entities, constraints, unspecified))
+            .map(describe);
 
-            resolve({
-                description: descriptions.join(' ')
-            });
+        return Promise.resolve({
+            description: descriptions.join(' ')
         });
     }
 
@@ -36,11 +34,11 @@ function describeFrame(frame, entity, variable) {
     const forecast = _.last(frame);
     const formatter = format(variable.type);
 
-    return `The last measured ${variable.name}
-        for ${entity.name} was ${formatter(last[1])} for ${last[0]}.
+    return `The last measured ${lowercase(variable.name)}
+        for ${entity.name} was ${formatter(last[1])} in ${last[0]}.
         ${entity.name} experienced an average growth rate of ${format('percent')(growth)}
         from our first statistic recorded in ${first[0]}.
-        If past trends continue, we forecast the ${variable.name} to be
+        If past trends continue, we forecast the ${lowercase(variable.name)} to be
         ${formatter(forecast[1])} by ${forecast[0]}.`.replace(/\n\s*/g, ' ');
 }
 
@@ -86,22 +84,26 @@ function describe(row) {
     const {variable, entity, value, constraints} = row;
     const formattedValue = format(variable.type)(value);
 
-    return `The ${variable.name} of ${entity.name} was ${formattedValue}${describeConstraints(constraints)}.`;
+    return `The ${lowercase(variable.name)} of ${entity.name} was ${formattedValue}${describeConstraints(constraints)}.`;
 }
 
 function describeConstraints(constraints) {
     if (_.size(constraints) === 0) return '';
 
-    const descriptions = _(constraints)
-        .toPairs()
-        .map(describeConstraint)
-        .value();
+    const constraintDescriptions = describeNonYearConstraints(_.omit(constraints, 'year'));
+    const yearDescription = describeYear(constraints);
 
-    return ` for ${englishJoin(descriptions)}`;
+    return constraintDescriptions + yearDescription;
 }
 
-function describeConstraint([name, value]) {
-    return `the ${name} of ${value}`;
+function describeYear(constraints) {
+    if ('year' in constraints) return ` in ${constraints.year}`;
+    return '';
+}
+
+function describeNonYearConstraints(constraints) {
+    if (_.size(constraints) === 0) return '';
+    return ` for ${englishJoin(_.values(constraints).map(lowercase))}`;
 }
 
 function englishJoin(elements) {
@@ -114,6 +116,19 @@ function englishJoin(elements) {
     } else {
         return englishJoin([elements.slice(0, 2).join(', ')].concat(elements.slice(2)));
     }
+}
+
+function lowercase(string) {
+    return string.replace(/\w*/g, lowercaseWord);
+}
+
+function lowercaseWord(word) {
+    if (word.length === 0 || (word.length > 2 && isAllCaps(word))) return word;
+    return word.toLowerCase();
+}
+
+function isAllCaps(word) {
+    return /^[^a-z]*$/.test(word);
 }
 
 /**

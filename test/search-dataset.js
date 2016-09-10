@@ -93,9 +93,9 @@ describe('/search/v1/dataset', () => {
                 return response.body.datasets.map(_.property('fxf'));
             });
 
-            expect(ids[0]).to.have.members(ids[1]);
-            expect(ids[1]).to.have.members(ids[2]);
-            expect(ids[2]).to.have.members(ids[0]);
+            // Since cetera search is unstable, we check that most of the
+            // top 10 results are the same.
+            expect(_.intersection.apply(this, ids)).to.have.length.above(8);
         });
     });
 
