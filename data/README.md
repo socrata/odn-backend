@@ -54,7 +54,7 @@ Make sure that the dataset is public.
 ### Update Entities
 
 If the new dataset contains new entities, you must update the
-[ODN Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m)
+[ODN Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/pvug-y23y)
 dataset with information about the new entities.
 
 #### Entity Attributes
@@ -101,9 +101,9 @@ CABC,British Columbia,region.province,4631000
 ...
 ```
 
-#### Update [Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m)
+#### Update [Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/pvug-y23y)
 
-Append your entity CSV file to the [ODN Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/kksg-4m3m) dataset.
+Append your entity CSV file to the [ODN Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/pvug-y23y) dataset.
 
 #### Update [Relations](https://dev.socrata.com/foundry/odn.data.socrata.com/dc4t-zwj5)
 
@@ -120,9 +120,9 @@ parent_id,parent_name,parent_type,parent_rank,child_id,child_name,child_type,chi
 CA,Canada,region.nation,35100000,CABC,British Columbia,region.province,4631000
 ```
 
-#### Update [Suggest](https://dev.socrata.com/foundry/odn.data.socrata.com/28uu-xzwf)
+#### Update [Suggest](https://dev.socrata.com/foundry/odn.data.socrata.com/s2z5-sxuw)
 
-Update the [ODN Suggest Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/28uu-xzwf) dataset
+Update the [ODN Suggest Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/s2z5-sxuw) dataset
 with the new entities.
 
 Use the `/data/process/suggest-entity.js` script to generate autosuggest data.
@@ -142,7 +142,7 @@ $ node suggest-entity.js entities.csv entities-autosuggest.csv
 ```
 
 Then, take `entities-autosuggest.csv` and append it to the
-[ODN Suggest Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/28uu-xzwf) dataset.
+[ODN Suggest Entities](https://dev.socrata.com/foundry/odn.data.socrata.com/s2z5-sxuw) dataset.
 The autosuggest index may take some time to update.
 
 #### Update Geographies
