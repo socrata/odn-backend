@@ -13,24 +13,24 @@ const server = Exception.server;
  *
  * Requires a valid app token.
  */
-function entitiesWithData(token, entities, variable) {
+function entitiesWithData(token, entities, variableID) {
     if (_.isEmpty(entities))
         return Promise.resolve(entities);
-    if (_.isNil(variable))
-        return Promise.reject(server('variable required for entitiesWithData'));
+    if (_.isNil(variableID))
+        return Promise.reject(server('variableID required for entitiesWithData'));
 
-    return getEntityIDsWithData(token, entities, variable).then(entityIDs => {
+    return getEntityIDsWithData(token, entities, variableID).then(entityIDs => {
         const entityIDSet = new Set(entityIDs);
 
         return Promise.resolve(entities.filter(entity => entityIDSet.has(entity.id)));
     });
 }
 
-function getEntityIDsWithData(token, entities, variable) {
+function getEntityIDsWithData(token, entities, variableID) {
     return new SOQL(Constants.VARIABLE_URL)
         .token(token)
         .whereEntities(entities)
-        .equal('variable', variable.id)
+        .equal('variable', variableID)
         .select('id')
         .send()
         .then(rows => rows.map(_.property('id')));

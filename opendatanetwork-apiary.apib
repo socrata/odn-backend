@@ -36,7 +36,7 @@ Registering for and including a [Socrata application token](https://dev.socrata.
 is _required_ for the ODN API. They can be passed either using the `app_token` parameter
 or the `X-App-Token` HTTP header.
 
-## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}]
+## Suggestions [/suggest/v1/{type}{?query}{?limit}{?app_token}{?variable_id}]
 
 Suggests entities like geographical regions, questions, datasets, publishers and categories
 that match the given query prefix or full phrase. Useful for building autosuggest style query
@@ -321,7 +321,7 @@ and that it is up to the client to decide which one is the best fit.
             ]
         }
 
-## Entity Relationships [/entity/v1/{relation}{?entity_id}{?limit}{?app_token}]
+## Entity Relationships [/entity/v1/{relation}{?entity_id}{?limit}{?app_token}{?variable_id}]
 
 Find entities that are related to one another.
 
@@ -345,6 +345,12 @@ For example, region entities are sorted in descending order by population.
     + entity_id (required, string, `0400000US53`)
 
         ID of the target entity.
+
+    + variable_id (optional, string, `demographics.population.seattle`)
+
+        If this parameter is included, only entities with data for the given
+        variable will be returned. Note that this may cause the number of
+        entities returned to be less than the specified `limit`.
 
     + limit (optional, number)
 

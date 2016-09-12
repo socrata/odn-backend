@@ -21,8 +21,8 @@ const sanFrancisco = {id: '1600000US0667000'};
 const atlanta = {id: '1600000US1304000'};
 const invalid = {id: 'invalid'};
 
-const population = {id: 'demographics.population.count'};
-const debt = {id: 'finance.michigan_debt.debt_service'};
+const population = 'demographics.population.count';
+const debt = 'finance.michigan_debt.debt_service';
 
 describe('entities with data', () => {
     it('should return no entities if given no entities', () => {

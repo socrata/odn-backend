@@ -10,6 +10,7 @@ const notFound = Exception.notFound;
 const invalid = Exception.invalidParam;
 const Relatives = require('./relatives');
 const ParseRequest = require('../parse-request');
+const entitiesWithData = require('../entities-with-data');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
@@ -20,12 +21,31 @@ module.exports = (request, response) => {
         getLimit(request)
     ]).then(([relation, limit]) => {
         ParseRequest.getEntity(request).then(entity => {
-            relationPromise(entity, relation, limit, token).then(json => {
-                response.json(json);
+            relationPromise(entity, relation, limit, token).then(result => {
+                const variableID = request.query.variable_id;
+
+                if (_.isEmpty(variableID)) return response.json(result);
+
+                filterRelated(token, result.relatives, variableID).then(relatives => {
+                    response.json({relatives});
+                }).catch(errorHandler);
             }).catch(errorHandler);
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
+
+function filterRelated(token, groups, variableID) {
+    return Promise.all(groups.map(group => filterGroup(token, variableID, group)));
+}
+
+function filterGroup(token, variableID, group) {
+    return entitiesWithData(token, group.entities, variableID).then(entities => {
+        return Promise.resolve({
+            entities,
+            type: group.type
+        });
+    });
+}
 
 function relationPromise(entity, relation, n, token) {
     if (relation === 'parent') {

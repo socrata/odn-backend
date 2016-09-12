@@ -18,12 +18,13 @@ module.exports = (request, response) => {
     return Promise.all([
         getQuery(request),
         getAutosuggestSource(request),
-        getLimit(request),
-        getVariable(request)
-    ]).then(([query, autosuggestSource, limit, variable]) => {
+        getLimit(request)
+    ]).then(([query, autosuggestSource, limit]) => {
+        const variableID = request.query.variable_id;
+
         autosuggestSource.get(query, limit).then(options => {
-            if (autosuggestSource.id === 'entity' && !_.isNil(variable)) {
-                entitiesWithData(token, options.options, variable).then(entities => {
+            if (autosuggestSource.id === 'entity' && !_.isEmpty(variableID)) {
+                entitiesWithData(token, options.options, variableID).then(entities => {
                     response.json({options: entities});
                 }).catch(errorHandler);
             } else {
@@ -57,10 +58,5 @@ function getLimit(request) {
     return ParseRequest.getLimit(request,
             Constants.SUGGEST_COUNT_DEFAULT,
             Constants.SUGGEST_COUNT_MAX);
-}
-
-function getVariable(request) {
-    const id = request.query.variable_id;
-    return Promise.resolve(_.isEmpty(id) ? null : {id});
 }
 
