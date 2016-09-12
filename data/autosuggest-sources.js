@@ -111,8 +111,8 @@ const occupationNames = {
     'business_and_finance': 'Business and Finance'
 };
 
-const datasets = _.mapValues(declarations, declaration => {
-    return new AutosuggestDataset(declaration.domain, declaration.fxf,
+const datasets = _.mapValues(declarations, (declaration, id) => {
+    return new AutosuggestDataset(id, declaration.domain, declaration.fxf,
         declaration.column, declaration.encoded, declaration.sort,
         declaration.transform);
 });

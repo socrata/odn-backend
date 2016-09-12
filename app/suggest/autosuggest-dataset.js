@@ -7,7 +7,8 @@ const Exception = require('../error');
 const Request = require('../request');
 
 class AutosuggestDataset {
-    constructor(domain, fxf, column, fields, sortFunc, transformFunc) {
+    constructor(id, domain, fxf, column, fields, sortFunc, transformFunc) {
+        this.id = id;
         this.domain = domain;
         this.fxf = fxf;
         this.column = column;

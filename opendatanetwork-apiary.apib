@@ -65,6 +65,17 @@ interaction where suggestions are provided as a user types.
 
         + Default: `5`
 
+    + variable_id (optional, string, `demographics.population.count`)
+
+        This parameter is only available when suggesting entities with `type=entity`.
+        If it is provided, suggestions will be filtered to include
+        only entities that have data for the given variable.
+
+        If the variable provided is invalid, no entities will be returned.
+
+        Note that this filtering will increase response time significantly,
+        so it should only be used when necessary.
+
     + app_token (optional, string, `cQovpGcdUT1CSzgYk0KPYdAI0`)
 
         The [Socrata App Token](https://dev.socrata.com/docs/app-tokens.html) to be

@@ -78,6 +78,26 @@ describe('/suggest/v1', () => {
         });
     });
 
+    it('should not suggest entities for seattle with the variable debt', () => {
+        return suggest('entity?query=seattle&variable_id=finance.michigan_debt.debt_service').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(entitySchema);
+            expect(response).to.have.json({
+                "options": []
+            });
+        });
+    });
+
+    it('should not suggest entities for an invalid variable', () => {
+        return suggest('entity?query=seattle&variable_id=demographics').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(entitySchema);
+            expect(response).to.have.json({
+                "options": []
+            });
+        });
+    });
+
     it('should rank washington state as the best entity suggestion for washington', () => {
         return suggest('entity?query=washington').then(response => {
             expect(response).to.have.status(200);
