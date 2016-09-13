@@ -379,7 +379,7 @@
                     },
                     "rate": {
                         "name": "Crime incident rate per 100,000 people",
-                        "type": "rate"
+                        "type": "precision3"
                     }
                 },
                 "searchTerms": ["crime", "policing", "public safety", "arrest", "warrant", "police"],
