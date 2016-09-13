@@ -118,6 +118,7 @@ function getData(session, ids) {
         .whereIn('id', ids)
         .select('id')
         .select('value')
+        .where('value IS NOT NULL')
         .send()
         .then(data => formatData(session, data));
 }
