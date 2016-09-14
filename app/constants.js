@@ -71,7 +71,7 @@ const Constants = {
     MAP_ZOOM_MAX: 18,
 
     SUMMARY_STAT_STEPS: 9,
-    SUMMARY_STAT_NAMES: ['minimum', '', 'lower quartile', '', 'average', '', 'upper quartile', '', 'maximum']
+    SUMMARY_STAT_NAMES: ['minimum', '', 'lower quartile', '', 'median', '', 'upper quartile', '', 'maximum']
 };
 
 module.exports = Constants;

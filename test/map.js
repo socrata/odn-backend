@@ -98,7 +98,7 @@ describe('/data/v1/map', () => {
             it('should have correct summary statistics', () => {
                 return response.then(response => {
                     const stats = response.body.summary_statistics;
-                    expect(stats.names).to.deep.equal(['minimum', '', 'lower quartile', '', 'average', '', 'upper quartile', '', 'maximum']);
+                    expect(stats.names).to.deep.equal(['minimum', '', 'lower quartile', '', 'median', '', 'upper quartile', '', 'maximum']);
                     expect(stats.values).to.have.lengthOf(9);
                     expect(stats.values).to.be.ascending;
                     expect(stats.values_formatted).to.have.lengthOf(9);
