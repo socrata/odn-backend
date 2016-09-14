@@ -6,50 +6,7 @@ const util = require('util');
 
 const Constants = require('./constants');
 const name = require('./name');
-
-const recurseFields = ['datasets', 'variables', 'topics'];
-
-/**
- * Paths must all be the same length.
- */
-function pick(tree, paths) {
-    if (_.isEmpty(paths)) return tree;
-    if (_.isEmpty(tree) && !_.isEmpty(paths)) return null;
-
-    const picked = {};
-
-    const grouped = _(paths)
-        .filter(_.negate(_.isEmpty))
-        .groupBy(_.first)
-        .toPairs()
-        .value();
-
-    grouped.forEach(([key, subpaths]) => {
-        if (!(key in tree)) return;
-
-        subpaths = subpaths.map(_.tail);
-        const subtree = tree[key];
-        if (subpaths[0].length === 0) {
-            picked[key] = subtree;
-            return;
-        }
-
-        const recurse = recurseFields.filter(field => field in subtree);
-        if (recurse.length === 0) return;
-
-        const subtrees = recurse.map(field => {
-            const pickedSubtree = pick(subtree[field], subpaths);
-            return _.isNil(pickedSubtree) ? null : {[field]: pickedSubtree};
-        }).filter(_.negate(_.isNil));
-
-        if (subtrees.length === 0) return;
-        picked[key] = _.omit(subtree, recurse);
-        subtrees.forEach(subtree => _.assign(picked[key], subtree));
-    });
-
-    if (_.size(picked) > 0) return picked;
-    return null;
-}
+const pick = require('./pick');
 
 function mapTree(tree, iteratee, parents) {
     parents = parents || [];

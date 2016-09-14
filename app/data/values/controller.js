@@ -337,6 +337,7 @@ function getValues(dataset, constraints, entities, unspecified, token) {
         .whereIn('variable', _.values(dataset.variables).map(variableID))
         .select('id')
         .select('value')
+        .where('value IS NOT NULL')
         .select(unspecified)
         .order(unspecified)
         .order('id')

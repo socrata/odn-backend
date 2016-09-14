@@ -9,50 +9,49 @@ const Constants = require('../constants');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
 const ParseRequest = require('../parse-request');
+const entitiesWithData = require('../entities-with-data');
 
 module.exports = (request, response) => {
     const errorHandler = Exception.getHandler(request, response);
+    const token = request.token;
 
     return Promise.all([
-        getType(request),
         getQuery(request),
+        getAutosuggestSource(request),
         getLimit(request)
-    ]).then(([type, query, limit]) => {
-        query = Stopwords.strip(query);
+    ]).then(([query, autosuggestSource, limit]) => {
+        const variableID = request.query.variable_id;
 
-        suggestPromise(type, query, limit).then(json => {
-            response.json(json);
+        autosuggestSource.get(query, limit).then(options => {
+            if (autosuggestSource.id === 'entity' && !_.isEmpty(variableID)) {
+                entitiesWithData(token, options.options, variableID).then(entities => {
+                    response.json({options: entities});
+                }).catch(errorHandler);
+            } else {
+                response.json(options);
+            }
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
 
-function suggestPromise(type, query, limit) {
-    if (type in AutosuggestSources) {
-        const source = AutosuggestSources[type];
-
-        return source.get(query, limit);
-    } else {
-        return Promise.reject(Exception.notFound(`suggest type not found: '${type}',
-            must be in ${_.keys(AutosuggestSources).join(', ')}`));
-    }
+function getQuery(request) {
+    return ParseRequest.getQuery(request)
+        .then(query => Promise.resolve(Stopwords.strip(query)));
 }
 
-function getType(request) {
-    const type = request.params.type;
+function getAutosuggestSource(request) {
+    let type = request.params.type;
 
     if (_.isNil(type))
         return Promise.reject(invalid('type of result to suggest required'));
 
-    return Promise.resolve(type.toLowerCase());
-}
+    type = type.toLowerCase();
 
-function getQuery(request) {
-    const query = request.query.query;
+    if (type in AutosuggestSources)
+        return Promise.resolve(AutosuggestSources[type]);
 
-    if (_.isNil(query))
-        return Promise.reject(invalid('query parameter required'));
-
-    return Promise.resolve(query);
+    return Promise.reject(Exception.notFound(`suggest type not found: '${type}',
+        must be in ${_.keys(AutosuggestSources).join(', ')}`));
 }
 
 function getLimit(request) {

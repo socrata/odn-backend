@@ -193,6 +193,21 @@ describe('/entity/v1/related', () => {
         });
     });
 
+    it('should find no peers for detroit with michigan data', () => {
+        return related('peer?entity_id=1600000US2622000&variable_id=finance.michigan_debt.debt_service').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(relatedSchema);
+            expect(response).to.comprise.of.json({
+                'relatives': [
+                    {
+                        'type': 'region.place',
+                        'entities': []
+                    }
+                ]
+            });
+        });
+    });
+
     it('should show that the united states has no parents', () => {
         return related('parent?entity_id=0400000US53').then(response => {
             expect(response).to.have.status(200);

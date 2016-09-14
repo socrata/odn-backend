@@ -249,11 +249,46 @@ describe('/data/v1/values', () => {
             expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('United States');
-            expect(response.body.forecast_descriptions[0]).to.have.string('Population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('0.7%');
+            expect(response.body.forecast_descriptions[0]).to.have.string('population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('0.84%');
             expect(response.body.forecast_descriptions[0]).to.have.string('2009');
             expect(response.body.forecast_descriptions[0]).to.have.string('2013');
             expect(response.body.forecast_descriptions[0]).to.have.string('2016');
+        });
+    });
+
+    it('should describe forecasted data when there is insufficient data', () => {
+        return values('variable=demographics.population.count&entity_id=310M200US29200&forecast=3&describe=true').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(valuesSchema);
+            expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
+            expect(response.body.forecast_descriptions).to.have.lengthOf(1);
+            expect(response.body.forecast_descriptions[0]).to.have.string('Lafayette Metro Area (IN)');
+            expect(response.body.forecast_descriptions[0]).to.have.string('population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('204,560');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[0]).to.not.have.string('growth rate');
+        });
+    });
+
+    it('should make forecast descriptions in the right order', () => {
+        return values('variable=demographics.population.count&entity_id=310M200US29200,310M200US24780&forecast=3&describe=true').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(valuesSchema);
+            expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
+            expect(response.body.forecast_descriptions).to.have.lengthOf(2);
+            expect(response.body.forecast_descriptions[0]).to.have.string('Greenville Metro Area (NC)');
+            expect(response.body.forecast_descriptions[0]).to.have.string('population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('170,485');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2016');
+            expect(response.body.forecast_descriptions[0]).to.have.string('growth rate');
+
+            expect(response.body.forecast_descriptions[1]).to.have.string('Lafayette Metro Area (IN)');
+            expect(response.body.forecast_descriptions[1]).to.have.string('population');
+            expect(response.body.forecast_descriptions[1]).to.have.string('204,560');
+            expect(response.body.forecast_descriptions[1]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[1]).to.not.have.string('growth rate');
         });
     });
 
@@ -281,8 +316,8 @@ describe('/data/v1/values', () => {
             expect(response).to.have.schema(valuesSchema);
             expect(response.body).to.have.all.keys(['data', 'description']);
             expect(response.body.description).to.have.string('United States');
-            expect(response.body.description).to.have.string('Population');
-            expect(response.body.description).to.have.string('Population Rate of Change');
+            expect(response.body.description).to.have.string('population');
+            expect(response.body.description).to.have.string('population rate of change');
             expect(response.body.description).to.have.string('2013');
             expect(response.body).to.not.have.keys('forecast_descriptions');
         });

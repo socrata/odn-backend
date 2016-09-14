@@ -4,7 +4,6 @@
         "datasets": {
             "population": {
                 "fxf": "9jg8-ki9x",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "count": {"name": "Population Count"},
@@ -25,21 +24,19 @@
         "datasets": {
             "graduation_rates": {
                 "fxf": "7mfb-7yvj",
-                "domain": "odn.data.socrata.com",
                 "name": "Graduation Rates",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "percent_less_than_9th_grade": {
                         "type": "percent",
-                        "name": "Percent who did not finish the 9th grade"
-                    },
-                    "percent_graduate_or_professional_degree": {
-                        "type": "percent",
-                        "name": "Percent with a graduate or professional degree"
+                        "name": "Percent who did not finish the 9th grade",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "percent_high_school_graduate_or_higher": {
                         "type": "percent",
-                        "name": "High School Graduation Rate"
+                        "name": "High School Graduation Rate",
+                        "stoplight": true
                     },
                     "percent_associates_degree": {
                         "type": "percent",
@@ -47,7 +44,13 @@
                     },
                     "percent_bachelors_degree_or_higher": {
                         "type": "percent",
-                        "name": "College Graduation Rate"
+                        "name": "College Graduation Rate",
+                        "stoplight": true
+                    },
+                    "percent_graduate_or_professional_degree": {
+                        "type": "percent",
+                        "name": "Percent with a graduate or professional degree",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["college", "education", "school", "university", "instruction", "teaching", "teacher", "professor", "student", "graduation", "scholastic", "matriculation"],
@@ -56,13 +59,15 @@
 
             "education_expenditures": {
                 "fxf": "nxzi-u9nr",
-                "domain": "odn.data.socrata.com",
                 "name": "Expenditures",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "administration-salaries": {
                         "type": "dollar",
                         "name": "Total Administration Salaries"
+                    },
+                    "administration-salaries-per-student": {
+                        "type": "dollar"
                     },
                     "capital-expenditures": {
                         "type": "dollar",
@@ -78,9 +83,6 @@
                     },
                     "instruction-salaries-per-student": {
                         "type": "dollar"
-                    },
-                    "administration-salaries-per-student": {
-                        "type": "dollar"
                     }
                 },
                 "searchTerms": ["school budget", "school funding", "school construction", "teacher salaries", "university salaries",
@@ -93,7 +95,6 @@
 
             "classroom_statistics": {
                 "fxf": "kx62-ayme",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "student-teacher-ratio": {}
@@ -108,42 +109,51 @@
         "datasets": {
             "earnings": {
                 "fxf": "j8a6-qa8k",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "female_full_time_median_earnings": {
+                    "median_earnings": {
                         "type": "dollar",
-                        "name": "Median Female Earnings (Full Time)"
+                        "stoplight": true
                     },
                     "female_median_earnings": {
                         "type": "dollar",
-                        "name": "Median Female Earnings"
-                    },
-                    "male_full_time_median_earnings": {
-                        "type": "dollar",
-                        "name": "Median Male Earnings (Full Time)"
+                        "name": "Median Female Earnings",
+                        "stoplight": true
                     },
                     "male_median_earnings": {
                         "type": "dollar",
-                        "name": "Median Male Earnings"
+                        "name": "Median Male Earnings",
+                        "stoplight": true
                     },
-                    "median_earnings": {
-                        "type": "dollar"
+                    "female_full_time_median_earnings": {
+                        "type": "dollar",
+                        "name": "Median Female Earnings (Full Time)",
+                        "stoplight": true
                     },
-                    "median_earnings_bachelor_degree": {
-                        "type": "dollar"
-                    },
-                    "median_earnings_graduate_or_professional_degree": {
-                        "type": "dollar"
-                    },
-                    "median_earnings_high_school": {
-                        "type": "dollar"
+                    "male_full_time_median_earnings": {
+                        "type": "dollar",
+                        "name": "Median Male Earnings (Full Time)",
+                        "stoplight": true
                     },
                     "median_earnings_less_than_high_school": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "median_earnings_high_school": {
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "median_earnings_some_college_or_associates": {
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "median_earnings_bachelor_degree": {
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "median_earnings_graduate_or_professional_degree": {
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "percent_with_earnings_1_to_9999": {
                         "type": "percent",
@@ -188,14 +198,15 @@
 
             "job_proximity": {
                 "fxf": "5pnb-mvzq",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "jobs-prox-idx-mean": {
-                        "name": "Mean Job Proximity Index"
+                        "name": "Mean Job Proximity Index",
+                        "stoplight": true
                     },
                     "jobs-prox-idx-median": {
-                        "name": "Median Job Proximity Index"
+                        "name": "Median Job Proximity Index",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["job location", "job opportunities", "employment location", "employment opportunities", "commute", "telecommute", "transportation", "traffic"],
@@ -205,13 +216,14 @@
 
             "occupations": {
                 "fxf": "y8sk-t74p",
-                "domain": "odn.data.socrata.com",
                 "constraints": ["occupation", ["year", "desc"]],
                 "variables": {
                     "employed": {
                         "name": "Number of Employees"
                     },
-                    "percent_employed": {}
+                    "percent_employed": {
+                        "type": "percent"
+                    }
                 },
                 "searchTerms": ["occupations", "wage", "profession", "business", "work", "job", "profession", "employment", "labor", "avocation"],
                 "sources": ["acs"]
@@ -223,14 +235,15 @@
         "datasets": {
             "environmental_health": {
                 "fxf": "nax7-t6ga",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "env-health-idx-mean": {
-                        "name": "Mean Environmental Health Hazard Index"
+                        "name": "Mean Environmental Health Hazard Index",
+                        "stoplight": true
                     },
                     "env-health-idx-median": {
-                        "name": "Median Environmental Health Hazard Index"
+                        "name": "Median Environmental Health Hazard Index",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["environment", "pollution", "carbon", "emissions", "energy", "waste", "toxic", "smog", "climate", "radiation", "toxin", "hazard"],
@@ -241,7 +254,6 @@
             "health_behaviors": {
                 "name": "Health Behaviors",
                 "fxf": "csbu-um39",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "access_to_exercise_opportunities_value": {
@@ -298,7 +310,6 @@
             "gdp": {
                 "name": "Gross Domestic Product",
                 "fxf": "jm8e-8hhx",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "per_capita_gdp": {
@@ -317,16 +328,15 @@
 
             "consumption": {
                 "fxf": "skua-q4dv",
-                "domain": "odn.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "expenditures_percent_change": {
-                        "name": "Annual change in PCE",
-                        "type": "percent"
-                    },
                     "personal_consumption_expenditures": {
                         "name": "Personal Consumption Expenditure",
                         "type": "dollar"
+                    },
+                    "expenditures_percent_change": {
+                        "name": "Annual change in PCE",
+                        "type": "percent"
                     }
                 },
                 "searchTerms": ["consumption", "consumer", "household consumption", "goods and services", "personal expenditure", "personal expenses", "pce"],
@@ -337,7 +347,6 @@
             "cost_of_living": {
                 "name": "Cost of Living",
                 "fxf": "t64z-nedn",
-                "domain": "odn.data.socrata.com",
                 "constraints": ["component", ["year", "desc"]],
                 "variables": {
                     "index": {
@@ -357,24 +366,24 @@
     },
 
     "crime": {
+        "name": "Public Safety",
         "datasets": {
             "fbi_ucr": {
-                "name": "FBI Uniform Crime Reporting Program",
+                "name": "Crime",
                 "fxf": "eds5-udzt",
-                "domain": "odn.data.socrata.com",
                 "constraints": ["crime_type", ["year", "desc"]],
                 "variables": {
-                    "rate": {
-                        "name": "Crime incident rate per 100,000 people",
-                        "type": "rate"
-                    },
                     "count": {
                         "name": "Crime incident count",
                         "type": "count"
+                    },
+                    "rate": {
+                        "name": "Crime incident rate per 100,000 people",
+                        "type": "ratio100k"
                     }
                 },
                 "searchTerms": ["crime", "policing", "public safety", "arrest", "warrant", "police"],
-                "description": "Crime statistics are sourced from the FBI Uniform Crime Reporting Program and aggregated across year and crime type. The FBI does not gather statistics for all jurisdictions, so some localities may be missing. Normalization is based on the population values published with the UCR data itself, so rather than on US Census data, as the jurisdiction of the data may vary. Crime rates are normalized on a per 100K basis; specifically, the crime count is divided by the population count, the result is then multiplied by 100K and rounded to the nearest integer value.",
+                "description": "Crime statistics are sourced from the FBI Uniform Crime Reporting Program and aggregated across year and crime type. The FBI does not gather statistics for all jurisdictions, so some localities may be missing. Normalization is based on the population values published with the UCR data itself, so rather than on US Census data, as the jurisdiction of the data may vary. Crime rates are normalized on a per 100K basis; specifically, the crime count is divided by the population count, the result is then multiplied by 100K and rounded to the nearest integer value. Latest data, displayed in charts and other visualizations, is from 2014.",
                 "sources": ["fbi_ucr"]
             }
         }

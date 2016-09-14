@@ -8,6 +8,7 @@ const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 const Sources = require('./sources');
 
+// TODO: refactor into object with request field and instance methods
 class ParseRequest {
     static getInteger(request, name, defaultValue, min, max) {
         let value = request.query[name];
@@ -65,6 +66,15 @@ class ParseRequest {
 
         const dataset = _.first(_.values(topic.datasets));
         return Promise.resolve(dataset);
+    }
+
+    static getQuery(request) {
+        const query = request.query.query;
+
+        if (_.isNil(query))
+            return Promise.reject(invalid('query parameter required'));
+
+        return Promise.resolve(query);
     }
 }
 
