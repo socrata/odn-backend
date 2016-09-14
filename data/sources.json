@@ -379,7 +379,9 @@
                     },
                     "rate": {
                         "name": "Crime incident rate per 100,000 people",
-                        "type": "ratio100k"
+                        "type": "ratio100k",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
                 "searchTerms": ["crime", "policing", "public safety", "arrest", "warrant", "police"],
@@ -399,7 +401,7 @@
                 "variables": {
                     "debt_service": {
                         "name": "Debt Service",
-                        "type": "rate",
+                        "type": "ratio_1dec",
                         "stoplight": true,
                         "reverse": true
                     },

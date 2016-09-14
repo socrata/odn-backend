@@ -9,6 +9,7 @@ const numeralFormatters = {
     dollar: '$0,0',
     percent: '0,0.00%',
     ratio: '0,0.00%',
+    ratio_1dec: '0,0.0%',
     per1000: '0,0.00%'
 };
 
