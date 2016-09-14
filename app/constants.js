@@ -22,7 +22,7 @@ const Constants = {
         'region.state': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.county': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.msa': 'https://odn.data.socrata.com/resource/3ma7-imys',
-        'region.place': 'https://odn.data.socrata.com/resource/rmqq-dzu4',
+        'region.place': 'https://odn.data.socrata.com/resource/4w8p-9itj',
         'region.zip_code': 'https://odn.data.socrata.com/resource/92xu-eg4b'
     },
     GEO_RANKED: ['region.place', 'region.zip_code'],
