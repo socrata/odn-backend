@@ -407,7 +407,7 @@
                     },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
-                        "type": "ratio"
+                        "type": "percent"
                     },
                     "debt_health": {
                         "name": "Debt Per Capita",
