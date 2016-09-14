@@ -20,26 +20,41 @@ class Describe {
         });
     }
 
-    static describeForecast(frame, entities, variable) {
-        const description = subframes(frame, true)
+    static describeForecast(wholeFrame, unsortedEntities, variable) {
+        const entities = _.tail(wholeFrame.data[0])
+            .filter(column => column !== 'forecast')
+            .map(id => _.find(unsortedEntities, {id}));
+
+        const description = subframes(wholeFrame, true)
             .map((frame, index) => describeFrame(frame, entities[index], variable));
+
         return Promise.resolve(description);
     }
 }
 
 function describeFrame(frame, entity, variable) {
+    frame = frame.filter(hasData);
     const growth = growthRate(frame);
     const first = frame[0];
     const last = lastMeasured(frame);
     const forecast = _.last(frame);
     const formatter = format(variable.type);
 
-    return `The last measured ${lowercase(variable.name)}
-        for ${entity.name} was ${formatter(last[1])} in ${last[0]}.
-        ${entity.name} experienced an average growth rate of ${format('percent')(growth)}
+    const lastMeasuredSummary =
+        `The last measured ${lowercase(variable.name)}
+        for ${entity.name} was ${formatter(last[1])} in ${last[0]}. `;
+
+    const forecastSummary = _.isNaN(growth) || _.isNil(growth) ? '' :
+        `${entity.name} experienced an average growth rate of ${format('percent')(growth)}
         from our first statistic recorded in ${first[0]}.
         If past trends continue, we forecast the ${lowercase(variable.name)} to be
-        ${formatter(forecast[1])} by ${forecast[0]}.`.replace(/\n\s*/g, ' ');
+        ${formatter(forecast[1])} by ${forecast[0]}.`;
+
+    return (lastMeasuredSummary + forecastSummary).replace(/\n\s*/g, ' ');
+}
+
+function hasData(row) {
+    return !_.isEmpty(row) && row.length >= 2 && !_.isNil(row[1]);
 }
 
 function lastMeasured(frame) {
@@ -51,6 +66,7 @@ function growthRate(frame) {
     if (measured.length < 2) return NaN;
     const [first, last] = [_.first(measured), _.last(measured)]
         .map(tuple => tuple[1]);
+    if (first === 0.0) return NaN;
     return 100 * ((last - first) / first / (measured.length - 1));
 }
 

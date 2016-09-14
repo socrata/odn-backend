@@ -257,6 +257,41 @@ describe('/data/v1/values', () => {
         });
     });
 
+    it('should describe forecasted data when there is insufficient data', () => {
+        return values('variable=demographics.population.count&entity_id=310M200US29200&forecast=3&describe=true').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(valuesSchema);
+            expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
+            expect(response.body.forecast_descriptions).to.have.lengthOf(1);
+            expect(response.body.forecast_descriptions[0]).to.have.string('Lafayette Metro Area (IN)');
+            expect(response.body.forecast_descriptions[0]).to.have.string('population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('204,560');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[0]).to.not.have.string('growth rate');
+        });
+    });
+
+    it('should make forecast descriptions in the right order', () => {
+        return values('variable=demographics.population.count&entity_id=310M200US29200,310M200US24780&forecast=3&describe=true').then(response => {
+            expect(response).to.have.status(200);
+            expect(response).to.have.schema(valuesSchema);
+            expect(response.body).to.contain.all.keys(['description', 'forecast_descriptions']);
+            expect(response.body.forecast_descriptions).to.have.lengthOf(2);
+            expect(response.body.forecast_descriptions[0]).to.have.string('Greenville Metro Area (NC)');
+            expect(response.body.forecast_descriptions[0]).to.have.string('population');
+            expect(response.body.forecast_descriptions[0]).to.have.string('170,485');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2016');
+            expect(response.body.forecast_descriptions[0]).to.have.string('growth rate');
+
+            expect(response.body.forecast_descriptions[1]).to.have.string('Lafayette Metro Area (IN)');
+            expect(response.body.forecast_descriptions[1]).to.have.string('population');
+            expect(response.body.forecast_descriptions[1]).to.have.string('204,560');
+            expect(response.body.forecast_descriptions[1]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[1]).to.not.have.string('growth rate');
+        });
+    });
+
     it('should default to not describing the data', () => {
         return values('variable=demographics.population&entity_id=0100000US&year=2013').then(response => {
             expect(response).to.have.status(200);
