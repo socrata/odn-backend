@@ -390,22 +390,23 @@
                 "variables": {
                     "debt_service": {
                         "name": "Debt Service",
-                        "type": "percent",
+                        "type": "rate",
                         "stoplight": true,
                         "reverse": true
                     },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
-                        "type": "percent"
+                        "type": "ratio"
                     },
                     "debt_health": {
-                        "name": "Debt Health",
-                        "type": "rate",
-                        "stoplight": true
+                        "name": "Debt Per Capita",
+                        "type": "dollar",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
-                "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "long term debt revenue"],
-                "description": "Michigan Department of Treasury Financial Indicators",
+                "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "dept per capita", "long term debt revenue"],
+                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues. <br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
                 "sources": ["f65"]
             },
 
@@ -425,7 +426,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "expenditures", "total general fund expenditures", "public safety fund expenditures", "public safety"],
-                "description": "Michigan Department of Treasury Financial Indicators",
+                "description": "Expenditures refer to all money spent by a government entity.<br /><br />Total Public Safety Fund Expenditures refers to all money spent on public safety (Police, Fire and Emergency Management).<br /><br />Total General Fund Expenditures refers to all monies spent out of the government's general budget, excluding special purpose funds.",
                 "sources": ["f65"]
             },
 
@@ -440,19 +441,19 @@
                         "type": "dollar",
                         "stoplight": true
                     },
-                    "general_fund_health": {
-                        "name": "General Fund Health",
-                        "type": "dollar",
-                        "stoplight": true
-                    },
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
-                        "type": "percent",
+                        "type": "ratio",
+                        "stoplight": true
+                    },
+                    "general_fund_health": {
+                        "name": "General Fund Balance Per Capita",
+                        "type": "dollar",
                         "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "Michigan Department of Treasury Financial Indicators",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
@@ -462,21 +463,21 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "pension_health": {
-                        "name": "Pension Health",
+                    "unfunded_pension_liability": {
+                        "name": "Unfunded Pension Liability",
                         "type": "dollar",
                         "stoplight": true,
                         "reverse": true
                     },
-                    "unfunded_pension_liability": {
-                        "name": "Unfunded Pension Liability",
+                    "pension_health": {
+                        "name": "Unfunded Pension Liability Per Capita",
                         "type": "dollar",
                         "stoplight": true,
                         "reverse": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "unfunded pension liability", "pension health"],
-                "description": "Michigan Department of Treasury Financial Indicators",
+                "description": "Pensions are the accounts used to pay for retirement benefits for former government employees.<br /><br />Unfunded Pension Liability is the difference between the current assets plus projected investment returns minus the total of all projected employee payments.<br /><br />Unfunded Pension Liability Per Capita is the unfunded pension liability per resident.",
                 "sources": ["f65"]
             },
 
@@ -488,21 +489,21 @@
                 "variables": {
                     "debt_taxable_value": {
                         "name": "Debt as % of Taxable Value",
-                        "type": "percent",
-                        "stoplight": true
-                    },
-                    "property_tax_health": {
-                        "name": "Property Tax Health",
-                        "type": "dollar",
+                        "type": "ratio",
                         "stoplight": true
                     },
                      "total_taxable_value": {
                         "name": "Total Taxable Value",
                         "type": "dollar"
+                    },
+                    "property_tax_health": {
+                        "name": "Total Taxable Value Per Capita",
+                        "type": "dollar",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "property tax", "total taxable value", "property tax health", "debt taxable value"],
-                "description": "Michigan Department of Treasury Financial Indicators",
+                "description": "Property Tax is the total amount of revenue collected based on a percentage of the value of all land and real property within a government entity.<br /><br />Debt as a Percentage of Taxable Value is the ratio between all outstanding debts of an entity and the total value of all property within that entity.<br /><br />Total Taxable Value is the total value of all land and real property within an entity.<br /><br />Total Taxable Value Per Capita is the total value of all land and real property per resident.",
                 "sources": ["f65"]
             },
 
@@ -518,12 +519,12 @@
                     },
                     "unrestricted_revenue": {
                         "name": "Unrestricted Revenue",
-                        "type": "percent",
+                        "type": "ratio",
                         "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
-                "description": "Michigan Department of Treasury Financial Indicators",
+                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenue refers to all monies collected into the General Fund, excluding some grants and special purpose funds.<br /><br />Unrestricted Revenue is the percentage of funds that are unrestricted as opposed to committed to a specific purpose or program.",
                 "sources": ["f65"]
             }
         }
