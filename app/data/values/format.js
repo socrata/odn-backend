@@ -17,6 +17,7 @@ const precisionPrefix = 'precision';
 function format(type) {
     if (type === 'percent') return n => numeral(n / 100).format(numeralFormatters.percent);
     if (type === 'per1000') return n => numeral(n / 100000).format(numeralFormatters.percent);
+    if (type === 'ratio100k') return n => numeral(n * 100000).format(numeralFormatters.number);
     const formatter = numeralFormatters[type] || precisionFormatter(type) || '';
     return number => numeral(number).format(formatter);
 }
