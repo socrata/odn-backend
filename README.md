@@ -32,8 +32,8 @@ to cache responses from the Socrata backend and store map sessions.
 
 Memcached is available over [homebrew](http://brew.sh/).
 To install it, use `brew install memcached`.
-There are many options for running `memcached`.
-To see them all, use `brew info memcached`.
+There are many options for running `memcached` including the most direct: /usr/local/opt/memcached/bin/memcached
+To see them all, use `brew info memcached`
 
 #### Flushing the Cache
 
