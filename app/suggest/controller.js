@@ -8,6 +8,7 @@ const notFound = Exception.notFound;
 const Constants = require('../constants');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
+const EntityRadixTree = require('./entity-radix-tree');
 const EntitySuggest = require('./entity-suggest');
 const ParseRequest = require('../parse-request');
 const entitiesWithData = require('../entities-with-data');
@@ -40,14 +41,9 @@ function getQuery(request) {
         .then(query => Promise.resolve(Stopwords.strip(query)));
 }
 
-// The entity autosuggest must pull down the entire ODN Entities dataset.
-// If this fails, fall back to the old entities autosuggest.
-let entitySuggest = EntitySuggest.fromSOQL().then(suggest => {
-    return Promise.resolve(suggest);
-}).catch(error => {
-    console.error('failed to load entities for entity suggest; falling back to dataset');
-    console.error(error);
-    entitySuggest = null;
+const entityRadixTree = EntityRadixTree.fromSOQL();
+const entitySuggest = entityRadixTree.then(tree => {
+    return Promise.resolve(new EntitySuggest(tree));
 });
 
 function getAutosuggestSource(request) {
