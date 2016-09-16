@@ -1,7 +1,7 @@
 'use strict';
 
-process.isDevelopment = process.env.NODE_ENV === 'development';
-process.isProduction = !process.isDevelopment;
+process.isProduction = process.env.NODE_ENV === 'production';
+process.isDevelopment = !process.isProduction;
 
 const istanbul = require('istanbul-middleware');
 if (process.isDevelopment) istanbul.hookLoader(__dirname);

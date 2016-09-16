@@ -204,6 +204,15 @@ const questionSchema = {
                 name: {type: 'string'},
                 type: {type: 'string'}
             },
+            required: ['id', 'name', 'type']
+        },
+
+        variable: {
+            type: 'object',
+            properties: {
+                id: {type: 'string'},
+                name: {type: 'string'}
+            },
             required: ['id', 'name']
         },
 
@@ -211,11 +220,9 @@ const questionSchema = {
             type: 'object',
             properties: {
                 entity: {'$ref': '#/definitions/entity'},
-                vector: {type: 'string'},
-                metric: {type: 'string'},
-                text: {type: 'string'}
+                variable: {'$ref': '#/definitions/variable'},
             },
-            required: ['entity', 'text', 'vector', 'metric']
+            required: ['entity', 'variable']
         }
     },
     type: 'object',
