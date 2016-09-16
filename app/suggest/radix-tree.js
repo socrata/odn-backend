@@ -2,9 +2,6 @@
 
 const _ = require('lodash');
 
-const Constants = require('../constants');
-const SOQL = require('../soql');
-
 class RadixTree {
     // takes a list of lists of characters e.g. [['a', 'b', 'c'], ['a, 'b', 'd']]
     constructor(list) {
@@ -72,84 +69,5 @@ function toCharacters(string) {
     return string.split('');
 }
 
-function clean(string) {
-    return string.replace(/[\W_]/g, '').toLowerCase();
-}
-
-const keypress = require('keypress');
-
-keypress(process.stdin);
-
-downloadEntities('region.place').then(entities => {
-    const nameToEntities = getNameToEntities(entities);
-    const tree = RadixTree.fromStrings(_.keys(nameToEntities));
-
-    getInput(string => {
-        string = clean(string);
-        const names = _.isEmpty(string) ? [] : tree.withPrefix(string);
-        console.log(`Found ${names.length} suggestions for "${string}"`);
-
-        const entities = _(names)
-            .flatMap(_.propertyOf(nameToEntities))
-            .orderBy(['rank'], ['desc'])
-            .value();
-
-        entities.slice(0, 10).forEach(entity => {
-            console.log(entity.name);
-        });
-    });
-});
-
-function getNameToEntities(entities) {
-    const nameToEntities = {};
-
-    entities.forEach(entity => {
-        const name = clean(entity.name);
-        if (name in nameToEntities) nameToEntities[name].push(entity);
-        nameToEntities[name] = [entity];
-    });
-
-    return nameToEntities;
-}
-
-function getInput(callback) {
-    let buffer = '';
-
-    process.stdin.on('keypress', (character, key) => {
-        if (_.isNil(key)) return;
-        if (key.ctrl && key.name === 'c') process.exit();
-        if (key.name === 'backspace' && buffer.length > 0)
-            buffer = buffer.substring(0, buffer.length - 1);
-        else if (character)
-            buffer = buffer + character;
-        callback(buffer);
-    });
-
-    process.stdin.setRawMode(true);
-    process.stdin.resume();
-}
-
-function downloadEntities(entityType) {
-    return new SOQL(Constants.ENTITY_URL)
-        .token(Constants.APP_TOKEN)
-        .select('name,rank')
-        .equal('type', entityType)
-        .limit(50000)
-        .send()
-        .then(entities => {
-            entities.forEach(entity => entity.rank = parseInt(entity.rank, 10));
-            return Promise.resolve(entities);
-        });
-}
-
-/*
-const tree = RadixTree.fromStrings(['seattle', 'washington', 'vancouver', 'seattle metro', 'new york']);
-console.log(tree.contains('s'));
-console.log(tree.contains('seattle'));
-console.log(tree.contains('seattle a'));
-console.log(tree.contains('a'));
-
-console.log(tree.withPrefix('s'));
-console.log(tree.withPrefix('seatt'));
-*/
+module.exports = RadixTree;
 
