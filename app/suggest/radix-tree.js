@@ -10,6 +10,7 @@ class RadixTree {
     constructor(list) {
         // Storing the list in each node will take a lot of memory,
         // we should probably reconstruct this list on demand instead.
+        // This will cut memory usage at least in half.
         this.list = list;
         this.children = {};
         this.data = [];
@@ -37,7 +38,7 @@ class RadixTree {
     }
 
     contains(string) {
-        return this._contains(clean(string));
+        return this._contains(toCharacters(string));
     }
 
     _withPrefix(characters) {
@@ -52,7 +53,7 @@ class RadixTree {
     }
 
     withPrefix(string) {
-        return this._withPrefix(clean(string)).map(substring => {
+        return this._withPrefix(toCharacters(string)).map(substring => {
             return string + substring.join('');
         });
     }
@@ -63,31 +64,53 @@ class RadixTree {
      */
     static fromStrings(strings) {
         strings.sort();
-        return new RadixTree(strings.map(clean));
+        return new RadixTree(strings.map(toCharacters));
     }
 }
 
+function toCharacters(string) {
+    return string.split('');
+}
+
 function clean(string) {
-    return string
-        .replace(/[\W_]/g, '')
-        .toLowerCase()
-        .split('');
+    return string.replace(/[\W_]/g, '').toLowerCase();
 }
 
 const keypress = require('keypress');
 
 keypress(process.stdin);
 
-downloadEntities('region.place').then(treeFromEntities).then(tree => {
-    console.log('tree initialized');
-    console.log(process.memoryUsage());
+downloadEntities('region.place').then(entities => {
+    const nameToEntities = getNameToEntities(entities);
+    const tree = RadixTree.fromStrings(_.keys(nameToEntities));
 
     getInput(string => {
-        const results = tree.withPrefix(string);
-        console.log(`Found ${results.length} suggestions for "${string}"`);
-        console.log(results.slice(0, 10));
+        string = clean(string);
+        const names = _.isEmpty(string) ? [] : tree.withPrefix(string);
+        console.log(`Found ${names.length} suggestions for "${string}"`);
+
+        const entities = _(names)
+            .flatMap(_.propertyOf(nameToEntities))
+            .orderBy(['rank'], ['desc'])
+            .value();
+
+        entities.slice(0, 10).forEach(entity => {
+            console.log(entity.name);
+        });
     });
 });
+
+function getNameToEntities(entities) {
+    const nameToEntities = {};
+
+    entities.forEach(entity => {
+        const name = clean(entity.name);
+        if (name in nameToEntities) nameToEntities[name].push(entity);
+        nameToEntities[name] = [entity];
+    });
+
+    return nameToEntities;
+}
 
 function getInput(callback) {
     let buffer = '';
@@ -106,19 +129,17 @@ function getInput(callback) {
     process.stdin.resume();
 }
 
-function treeFromEntities(entities) {
-    const names = entities.map(_.property('name'));
-    const tree = RadixTree.fromStrings(names);
-    return Promise.resolve(tree);
-}
-
 function downloadEntities(entityType) {
     return new SOQL(Constants.ENTITY_URL)
         .token(Constants.APP_TOKEN)
-        .select('name')
+        .select('name,rank')
         .equal('type', entityType)
         .limit(50000)
-        .send();
+        .send()
+        .then(entities => {
+            entities.forEach(entity => entity.rank = parseInt(entity.rank, 10));
+            return Promise.resolve(entities);
+        });
 }
 
 /*
