@@ -6,21 +6,8 @@ const AutosuggestDataset = require('../app/suggest/autosuggest-dataset');
 const Sources = require('../app/sources');
 
 const declarations = {
-    entity: {
-        domain: Constants.ODN_DATA_DOMAIN,
-        fxf: 's2z5-sxuw',
-        column: 'name',
-        encoded: ['id', 'type', 'rank'],
-        sort: option => -parseFloat(option.fields.rank),
-        transform: option => {
-            return {
-                id: option.fields.id,
-                name: option.text,
-                type: option.fields.type
-            };
-        }
-    },
-
+    // This is only for /search/v1/questions, which is now only used
+    // to generate random questions on the ODN home page.
     question: {
         domain: Constants.ODN_DATA_DOMAIN,
         fxf: 'arys-69tf',
