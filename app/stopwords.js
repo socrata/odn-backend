@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const fs = require('fs');
 
 class Stopwords {
@@ -13,10 +14,12 @@ class Stopwords {
      * Extracts all important words from a string ignoring all stopwords.
      */
     importantWords(string) {
-        return string
+        const words = string
             .toLowerCase()
-            .match(/\b(\w+)\b/g)
-            .filter(word => !this.stopwords.has(word));
+            .match(/\b(\w+)\b/g);
+
+        if (_.isEmpty(words)) return [];
+        return words.filter(word => !this.stopwords.has(word));
     }
 
     /**
