@@ -3,6 +3,7 @@
 const _ = require('lodash');
 
 const Stopwords = require('../stopwords');
+const lowercase = require('../lowercase');
 
 const THRESHOLD = 100;
 
@@ -46,6 +47,7 @@ class QuestionSuggest {
         return _(variables)
             .orderBy(['rank'], ['asc'])
             .map(variable => _.omit(variable, ['rank']))
+            .map(variable => _.extend(variable, {name: lowercase(variable.name)}))
             .value();
     }
 }

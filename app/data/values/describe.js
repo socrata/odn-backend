@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const Exception = require('../../error');
 const invalid = Exception.invalidParam;
-
+const lowercase = require('../../lowercase');
 const format = require('./format');
 
 class Describe {
@@ -132,19 +132,6 @@ function englishJoin(elements) {
     } else {
         return englishJoin([elements.slice(0, 2).join(', ')].concat(elements.slice(2)));
     }
-}
-
-function lowercase(string) {
-    return string.replace(/\w*/g, lowercaseWord);
-}
-
-function lowercaseWord(word) {
-    if (word.length === 0 || (word.length > 2 && isAllCaps(word))) return word;
-    return word.toLowerCase();
-}
-
-function isAllCaps(word) {
-    return /^[^a-z]*$/.test(word);
 }
 
 /**
