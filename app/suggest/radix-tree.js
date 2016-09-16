@@ -57,10 +57,8 @@ class RadixTree {
 
     /**
      * Creates a RadixTree from a list of strings.
-     * Note that this function will sort its input.
      */
     static fromStrings(strings) {
-        strings.sort();
         return new RadixTree(strings.map(toCharacters));
     }
 }

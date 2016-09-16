@@ -8,21 +8,24 @@ const SOQL = require('../soql');
 
 class EntitySuggest {
     constructor(entities) {
+        this.id = 'entity';
         this.nameToEntities = getNameToEntities(entities);
         this.tree = RadixTree.fromStrings(_.keys(this.nameToEntities));
     }
 
-    get(query, limit) {
+    _get(query, limit) {
         if (_.isEmpty(query)) return [];
         query = clean(query);
 
         const names = this.tree.withPrefix(query);
-        const entities = _(names)
-            .flatMap(_.propertyOf(this.nameToEntities))
-            .orderBy(['rank'], ['desc'])
-            .value();
+        const entities = _.flatMap(names, _.propertyOf(this.nameToEntities));
+        return entities.slice(0, limit);
+    }
 
-        return Promise.resolve(entities.slice(0, limit));
+    get(query, limit) {
+        const options = this._get(query, limit)
+            .map(option => _.omit(option, 'rank'));
+        return Promise.resolve({options});
     }
 
     static fromSOQL() {
@@ -53,8 +56,7 @@ function downloadEntities() {
     const pagesize = 10000;
     const query = new SOQL(Constants.ENTITY_URL)
         .token(Constants.APP_TOKEN)
-        .select('id,name,rank')
-        .order('id')
+        .order('rank', 'desc')
         .limit(pagesize);
 
     return Promise.all(_.range(pages).map(page => {

@@ -40,7 +40,15 @@ function getQuery(request) {
         .then(query => Promise.resolve(Stopwords.strip(query)));
 }
 
-const entitySuggest = EntitySuggest.fromSOQL();
+// The entity autosuggest must pull down the entire ODN Entities dataset.
+// If this fails, fall back to the old entities autosuggest.
+let entitySuggest = EntitySuggest.fromSOQL().then(suggest => {
+    return Promise.resolve(suggest);
+}).catch(error => {
+    console.error('failed to load entities for entity suggest; falling back to dataset');
+    console.error(error);
+    entitySuggest = null;
+});
 
 function getAutosuggestSource(request) {
     let type = request.params.type;
@@ -50,7 +58,7 @@ function getAutosuggestSource(request) {
 
     type = type.toLowerCase();
 
-    if (type === 'entity')
+    if (type === 'entity' && !_.isNil(entitySuggest))
         return entitySuggest;
 
     if (type in AutosuggestSources)
