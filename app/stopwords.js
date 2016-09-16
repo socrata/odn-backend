@@ -14,10 +14,8 @@ class Stopwords {
      */
     importantWords(string) {
         return string
-            .replace(/[\.,\(\)]/g, '')
-            .replace(/[\\\/_-]/g, ' ')
             .toLowerCase()
-            .split(' ')
+            .match(/\b(\w+)\b/g)
             .filter(word => !this.stopwords.has(word));
     }
 

@@ -106,6 +106,14 @@ class Sources {
         return _.findKey(this.topics, topic => datasetID in topic.datasets);
     }
 
+    variables() {
+        return _.flatMap(_.values(this.topics), topic => {
+            return _.flatMap(_.values(topic.datasets), dataset => {
+                return _.values(dataset.variables);
+            });
+        });
+    }
+
     static fromFile(sourcePath, attributionPath) {
         return new Sources(readJSON(sourcePath), readJSON(attributionPath));
     }

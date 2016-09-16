@@ -2,10 +2,6 @@
 
 const _ = require('lodash');
 
-const RadixTree = require('./radix-tree');
-const Constants = require('../constants');
-const SOQL = require('../soql');
-
 class EntitySuggest {
     constructor(entityRadixTree) {
         this.id = 'entity';
@@ -13,7 +9,7 @@ class EntitySuggest {
     }
 
     get(query, limit) {
-        const options = this.tree.get(query)
+        const options = this.tree.withPrefix(query)
             .slice(0, limit)
             .map(option => _.omit(option, 'rank'));
         return Promise.resolve({options});

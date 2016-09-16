@@ -12,10 +12,10 @@ class EntityRadixTree {
         this.tree = RadixTree.fromStrings(_.keys(this.nameToEntities));
     }
 
-    get(query) {
-        if (_.isEmpty(query)) return [];
-        query = clean(query);
-        const names = this.tree.withPrefix(query);
+    withPrefix(prefix) {
+        if (_.isEmpty(prefix)) return [];
+        prefix = clean(prefix);
+        const names = this.tree.withPrefix(prefix);
         return _.flatMap(names, _.propertyOf(this.nameToEntities));
     }
 
