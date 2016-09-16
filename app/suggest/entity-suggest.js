@@ -22,11 +22,11 @@ class EntitySuggest {
             .orderBy(['rank'], ['desc'])
             .value();
 
-        return entities.slice(0, limit);
+        return Promise.resolve(entities.slice(0, limit));
     }
 
-    fromSOQL() {
-        downloadEntities().then(entities => {
+    static fromSOQL() {
+        return downloadEntities().then(entities => {
             return Promise.resolve(new EntitySuggest(entities));
         });
     }
@@ -61,7 +61,10 @@ function downloadEntities() {
         return query.clone().offset(page * pagesize).send();
     })).then(entities => {
         entities = _.concat.apply(this, entities);
+        entities.forEach(entity => entity.rank = parseInt(entity.rank, 10));
         return Promise.resolve(entities);
     });
 }
+
+module.exports = EntitySuggest;
 

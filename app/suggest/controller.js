@@ -8,6 +8,7 @@ const notFound = Exception.notFound;
 const Constants = require('../constants');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
+const EntitySuggest = require('./entity-suggest');
 const ParseRequest = require('../parse-request');
 const entitiesWithData = require('../entities-with-data');
 
@@ -39,6 +40,8 @@ function getQuery(request) {
         .then(query => Promise.resolve(Stopwords.strip(query)));
 }
 
+const entitySuggest = EntitySuggest.fromSOQL();
+
 function getAutosuggestSource(request) {
     let type = request.params.type;
 
@@ -46,6 +49,9 @@ function getAutosuggestSource(request) {
         return Promise.reject(invalid('type of result to suggest required'));
 
     type = type.toLowerCase();
+
+    if (type === 'entity')
+        return entitySuggest;
 
     if (type in AutosuggestSources)
         return Promise.resolve(AutosuggestSources[type]);
