@@ -32,7 +32,7 @@ function getNameToEntities(entities) {
     entities.forEach(entity => {
         const name = clean(entity.name);
         if (name in nameToEntities) nameToEntities[name].push(entity);
-        nameToEntities[name] = [entity];
+        else nameToEntities[name] = [entity];
     });
 
     return nameToEntities;

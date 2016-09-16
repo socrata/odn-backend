@@ -9,6 +9,7 @@ const Stopwords = require('../stopwords');
 
 class VariableRadixTree {
     constructor(variables) {
+        this.variables = variables;
         this.nameToEntities = getNameToEntities(variables);
         this.tree = RadixTree.fromStrings(_.keys(this.nameToEntities));
     }
@@ -22,7 +23,7 @@ class VariableRadixTree {
 
     static fromSources() {
         const variables = Sources.variables()
-            .map(variable => _.pick(variable, ['name', 'id']));
+            .map(variable => _.pick(variable, ['name', 'id', 'rank']));
         return new VariableRadixTree(variables);
     }
 }
@@ -31,9 +32,10 @@ function getNameToEntities(entities) {
     const nameToEntities = {};
 
     entities.forEach(entity => {
-        const name = clean(entity.name);
-        if (name in nameToEntities) nameToEntities[name].push(entity);
-        nameToEntities[name] = [entity];
+        Stopwords.importantWords(entity.name).forEach(name => {
+            if (name in nameToEntities) nameToEntities[name].push(entity);
+            else nameToEntities[name] = [entity];
+        });
     });
 
     return nameToEntities;

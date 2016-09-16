@@ -109,7 +109,10 @@ class Sources {
     variables() {
         return _.flatMap(_.values(this.topics), topic => {
             return _.flatMap(_.values(topic.datasets), dataset => {
-                return _.values(dataset.variables);
+                return _.values(dataset.variables).map((variable, index) => {
+                    variable.rank = index;
+                    return variable;
+                });
             });
         });
     }

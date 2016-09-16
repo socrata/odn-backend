@@ -9,7 +9,9 @@ const Constants = require('../constants');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
 const EntityRadixTree = require('./entity-radix-tree');
+const VariableRadixTree = require('./variable-radix-tree');
 const EntitySuggest = require('./entity-suggest');
+const QuestionSuggest = require('./question-suggest');
 const ParseRequest = require('../parse-request');
 const entitiesWithData = require('../entities-with-data');
 
@@ -42,8 +44,17 @@ function getQuery(request) {
 }
 
 const entityRadixTree = EntityRadixTree.fromSOQL();
+const variableRadixTree = VariableRadixTree.fromSources();
+
 const entitySuggest = entityRadixTree.then(tree => {
     return Promise.resolve(new EntitySuggest(tree));
+});
+
+const questionSuggest = Promise.all([
+    entityRadixTree,
+    variableRadixTree
+]).then(([entityTree, variableTree]) => {
+    return Promise.resolve(new QuestionSuggest(entityTree, variableTree));
 });
 
 function getAutosuggestSource(request) {
@@ -54,8 +65,8 @@ function getAutosuggestSource(request) {
 
     type = type.toLowerCase();
 
-    if (type === 'entity' && !_.isNil(entitySuggest))
-        return entitySuggest;
+    if (type === 'entity') return entitySuggest;
+    if (type === 'question') return questionSuggest;
 
     if (type in AutosuggestSources)
         return Promise.resolve(AutosuggestSources[type]);
