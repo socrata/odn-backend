@@ -370,7 +370,7 @@
         "datasets": {
             "fbi_ucr": {
                 "name": "Crime",
-                "fxf": "eds5-udzt",
+                "fxf": "rzhy-aw2m",
                 "constraints": ["crime_type", ["year", "desc"]],
                 "variables": {
                     "count": {
@@ -379,7 +379,7 @@
                     },
                     "rate": {
                         "name": "Crime incident rate per 100,000 people",
-                        "type": "ratio100k",
+                        "type": "number",
                         "stoplight": true,
                         "reverse": true
                     }
