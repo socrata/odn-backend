@@ -52,8 +52,8 @@ class QuestionSuggest {
 
 function allWithPrefix(tree, words) {
     return _(words).flatMap(word => {
-        const options = tree.withPrefix(word);
-        return options.length > THRESHOLD ? [] : options;
+        const options = tree.withPrefix(word, THRESHOLD);
+        return options.length >= THRESHOLD ? [] : options;
     });
 }
 

@@ -2,45 +2,15 @@
 
 const _ = require('lodash');
 
-const RadixTree = require('./radix-tree');
+const ObjectRadixTree = require('./object-radix-tree');
 const Constants = require('../constants');
 const SOQL = require('../soql');
 
-class EntityRadixTree {
-    constructor(entities) {
-        this.nameToEntities = getNameToEntities(entities);
-        this.tree = RadixTree.fromStrings(_.keys(this.nameToEntities));
-    }
-
-    withPrefix(prefix) {
-        if (_.isEmpty(prefix)) return [];
-        prefix = clean(prefix);
-        const names = this.tree.withPrefix(prefix);
-        return _.flatMap(names, _.propertyOf(this.nameToEntities));
-    }
-
-    static fromSOQL() {
-        return downloadEntities().then(entities => {
-            return Promise.resolve(new EntityRadixTree(entities));
-        });
-    }
-}
-
-function getNameToEntities(entities) {
-    const nameToEntities = {};
-
-    entities.forEach(entity => {
-        const name = clean(entity.name);
-        if (name in nameToEntities) nameToEntities[name].push(entity);
-        else nameToEntities[name] = [entity];
+module.exports = function() {
+    return downloadEntities().then(entities => {
+        return Promise.resolve(new ObjectRadixTree(entities, entityToNames, clean));
     });
-
-    return nameToEntities;
-}
-
-function clean(string) {
-    return string.replace(/[\W_]/g, '').toLowerCase();
-}
+};
 
 function downloadEntities() {
     const pages = 10;
@@ -59,5 +29,11 @@ function downloadEntities() {
     });
 }
 
-module.exports = EntityRadixTree;
+function entityToNames(entity) {
+    return [entity.name];
+}
+
+function clean(string) {
+    return string.replace(/[\W_]/g, '').toLowerCase();
+}
 

@@ -5,6 +5,8 @@ const _ = require('lodash');
 class RadixTree {
     /**
      * Creates a radix tree from a list of lists of characters.
+     *
+     * Maintains ordering of the list.
      */
     constructor(list) {
         // Mapping from character to child radix tree.

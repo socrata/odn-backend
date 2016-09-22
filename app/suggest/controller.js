@@ -8,8 +8,8 @@ const notFound = Exception.notFound;
 const Constants = require('../constants');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
-const EntityRadixTree = require('./entity-radix-tree');
-const VariableRadixTree = require('./variable-radix-tree');
+const createEntityRadixTree = require('./entity-radix-tree');
+const createVariableRadixTree = require('./variable-radix-tree');
 const EntitySuggest = require('./entity-suggest');
 const QuestionSuggest = require('./question-suggest');
 const ParseRequest = require('../parse-request');
@@ -43,8 +43,8 @@ function getQuery(request) {
         .then(query => Promise.resolve(Stopwords.strip(query)));
 }
 
-const entityRadixTree = EntityRadixTree.fromSOQL();
-const variableRadixTree = VariableRadixTree.fromSources();
+const entityRadixTree = createEntityRadixTree();
+const variableRadixTree = createVariableRadixTree();
 
 const entitySuggest = entityRadixTree.then(tree => {
     return Promise.resolve(new EntitySuggest(tree));
