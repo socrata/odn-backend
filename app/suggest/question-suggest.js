@@ -70,8 +70,8 @@ function questionsWithData(entities, variables) {
     return questionsWithDataQuery(entities, variables).then(rows => {
         const questions = [];
 
-        entities.forEach(entity => {
-            variables.forEach(variable => {
+        variables.forEach(variable => {
+            entities.forEach(entity => {
                 if (_.find(rows, {id: entity.id, variable: variable.id}))
                     questions.push({entity, variable});
             });
