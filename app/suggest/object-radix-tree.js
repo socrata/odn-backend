@@ -49,20 +49,35 @@ class ObjectRadixTree {
 
     getCandidates(words) {
         return _.flatMap(words, word => {
-            const options = this.withPrefix(word, THRESHOLD);
-            return options.length >= THRESHOLD ? [] : options;
+            return this.withPrefix(word, THRESHOLD);
         });
     }
 
     rankCandidates(candidates) {
-        return _(candidates)
-            .countBy('id')
-            .toPairs()
-            .orderBy('1', 'desc')
-            .map(_.first)
-            .map(_.propertyOf(this.idToObject))
-            .value();
+        if (!(candidates.length)) return [];
+
+        const scores = scoreCandidates(candidates);
+        const bestScore = scores[0].score;
+        const withBestScore = scores
+            .filter(candidate => candidate.score === bestScore);
+
+        return this.idsToObjects(withBestScore.map(_.property('id')));
     }
+
+    idsToObjects(ids) {
+        return ids.map(_.propertyOf(this.idToObject));
+    }
+}
+
+function scoreCandidates(candidates) {
+    return _(candidates)
+        .countBy('id')
+        .toPairs()
+        .map(([id, score]) => {
+            return {id, score};
+        })
+        .orderBy('score', 'desc')
+        .value();
 }
 
 function objectToNames(object) {

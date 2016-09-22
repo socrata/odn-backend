@@ -18,8 +18,8 @@ class QuestionSuggest {
     get(query, limit) {
         if (limit > MAX_LIMIT) limit = MAX_LIMIT;
 
-        const entities = this.getEntities(query, limit);
-        const variables = this.getVariables(query, limit);
+        const entities = this.getEntities(query, MAX_LIMIT);
+        const variables = this.getVariables(query, MAX_LIMIT);
 
         return questionsWithData(entities, variables)
             .then(questions => Promise.resolve({options: questions.slice(0, limit)}));
