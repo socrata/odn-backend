@@ -3,56 +3,70 @@
 const _ = require('lodash');
 
 class RadixTree {
-    // takes a list of lists of characters e.g. [['a', 'b', 'c'], ['a, 'b', 'd']]
+    /**
+     * Creates a radix tree from a list of lists of characters.
+     */
     constructor(list) {
-        // Storing the list in each node will take a lot of memory,
-        // we should probably reconstruct this list on demand instead.
-        // This will cut memory usage at least in half.
-        this.list = list;
-        this.children = {};
-        this.data = [];
+        // Mapping from character to child radix tree.
+        this.children = new Map();
+        this.leaf = false;
 
         list.forEach(string => {
-            if (string.length === 0) return this.data.push(1);
+            if (string.length === 0) {
+                this.leaf = true;
+                return;
+            }
+
             const head = string[0];
             const tail = _.tail(string);
 
-            if (head in this.children) this.children[head].push(tail);
-            else this.children[head] = [tail];
+            if (!(this.children.has(head))) this.children.set(head, []);
+            this.children.get(head).push(tail);
         });
 
-        this.children = _.mapValues(this.children, childList => new RadixTree(childList));
-    }
-
-    _contains(characters) {
-        if (!(characters.length)) return false;
-
-        const head = characters[0];
-        const tail = _.tail(characters);
-
-        if (characters.length === 1) return head in this.children;
-        return head in this.children && this.children[head]._contains(tail);
-    }
-
-    contains(string) {
-        return this._contains(toCharacters(string));
-    }
-
-    _withPrefix(characters) {
-        if (!(characters.length)) {
-            return this.list;
-        } else if (characters[0] in this.children) {
-            const child = this.children[characters[0]];
-            return child._withPrefix(_.tail(characters));
-        } else {
-            return [];
+        for (const [key, childList] of this.children.entries()) {
+            this.children.set(key, new RadixTree(childList));
         }
     }
 
-    withPrefix(string) {
-        return this._withPrefix(toCharacters(string)).map(substring => {
-            return string + substring.join('');
+    /**
+     * Returns an iterator over all nodes in the tree in order of insertion.
+     */
+    * entries(buffer) {
+        buffer = buffer || [];
+
+        if (this.leaf) yield buffer;
+
+        if (!_.isEmpty(this.children)) {
+            for (const [character, childTree] of this.children) {
+                yield * childTree.entries(buffer.concat(character));
+            }
+        }
+    }
+
+    /**
+     * Returns up to limit strings in the tree with the given prefix.
+     * If the string is null or undefined, this will return an empty list.
+     * If limit is not provided or is not an integer, results will not be limited.
+     */
+    withPrefix(string, limit) {
+        if (_.isNil(string)) return [];
+        const tree = this._withPrefix(toCharacters(string));
+        if (_.isNil(tree)) return [];
+
+        return take(tree.entries(), limit).map(characters => {
+            return string + characters.join('');
         });
+    }
+
+    /**
+     * Returns the subtree with the given prefix or null if no such tree exists.
+     */
+    _withPrefix(characters) {
+        if (_.isNil(characters)) return null;
+        if (!(characters.length)) return this;
+        if (!(this.children.has(characters[0]))) return null;
+        return this.children.get(characters[0])._withPrefix(_.tail(characters));
     }
 
     /**
@@ -63,8 +77,29 @@ class RadixTree {
     }
 }
 
+/**
+ * String to list of characters.
+ */
 function toCharacters(string) {
     return string.split('');
+}
+
+/**
+ * Takes limit elements from the generator and returns them as a list.
+ *
+ * If limit is not provided or not an integer, returns all items in the generator
+ * which could be infinite.
+ */
+function take(generator, limit) {
+    let values = [];
+    const limited = _.isInteger(limit);
+
+    for (const value of generator) {
+        if (limited && values.length >= limit) return values;
+        values.push(value);
+    }
+
+    return values;
 }
 
 module.exports = RadixTree;
