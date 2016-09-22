@@ -5,12 +5,11 @@ const _ = require('lodash');
 const ObjectRadixTree = require('./object-radix-tree');
 const Constants = require('../constants');
 const SOQL = require('../soql');
+const Stopwords = require('../stopwords');
 
 module.exports = function() {
     return downloadEntities().then(entities => {
-        const tree = new ObjectRadixTree(entities, entityToNames, clean);
-        tree.entities = entities;
-        return Promise.resolve(tree);
+        return Promise.resolve(new ObjectRadixTree(entities));
     });
 };
 
@@ -29,13 +28,5 @@ function downloadEntities() {
         entities.forEach(entity => entity.rank = parseInt(entity.rank, 10));
         return Promise.resolve(entities);
     });
-}
-
-function entityToNames(entity) {
-    return [entity.name];
-}
-
-function clean(string) {
-    return string.replace(/[\W_]/g, '').toLowerCase();
 }
 

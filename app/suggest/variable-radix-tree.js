@@ -11,17 +11,6 @@ module.exports = function() {
     const variables = Sources.variables()
         .map(variable => _.pick(variable, ['name', 'id', 'rank']));
 
-    const tree = new ObjectRadixTree(variables, variableToNames, clean);
-    tree.variables = variables;
-
-    return tree;
+    return new ObjectRadixTree(variables);
 };
-
-function variableToNames(variable) {
-    return Stopwords.importantWords(variable.name);
-}
-
-function clean(string) {
-    return Stopwords.importantWords(string).join('');
-}
 

@@ -7,7 +7,6 @@ const lowercase = require('../lowercase');
 const Constants = require('../constants');
 const SOQL = require('../soql');
 
-const THRESHOLD = 100;
 const MAX_LIMIT = 10;
 
 class QuestionSuggest {
@@ -19,51 +18,23 @@ class QuestionSuggest {
     get(query, limit) {
         if (limit > MAX_LIMIT) limit = MAX_LIMIT;
 
-        const words = Stopwords.importantWords(query);
-
-        const entities = this.getEntities(words, limit);
-        const variables = this.getVariables(words, limit);
+        const entities = this.getEntities(query, limit);
+        const variables = this.getVariables(query, limit);
 
         return questionsWithData(entities, variables)
             .then(questions => Promise.resolve({options: questions.slice(0, limit)}));
     }
 
-    getEntities(words, limit) {
-        let entities = allWithPrefix(this.entityTree, words);
-        if (!(entities.length)) entities = this.entityTree.entities;
-
-        return entities
-            .slice(0, limit)
+    getEntities(phrase, limit) {
+        return this.entityTree.withPhrase(phrase, limit)
             .map(entity => _.omit(entity, ['rank']));
     }
 
-    getVariables(words, limit) {
-        let variables = allWithPrefix(this.variableTree, words);
-        if (!(variables.length)) variables = this.variableTree.variables;
-
-        return _(variables)
-            .slice(0, limit)
+    getVariables(phrase, limit) {
+        return this.variableTree.withPhrase(phrase, limit)
             .map(variable => _.omit(variable, ['rank']))
-            .map(variable => _.extend(variable, {name: lowercase(variable.name)}))
-            .value();
+            .map(variable => _.extend(variable, {name: lowercase(variable.name)}));
     }
-}
-
-function allWithPrefix(tree, words) {
-    const allMatches = _.flatMap(words, word => {
-        const options = tree.withPrefix(word, THRESHOLD);
-        return options.length >= THRESHOLD ? [] : options;
-    });
-
-    const idToObject = _.keyBy(allMatches, 'id');
-
-    return _(allMatches)
-        .countBy('id')
-        .toPairs()
-        .orderBy('1', 'desc')
-        .map(_.first)
-        .map(_.propertyOf(idToObject))
-        .value();
 }
 
 function questionsWithData(entities, variables) {
