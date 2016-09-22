@@ -21,21 +21,22 @@ class QuestionSuggest {
 
         const words = Stopwords.importantWords(query);
 
-        const entities = this.getEntities(words);
-        const variables = this.getVariables(words);
+        const entities = this.getEntities(words, limit);
+        const variables = this.getVariables(words, limit);
 
-        return questionsWithData(entities.slice(0, limit), variables.slice(0, limit))
+        return questionsWithData(entities, variables)
             .then(questions => Promise.resolve({options: questions.slice(0, limit)}));
     }
 
-    getEntities(words) {
-        return allWithPrefix(this.entityTree, words)
-            .orderBy(['rank'], ['desc'])
-            .map(entity => _.omit(entity, ['rank']))
-            .value();
+    getEntities(words, limit) {
+        let entities = allWithPrefix(this.entityTree, words).value();
+        if (!(entities.length)) entities = this.entityTree.entities;
+        return entities
+            .slice(0, limit)
+            .map(entity => _.omit(entity, ['rank']));
     }
 
-    getVariables(words) {
+    getVariables(words, limit) {
         let variables = allWithPrefix(this.variableTree, words)
             .uniqBy('id')
             .value();
@@ -44,6 +45,7 @@ class QuestionSuggest {
 
         return _(variables)
             .orderBy(['rank'], ['asc'])
+            .slice(0, limit)
             .map(variable => _.omit(variable, ['rank']))
             .map(variable => _.extend(variable, {name: lowercase(variable.name)}))
             .value();

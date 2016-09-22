@@ -8,7 +8,9 @@ const SOQL = require('../soql');
 
 module.exports = function() {
     return downloadEntities().then(entities => {
-        return Promise.resolve(new ObjectRadixTree(entities, entityToNames, clean));
+        const tree = new ObjectRadixTree(entities, entityToNames, clean);
+        tree.entities = entities;
+        return Promise.resolve(tree);
     });
 };
 
