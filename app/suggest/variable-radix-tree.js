@@ -18,7 +18,7 @@ module.exports = function() {
 };
 
 function variableToNames(variable) {
-    return [variable.name].concat(Stopwords.importantWords(variable.name));
+    return Stopwords.importantWords(variable.name);
 }
 
 function clean(string) {

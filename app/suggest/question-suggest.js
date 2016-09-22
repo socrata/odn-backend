@@ -29,22 +29,19 @@ class QuestionSuggest {
     }
 
     getEntities(words, limit) {
-        let entities = allWithPrefix(this.entityTree, words).value();
+        let entities = allWithPrefix(this.entityTree, words);
         if (!(entities.length)) entities = this.entityTree.entities;
+
         return entities
             .slice(0, limit)
             .map(entity => _.omit(entity, ['rank']));
     }
 
     getVariables(words, limit) {
-        let variables = allWithPrefix(this.variableTree, words)
-            .uniqBy('id')
-            .value();
-
+        let variables = allWithPrefix(this.variableTree, words);
         if (!(variables.length)) variables = this.variableTree.variables;
 
         return _(variables)
-            .orderBy(['rank'], ['asc'])
             .slice(0, limit)
             .map(variable => _.omit(variable, ['rank']))
             .map(variable => _.extend(variable, {name: lowercase(variable.name)}))
@@ -53,10 +50,20 @@ class QuestionSuggest {
 }
 
 function allWithPrefix(tree, words) {
-    return _(words).flatMap(word => {
+    const allMatches = _.flatMap(words, word => {
         const options = tree.withPrefix(word, THRESHOLD);
         return options.length >= THRESHOLD ? [] : options;
     });
+
+    const idToObject = _.keyBy(allMatches, 'id');
+
+    return _(allMatches)
+        .countBy('id')
+        .toPairs()
+        .orderBy('1', 'desc')
+        .map(_.first)
+        .map(_.propertyOf(idToObject))
+        .value();
 }
 
 function questionsWithData(entities, variables) {
