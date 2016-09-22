@@ -32,7 +32,7 @@ function getNameToEntities(entities) {
     const nameToEntities = {};
 
     entities.forEach(entity => {
-        Stopwords.importantWords(entity.name).forEach(name => {
+        [entity.name].concat(Stopwords.importantWords(entity.name)).forEach(name => {
             if (name in nameToEntities) nameToEntities[name].push(entity);
             else nameToEntities[name] = [entity];
         });
