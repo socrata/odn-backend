@@ -48,7 +48,7 @@ class ObjectRadixTree {
      */
     match(phrase, limit) {
         const words = this.normalize(phrase);
-        const candidates = this.getCandidates(words)
+        const candidates = scoreCandidates(this.getCandidates(words))
             .filter(candidate => candidate.score === words.length);
 
         return this.lookupCandidates(candidates, limit);
@@ -56,7 +56,9 @@ class ObjectRadixTree {
 
     withPhrase(phrase, limit) {
         const words = this.normalize(phrase);
-        const candidates = this.getCandidates(words);
+        let candidates = this.getCandidates(words);
+        if (!(candidates.length)) candidates = this.objects;
+        candidates = scoreCandidates(candidates);
 
         if (!(candidates.length)) return [];
 
@@ -73,9 +75,7 @@ class ObjectRadixTree {
      * a reference to it appears in the phrase.
      */
     getCandidates(words) {
-        let candidates = _.flatMap(words, word => this.withPrefix(word, THRESHOLD));
-        if (!(candidates.length)) candidates = this.objects;
-        return scoreCandidates(candidates);
+        return _.flatMap(words, word => this.withPrefix(word, THRESHOLD));
     }
 
     lookupCandidates(candidates, limit) {
