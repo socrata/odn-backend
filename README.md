@@ -151,5 +151,6 @@ Once apps are built around the ODN API, alerts will be sent to on call.
 
 ## Adding Data to the ODN
 
-See [`/data`](/data) for information on adding data to the ODN.
+Check the [ODN Wiki](https://github.com/socrata/opendatanetwork.com/wiki/Adding-Data-to-the-ODN-Backend)
+for instructions on loading data into the ODN backend.
 
