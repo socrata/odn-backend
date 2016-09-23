@@ -189,7 +189,7 @@ const entitySchema = {
     properties: {
         options: {
             type: 'array',
-            etems: {'$ref': '#/definitions/entity'}
+            items: {'$ref': '#/definitions/entity'}
         }
     },
     required: ['options']
@@ -219,10 +219,13 @@ const questionSchema = {
         question: {
             type: 'object',
             properties: {
-                entity: {'$ref': '#/definitions/entity'},
+                entities: {
+                    type: 'array',
+                    items: {'$ref': '#/definitions/entity'}
+                },
                 variable: {'$ref': '#/definitions/variable'},
             },
-            required: ['entity', 'variable']
+            required: ['entities', 'variable']
         }
     },
     type: 'object',

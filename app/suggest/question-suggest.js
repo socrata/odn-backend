@@ -38,17 +38,39 @@ class QuestionSuggest {
 }
 
 function questionsWithData(entities, variables) {
+    return singleEntityQuestions(entities, variables).then(questions => {
+        return Promise.resolve(comparisonQuestions(questions));
+    });
+}
+
+function singleEntityQuestions(entities, variables) {
     return questionsWithDataQuery(entities, variables).then(rows => {
-        const questions = [];
+        let questions = [];
 
         variables.forEach(variable => {
             entities.forEach(entity => {
                 if (_.find(rows, {id: entity.id, variable: variable.id}))
-                    questions.push({entity, variable});
+                    questions.push({variable, entity});
             });
         });
 
         return Promise.resolve(questions);
+    });
+}
+
+function comparisonQuestions(singleEntityQuestions) {
+    const groups = _.groupBy(singleEntityQuestions, question => {
+        return question.entity.type + question.variable.id;
+    });
+
+    return _.flatMap(_.values(groups), group => {
+        const variable = group[0].variable;
+        const entities = group.map(_.property('entity'));
+
+        if (entities.length === 2) return {variable, entities};
+        return entities.map(entity => {
+            return {variable, entities: [entity]};
+        });
     });
 }
 
