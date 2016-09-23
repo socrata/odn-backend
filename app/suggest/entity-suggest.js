@@ -9,7 +9,7 @@ class EntitySuggest {
     }
 
     get(query, limit) {
-        const options = this.tree.withPhrase(query, limit)
+        const options = this.tree.match(query, limit)
             .map(option => _.omit(option, 'rank'));
 
         return Promise.resolve({options});

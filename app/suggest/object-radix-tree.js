@@ -36,78 +36,64 @@ class ObjectRadixTree {
      */
     withPrefix(prefix, limit) {
         if (_.isEmpty(prefix)) return [];
-
         const names = this.tree.withPrefix(prefix, limit);
-
         if (_.isEmpty(names)) return [];
-
         return _.flatMap(names, name => this.objectToNames.get(name));
-            /*
-            return this.objectToNames.get(name).map(candidate => {
-                const score = name === 'metro' ? 0.5 : 1.0;
-                return {candidate, score};
-            });
-        });
-        */
+    }
+
+    /**
+     * Finds all of the entities in the tree which match the whole phrase.
+     *
+     * For example, "seattle" matches "Seattle, WA" but "seattle population" does not.
+     */
+    match(phrase, limit) {
+        const words = this.normalize(phrase);
+        const candidates = this.getCandidates(words)
+            .filter(candidate => candidate.score === words.length);
+
+        return this.lookupCandidates(candidates, limit);
     }
 
     withPhrase(phrase, limit) {
         const words = this.normalize(phrase);
-        let candidates = this.getCandidates(words);
-        if (!(candidates.length)) candidates = this.objects;
-        return this.rankCandidates(candidates).slice(0, limit);
-    }
+        const candidates = this.getCandidates(words);
 
-    getCandidates(words) {
-        return _.flatMap(words, word => {
-            return this.withPrefix(word, THRESHOLD);
-        });
-    }
-
-    rankCandidates(candidates) {
         if (!(candidates.length)) return [];
 
-        const scores = scoreCandidates(candidates);
-        const bestScore = scores[0].score;
-        const withBestScore = scores
-            .filter(candidate => candidate.score === bestScore);
+        const bestScore = candidates[0].score;
+        const withBestScore = candidates
+            .filter(candidate => candidate.score > bestScore / 2);
 
-        // Restore filtering
-        const objects = this.idsToObjects(scores.map(_.property('id')));
-        return objects;
+        return this.lookupCandidates(withBestScore, limit);
     }
 
-    idsToObjects(ids) {
-        return ids.map(_.propertyOf(this.idToObject));
+    /**
+     * Generates a list of candidate objects from a list of words.
+     * Each candidate has a score which is the number of times that
+     * a reference to it appears in the phrase.
+     */
+    getCandidates(words) {
+        let candidates = _.flatMap(words, word => this.withPrefix(word, THRESHOLD));
+        if (!(candidates.length)) candidates = this.objects;
+        return scoreCandidates(candidates);
+    }
+
+    lookupCandidates(candidates, limit) {
+        return candidates
+            .slice(0, limit)
+            .map(candidate => this.idToObject[candidate.id]);
     }
 }
 
 function scoreCandidates(candidates) {
     return _(candidates)
         .countBy('id')
-        /*
-        .groupBy('candidate.id')
-        .mapValues(scores => _.sumBy(scores, 'score'))
-        */
         .toPairs()
         .map(([id, score]) => {
             return {id, score};
         })
         .orderBy('score', 'desc')
         .value();
-}
-
-// We need to strip stopwords for variable names but not entity names.
-function objectToNames(object) {
-    return toWords(object.name).map(clean);
-}
-
-function clean(string) {
-    return string.toLowerCase();
-}
-
-function toWords(phrase) {
-    return phrase.match(/\b(\w+)\b/g);
 }
 
 module.exports = ObjectRadixTree;

@@ -6,6 +6,7 @@ const ObjectRadixTree = require('./object-radix-tree');
 const Constants = require('../constants');
 const SOQL = require('../soql');
 const Stopwords = require('../stopwords');
+const Aliases = require('../aliases');
 
 module.exports = function() {
     return downloadEntities().then(entities => {
@@ -14,7 +15,15 @@ module.exports = function() {
 };
 
 function normalize(string) {
-    return Stopwords.words(string.toLowerCase());
+    return Stopwords.words(string.toLowerCase())
+        .map(expandStateAbbreviation);
+}
+
+function expandStateAbbreviation(word) {
+    if (word.length !== 2) return word;
+    const aliases = Aliases.get(word);
+    if (!(aliases.length)) return word;
+    return aliases[0].toLowerCase();
 }
 
 function downloadEntities() {
