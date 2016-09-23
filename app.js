@@ -29,7 +29,6 @@ app.get('/data/v1/values', require('./app/data/values/controller'));
 app.get('/data/v1/map/new', require('./app/data/map/new'));
 app.get('/suggest/v1/:type', require('./app/suggest/controller'));
 app.get('/search/v1/dataset', require('./app/search/dataset'));
-app.get('/search/v1/question', require('./app/search/question'));
 app.get('/entity/v1', require('./app/entity/controller'));
 app.get('/entity/v1/:relation', require('./app/related/controller'));
 
