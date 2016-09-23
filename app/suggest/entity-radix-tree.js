@@ -9,9 +9,13 @@ const Stopwords = require('../stopwords');
 
 module.exports = function() {
     return downloadEntities().then(entities => {
-        return Promise.resolve(new ObjectRadixTree(entities));
+        return Promise.resolve(new ObjectRadixTree(entities, normalize));
     });
 };
+
+function normalize(string) {
+    return Stopwords.words(string.toLowerCase());
+}
 
 function downloadEntities() {
     const pages = 10;

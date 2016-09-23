@@ -11,6 +11,10 @@ module.exports = function() {
     const variables = Sources.variables()
         .map(variable => _.pick(variable, ['name', 'id', 'rank']));
 
-    return new ObjectRadixTree(variables);
+    return new ObjectRadixTree(variables, normalize);
 };
+
+function normalize(string) {
+    return Stopwords.importantWords(string);
+}
 

@@ -10,16 +10,17 @@ class Stopwords {
     constructor(stopwords) {
         this.stopwords = new Set(stopwords);
     }
+
     /**
      * Extracts all important words from a string ignoring all stopwords.
      */
     importantWords(string) {
-        const words = string
-            .toLowerCase()
-            .match(/\b(\w+)\b/g);
-
-        if (_.isEmpty(words)) return [];
+        const words = this.words(string.toLowerCase());
         return words.filter(word => !this.stopwords.has(word));
+    }
+
+    words(string) {
+        return string.match(/\b(\w+)\b/g);
     }
 
     /**

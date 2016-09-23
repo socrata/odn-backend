@@ -20,7 +20,7 @@ module.exports = (request, response) => {
     const token = request.token;
 
     return Promise.all([
-        getQuery(request),
+        ParseRequest.getQuery(request),
         getAutosuggestSource(request),
         getLimit(request)
     ]).then(([query, autosuggestSource, limit]) => {
@@ -37,11 +37,6 @@ module.exports = (request, response) => {
         }).catch(errorHandler);
     }).catch(errorHandler);
 };
-
-function getQuery(request) {
-    return ParseRequest.getQuery(request)
-        .then(query => Promise.resolve(Stopwords.strip(query)));
-}
 
 const entityRadixTree = createEntityRadixTree();
 const variableRadixTree = createVariableRadixTree();

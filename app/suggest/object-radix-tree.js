@@ -14,14 +14,16 @@ class ObjectRadixTree {
     /**
      * Creates a new ObjectRadixTree.
      *  objects: List of objects with id and name attributes.
+     *  normalize: Breaks a phrase into words.
      */
-    constructor(objects) {
+    constructor(objects, normalize) {
         this.objects = objects;
         this.idToObject = _.keyBy(objects, 'id');
+        this.normalize = normalize;
         this.objectToNames = new MultiMap();
 
         objects.forEach(object => {
-            objectToNames(object).forEach(name => {
+            normalize(object.name).forEach(name => {
                 this.objectToNames.add((name), object);
             });
         });
@@ -34,14 +36,23 @@ class ObjectRadixTree {
      */
     withPrefix(prefix, limit) {
         if (_.isEmpty(prefix)) return [];
-        prefix = clean(prefix);
+
         const names = this.tree.withPrefix(prefix, limit);
+
         if (_.isEmpty(names)) return [];
+
         return _.flatMap(names, name => this.objectToNames.get(name));
+            /*
+            return this.objectToNames.get(name).map(candidate => {
+                const score = name === 'metro' ? 0.5 : 1.0;
+                return {candidate, score};
+            });
+        });
+        */
     }
 
     withPhrase(phrase, limit) {
-        const words = Stopwords.importantWords(phrase);
+        const words = this.normalize(phrase);
         let candidates = this.getCandidates(words);
         if (!(candidates.length)) candidates = this.objects;
         return this.rankCandidates(candidates).slice(0, limit);
@@ -61,7 +72,9 @@ class ObjectRadixTree {
         const withBestScore = scores
             .filter(candidate => candidate.score === bestScore);
 
-        return this.idsToObjects(withBestScore.map(_.property('id')));
+        // Restore filtering
+        const objects = this.idsToObjects(scores.map(_.property('id')));
+        return objects;
     }
 
     idsToObjects(ids) {
@@ -72,6 +85,10 @@ class ObjectRadixTree {
 function scoreCandidates(candidates) {
     return _(candidates)
         .countBy('id')
+        /*
+        .groupBy('candidate.id')
+        .mapValues(scores => _.sumBy(scores, 'score'))
+        */
         .toPairs()
         .map(([id, score]) => {
             return {id, score};
@@ -80,12 +97,17 @@ function scoreCandidates(candidates) {
         .value();
 }
 
+// We need to strip stopwords for variable names but not entity names.
 function objectToNames(object) {
-    return Stopwords.importantWords(object.name);
+    return toWords(object.name).map(clean);
 }
 
 function clean(string) {
-    return Stopwords.importantWords(string).join('');
+    return string.toLowerCase();
+}
+
+function toWords(phrase) {
+    return phrase.match(/\b(\w+)\b/g);
 }
 
 module.exports = ObjectRadixTree;
