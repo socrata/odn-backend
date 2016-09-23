@@ -165,7 +165,7 @@ describe('/suggest/v1', () => {
     });
 
     it('should respect the limit parameter', () => {
-        return suggest('entity?query= &limit=63').then(response => {
+        return suggest('entity?query=a&limit=63').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(entitySchema);
             expect(response.body.options).to.have.lengthOf(63);

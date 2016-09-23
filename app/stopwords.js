@@ -16,11 +16,12 @@ class Stopwords {
      */
     importantWords(string) {
         const words = this.words(string.toLowerCase());
+
         return words.filter(word => !this.stopwords.has(word));
     }
 
     words(string) {
-        return string.match(/\b(\w+)\b/g);
+        return string.match(/\b(\w+)\b/g) || [];
     }
 
     /**

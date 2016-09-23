@@ -15,7 +15,7 @@ module.exports = function() {
 };
 
 function normalize(string) {
-    return Stopwords.words(string.toLowerCase())
+    return Stopwords.importantWords(string)
         .map(expandStateAbbreviation);
 }
 
