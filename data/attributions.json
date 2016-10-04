@@ -39,6 +39,10 @@
     "f65": {
       "name" : "MICommunity Financial Dashboard",
       "url" : "http://michigan.insight.socrata.com"
+    },
+    "sahie": {
+      "name": "Small Area Health Insurance Estimates",
+      "urls": "http://www.census.gov/did/www/sahie/data/20082014/index.html"
     }
 }
 

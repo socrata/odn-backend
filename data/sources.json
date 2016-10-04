@@ -254,7 +254,7 @@
               },
               "searchTerms": ["health insurance", "healthcare", "coverage", "insurance"],
               "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum augue ac lorem malesuada at rhoncus turpis condimentum. Maecenas commodo sem ac magna posuere ultrices. Proin ut felis ac odio consectetur rutrum vel quis sem.",
-              "sources": [["sahie", "http://www.census.gov/did/www/sahie/data/20082014/index.html"]]
+              "sources": ["sahie"]
             },
 
             "environmental_health": {
