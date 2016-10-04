@@ -24,7 +24,7 @@ module.exports = (request, response, next) => {
 };
 
 function validate(token) {
-    const url = `http://${Constants.ODN_DATA_DOMAIN}/api/app_tokens/${token}`;
+    const url = `https://${Constants.ODN_DATA_DOMAIN}/api/app_tokens/${token}`;
     return Request.get(url).then(response => {
         if (_.isEmpty(response)) return Promise.reject(invalidAppToken(token));
         return Promise.resolve();
