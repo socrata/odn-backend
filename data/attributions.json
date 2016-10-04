@@ -42,7 +42,7 @@
     },
     "sahie": {
       "name": "Small Area Health Insurance Estimates",
-      "urls": "http://www.census.gov/did/www/sahie/data/20082014/index.html"
+      "url": "http://www.census.gov/did/www/sahie/data/20082014/index.html"
     }
 }
 
