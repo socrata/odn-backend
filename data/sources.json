@@ -233,6 +233,30 @@
 
     "health": {
         "datasets": {
+            "insurance" : {
+              "fxf": "vtkj-74g4",
+              "constraints": [["year", "desc"], "age", "race", "sex", "income"],
+              "variables": {
+                "pctui": {
+                  "name": "Percent uninsured",
+                  "type": "percent"
+                },
+                "nui": {
+                  "name": "Number of uninsured"
+                },
+                "pctic": {
+                  "name": "Percent insured",
+                  "type": "percent"
+                },
+                "nipr": {
+                  "name": "Total individuals"
+                }
+              },
+              "searchTerms": ["health insurance", "healthcare", "coverage", "insurance"],
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum augue ac lorem malesuada at rhoncus turpis condimentum. Maecenas commodo sem ac magna posuere ultrices. Proin ut felis ac odio consectetur rutrum vel quis sem.",
+              "sources": ["sahie"]
+            },
+
             "environmental_health": {
                 "fxf": "nax7-t6ga",
                 "constraints": [["year", "desc"]],

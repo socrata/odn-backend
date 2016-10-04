@@ -173,9 +173,9 @@ If you added a `rank` property, add the entity type to
 
 Now, you should be able to render maps of the new entity type.
 
-### Update [Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
+### Update [Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/gkgr-ab5r)
 
-The [ODN Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
+The [ODN Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/gkgr-ab5r)
 lets us quickly figure out which variables are available for a given entity.
 
 For example,
@@ -273,7 +273,7 @@ done
 If you get some out of memory error, try passing `--max-old-space-size=8192` to `node`
 
 Then, we have to append `population-variables.csv` to the
-[ODN Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/sutp-685r)
+[ODN Variables](https://dev.socrata.com/foundry/odn.data.socrata.com/gkgr-ab5r)
 dataset.
 
 The simplest way to do this is using
