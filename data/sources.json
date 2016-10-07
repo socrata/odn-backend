@@ -256,7 +256,7 @@
                 }
               },
               "searchTerms": ["health insurance", "healthcare", "coverage", "insurance"],
-              "description": "The Small Area Health Insurance Estimates (SAHIE) estimates health insurance coverage from the American Community Survey (ACS).",
+              "description": "The Small Area Health Insurance Estimate (SAHIE) estimates health insurance coverage from the American Community Survey (ACS).",
               "sources": ["sahie"]
             },
 
