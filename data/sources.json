@@ -233,27 +233,30 @@
 
     "health": {
         "datasets": {
-            "insurance" : {
+            "health_insurance" : {
               "fxf": "vtkj-74g4",
               "constraints": [["year", "desc"], "age", "race", "sex", "income"],
               "variables": {
                 "pctui": {
-                  "name": "Percent uninsured",
-                  "type": "percent"
+                  "name": "Percent Without Health Insurance",
+                  "type": "percent",
+                  "stoplight": true
                 },
                 "nui": {
-                  "name": "Number of uninsured"
+                  "name": "Number of Residents Without Insurance "
                 },
                 "pctic": {
-                  "name": "Percent insured",
-                  "type": "percent"
+                  "name": "Percent With Health Insurance",
+                  "type": "percent",
+                  "stoplight": true,
+                  "reverse": true
                 },
                 "nipr": {
-                  "name": "Total individuals"
+                  "name": "Number of Residents"
                 }
               },
               "searchTerms": ["health insurance", "healthcare", "coverage", "insurance"],
-              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum augue ac lorem malesuada at rhoncus turpis condimentum. Maecenas commodo sem ac magna posuere ultrices. Proin ut felis ac odio consectetur rutrum vel quis sem.",
+              "description": "The Small Area Health Insurance Estimate (SAHIE) estimates health insurance coverage from the American Community Survey (ACS).",
               "sources": ["sahie"]
             },
 
