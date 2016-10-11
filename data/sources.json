@@ -478,7 +478,7 @@
                     },
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
-                        "type": "ratio",
+                        "type": "percent",
                         "stoplight": true
                     },
                     "general_fund_health": {
