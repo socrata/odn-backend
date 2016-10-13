@@ -57,7 +57,6 @@ class ObjectRadixTree {
     withPhrase(phrase, limit) {
         const words = this.normalize(phrase);
         let candidates = this.getCandidates(words);
-        if (!(candidates.length)) candidates = this.objects;
         candidates = scoreCandidates(candidates);
 
         if (!(candidates.length)) return [];

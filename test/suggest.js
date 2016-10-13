@@ -106,11 +106,11 @@ describe('/suggest/v1', () => {
         });
     });
 
-    it('should find questions for california', () => {
+    it('should find questions no questions for california since no variable is specified', () => {
         return suggest('question?query=california').then(response => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(questionSchema);
-            expect(response.body.options).to.have.length.above(3);
+            expect(response.body.options).to.be.empty;
         });
     });
 
