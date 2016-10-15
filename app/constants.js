@@ -21,6 +21,7 @@ const Constants = {
         'region.region': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.state': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.county': 'https://odn.data.socrata.com/resource/3ma7-imys',
+        'region.township': 'https://mi-treasury.data.socrata.com/resource/ejw8-67dq',
         'region.msa': 'https://odn.data.socrata.com/resource/3ma7-imys',
         'region.place': 'https://odn.data.socrata.com/resource/4w8p-9itj',
         'region.zip_code': 'https://odn.data.socrata.com/resource/92xu-eg4b'

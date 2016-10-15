@@ -436,6 +436,10 @@
                         "name": "Long Term Debt Revenue",
                         "type": "percent"
                     },
+                    "debt_long_term": {
+                        "name": "Long Term Debt",
+                        "type": "dollar"
+                    },
                     "debt_health": {
                         "name": "Debt Per Capita",
                         "type": "dollar",
@@ -476,6 +480,11 @@
                 "variables": {
                     "general_fund_balance": {
                         "name": "General Fund Balance",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                     "general_fund_unrestricted_balance": {
+                        "name": "General Fund Unrestricted Balance",
                         "type": "dollar",
                         "stoplight": true
                     },
