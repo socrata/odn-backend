@@ -240,7 +240,8 @@
                 "pctui": {
                   "name": "Percent Without Health Insurance",
                   "type": "percent",
-                  "stoplight": true
+                  "stoplight": true,
+                  "reverse": true
                 },
                 "nui": {
                   "name": "Number of Residents Without Insurance "
@@ -248,8 +249,7 @@
                 "pctic": {
                   "name": "Percent With Health Insurance",
                   "type": "percent",
-                  "stoplight": true,
-                  "reverse": true
+                  "stoplight": true
                 },
                 "nipr": {
                   "name": "Number of Residents"
