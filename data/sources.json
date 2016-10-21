@@ -426,6 +426,16 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
+                    "debt_service": {
+                        "name": "Debt Service",
+                        "type": "ratio_1dec",
+                        "stoplight": true,
+                        "reverse": true
+                    },
+                    "long_term_debt_revenue": {
+                        "name": "Long Term Debt Revenue",
+                        "type": "percent"
+                    },
                     "debt_long_term": {
                         "name": "Long Term Debt",
                         "type": "dollar"
@@ -438,7 +448,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "dept per capita", "long term debt revenue"],
-                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
+                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues. <br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
                 "sources": ["f65"]
             },
 
@@ -448,13 +458,17 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
+                    "public_safety_expenditures": {
+                        "name": "Total Public Safety Fund Expenditures",
+                        "type": "dollar"
+                    },
                     "total_general_fund_expenditures": {
                         "name": "Total General Fund Expenditures",
                         "type": "dollar"
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "expenditures", "total general fund expenditures", "public safety fund expenditures", "public safety"],
-                "description": "Expenditures refer to all money spent by a government entity.<br /><br />Total General Fund Expenditures refers to all monies spent out of the government's general budget, excluding special purpose funds.",
+                "description": "Expenditures refer to all money spent by a government entity.<br /><br />Total Public Safety Fund Expenditures refers to all money spent on public safety (Police, Fire and Emergency Management).<br /><br />Total General Fund Expenditures refers to all monies spent out of the government's general budget, excluding special purpose funds.",
                 "sources": ["f65"]
             },
 
@@ -464,9 +478,19 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "general_fund_unrestricted_balance": {
+                    "general_fund_balance": {
+                        "name": "General Fund Balance",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                     "general_fund_unrestricted_balance": {
                         "name": "General Fund Unrestricted Balance",
                         "type": "dollar",
+                        "stoplight": true
+                    },
+                     "liquidity_ratio": {
+                        "name": "Liquidity Ratio",
+                        "type": "percent",
                         "stoplight": true
                     },
                     "general_fund_health": {
@@ -476,7 +500,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
@@ -539,10 +563,15 @@
                     "total_general_fund_revenue": {
                         "name": "Total General Fund Revenue",
                         "type": "dollar"
+                    },
+                    "unrestricted_revenue": {
+                        "name": "Unrestricted Revenue",
+                        "type": "ratio",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
-                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenue refers to all monies collected into the General Fund, excluding some grants and special purpose funds.",
+                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenue refers to all monies collected into the General Fund, excluding some grants and special purpose funds.<br /><br />Unrestricted Revenue is the percentage of funds that are unrestricted as opposed to committed to a specific purpose or program.",
                 "sources": ["f65"]
             }
         }
