@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/socrata/odn-backend/badges/gpa.svg)](https://codeclimate.com/github/socrata/odn-backend)
 [![Test Coverage](https://codeclimate.com/github/socrata/odn-backend/badges/coverage.svg)](https://codeclimate.com/github/socrata/odn-backend/coverage)
 
-A REST API for the Open Data Network.
+A REST API for  the Open Data Network.
 Available at [api.opendatanetwork.com](http://api.opendatanetwork.com).
 
 ## Documentation
