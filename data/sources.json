@@ -341,18 +341,34 @@
                 "variables": {
                     "per_capita_gdp": {
                         "name": "GDP per capita",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "per_capita_gdp_percent_change": {
                         "name": "Annual change in GDP",
-                        "type": "percent"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["gdp", "gross domestic product", "economy", "production", "revenue", "gross national product", "gnp"],
                 "description": "Gross Domestic Product (GDP) is a measure of the value of all goods and services produced in a region minus the value of the goods and services used up in production. Real GDP is adjusted for changes in the value of money (inflation and deflation) so that values can be compared between years. Data is available for U.S. states and metropolitan areas.",
                 "sources": [["bea", "http://www.bea.gov/regional/index.htm"]]
             },
-
+            "personal_income": {
+                "name": "Personal Income",
+                "fxf": "a2ab-jm4u",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "annual_personal_income": {
+                        "name": "Annual Personal Income",
+                        "type": "dollar",
+                        "stoplight": true
+                    }
+                },
+                "searchTerms": ["income", "personal income", "average salary", "salaries", "wage", "wages", "salary", "salaries"],
+                "description": "Per capita personal income was computed using Census Bureau midyear population estimates. Estimates for 2010-2014 reflect county population estimates available as of March 2015. All dollar estimates are in current dollars (not adjusted for inflation).",
+                "sources": [["bea", "http://www.bea.gov/regional"]]
+            },
             "consumption": {
                 "fxf": "skua-q4dv",
                 "constraints": [["year", "desc"]],
@@ -378,11 +394,15 @@
                 "variables": {
                     "index": {
                         "name": "cost of living index",
-                        "type": "count"
+                        "type": "count",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "rank": {
                         "name": "cost of living rank",
-                        "type": "count"
+                        "type": "count",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
                 "searchTerms": ["cost of living", "rent", "housing", "consumer price index", "expensive", "inexpensive", "housing cost", "home price"],
