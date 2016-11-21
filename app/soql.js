@@ -6,8 +6,8 @@ const Request = require('./request');
 const Exception = require('./error');
 const invalidAppToken = Exception.invalidAppToken;
 const missingAppToken = Exception.missingAppToken;
-const Constants = require('./constants');
-const tokenKey = Constants.APP_TOKEN_HEADER;
+const Config = require('./config');
+const tokenKey = Config.app_token_header;
 
 /**
  * Building SOQL queries.

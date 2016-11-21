@@ -4,7 +4,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const util = require('util');
 
-const Constants = require('./constants');
+const Config = require('./config');
 const name = require('./name');
 const pick = require('./pick');
 
@@ -46,7 +46,7 @@ class Sources {
 
         this.topics = this.mapDatasets(this.topics, dataset => {
             if (!('domain' in dataset))
-                dataset.domain = Constants.ODN_DATA_DOMAIN;
+                dataset.domain = Config.odn_data_domain;
             if (!('searchTerms' in dataset))
                 dataset.searchTerms = [];
             if (!('description' in dataset))

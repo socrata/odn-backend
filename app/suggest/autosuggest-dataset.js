@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('../constants');
+const Config = require('../config');
 const Exception = require('../error');
 const Request = require('../request');
 
@@ -22,8 +22,8 @@ class AutosuggestDataset {
     }
 
     get(query, limit) {
-        const newLimit = this.sorted && Constants.SUGGEST_COUNT_SORTED > limit ?
-            Constants.SUGGEST_COUNT_SORTED : limit;
+        const newLimit = this.sorted && Config.suggest_count_sorted > limit ?
+            Config.suggest_count_sorted : limit;
         const url = this._getURL(query, newLimit);
 
         return Request.getJSON(url).then(response => {
@@ -99,7 +99,7 @@ class AutosuggestDataset {
                 const text = allText.substring(0, index);
                 const base64 = allText.substring(index + 1);
                 const decoded = Base64.decode(base64);
-                const attributes = decoded.split(Constants.SUGGEST_SEPARATOR);
+                const attributes = decoded.split(Config.suggest_separator);
 
                 if (attributes.length !== this.fields.length)
                     reject(Exception.server(`expected ${this.fields.length} hidden this.fields in

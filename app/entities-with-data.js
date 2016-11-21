@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('./constants');
+const Config = require('./config');
 const SOQL = require('./soql');
 const Exception = require('./error');
 const server = Exception.server;
@@ -27,7 +27,7 @@ function entitiesWithData(token, entities, variableID) {
 }
 
 function getEntityIDsWithData(token, entities, variableID) {
-    return new SOQL(Constants.VARIABLE_URL)
+    return new SOQL(Config.variable_url)
         .token(token)
         .whereEntities(entities)
         .equal('variable', variableID)
