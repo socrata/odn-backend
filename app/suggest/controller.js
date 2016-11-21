@@ -5,7 +5,7 @@ const _ = require('lodash');
 const Exception = require('../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
-const Constants = require('../constants');
+const Config = require('../config');
 const Stopwords = require('./../stopwords');
 const AutosuggestSources = require('../../data/autosuggest-sources');
 const ParseRequest = require('../parse-request');
@@ -56,7 +56,7 @@ function getAutosuggestSource(request) {
 
 function getLimit(request) {
     return ParseRequest.getLimit(request,
-            Constants.SUGGEST_COUNT_DEFAULT,
-            Constants.SUGGEST_COUNT_MAX);
+            Config.suggest_count_default,
+            Config.suggest_count_max);
 }
 

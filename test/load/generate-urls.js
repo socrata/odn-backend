@@ -3,7 +3,7 @@ const _ = require('lodash');
 const request = require('request-promise');
 
 const SOQL = require('../../app/soql');
-const Constants = require('../../app/constants');
+const Config = require('../../app/config');
 
 /**
  * Generate random URLs for load testing.
@@ -43,7 +43,7 @@ function setup() {
 }
 
 function generateEntities() {
-    return new SOQL(Constants.ENTITY_URL)
+    return new SOQL(Config.entity_url)
         .token(options.app_token[0])
         .select('id')
         .send()

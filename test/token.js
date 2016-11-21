@@ -4,7 +4,7 @@ const chakram = require('chakram');
 const expect = chakram.expect;
 const get = chakram.get;
 const getWithToken = require('./get');
-const Constants = require('../app/constants');
+const Config = require('../app/config');
 
 const url = 'http://localhost:3001/data/v1/availability?entity_id=0400000US53';
 
@@ -20,7 +20,7 @@ describe('app token', () => {
     it('should return a 403 if invalid', () => {
         return get(url, {
             headers: {
-                [Constants.APP_TOKEN_HEADER]: 'invalid-app-token'
+                [Config.app_token_header]: 'invalid-app-token'
             }
         }).then(response => {
             return expect(response).to.have.status(403);
@@ -32,7 +32,7 @@ describe('app token', () => {
     });
 
     it('should accept app token as parameter', () => {
-        return expect(get(`${url}&app_token=${Constants.APP_TOKEN}`)).to.have.status(200);
+        return expect(get(`${url}&app_token=${Config.app_token}`)).to.have.status(200);
     });
 });
 

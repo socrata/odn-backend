@@ -166,10 +166,10 @@ A higher rank denotes higher priority.
 Now, upload the geographical dataset to Socrata.
 
 Once the upload is done, get a link to the new dataset and update
-[`Constants.GEO_URLS`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L13).
+[`Config.geo_urls`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L13).
 
 If you added a `rank` property, add the entity type to
-[`Constants.GEO_RANKED`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L23).
+[`Config.geo_ranked`](https://github.com/socrata/odn-backend/blob/cf930cba33528b2a56a9a0937606205e8a425857/app/constants.js#L23).
 
 Now, you should be able to render maps of the new entity type.
 

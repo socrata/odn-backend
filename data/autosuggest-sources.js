@@ -1,13 +1,13 @@
 
 const _ = require('lodash');
 
-const Constants = require('../app/constants');
+const Config = require('../app/config');
 const AutosuggestDataset = require('../app/suggest/autosuggest-dataset');
 const Sources = require('../app/sources');
 
 const declarations = {
     entity: {
-        domain: Constants.ODN_DATA_DOMAIN,
+        domain: Config.odn_data_domain,
         fxf: 's2z5-sxuw',
         column: 'name',
         encoded: ['id', 'type', 'rank'],
@@ -22,7 +22,7 @@ const declarations = {
     },
 
     question: {
-        domain: Constants.ODN_DATA_DOMAIN,
+        domain: Config.odn_data_domain,
         fxf: 'arys-69tf',
         column: 'question',
         encoded: ['regionName', 'regionID', 'regionPopulation',
@@ -47,7 +47,7 @@ const declarations = {
     },
 
     dataset: {
-        domain: Constants.ODN_DATA_DOMAIN,
+        domain: Config.odn_data_domain,
         fxf: 'fpum-bjbr',
         column: 'encoded',
         encoded: ['domain', 'fxf'],
@@ -61,7 +61,7 @@ const declarations = {
     },
 
     publisher: {
-        domain: Constants.ODN_DATA_DOMAIN,
+        domain: Config.odn_data_domain,
         fxf: '8ae5-ghum',
         column: 'domain',
         transform: option => {
@@ -72,7 +72,7 @@ const declarations = {
     },
 
     category: {
-        domain: Constants.ODN_DATA_DOMAIN,
+        domain: Config.odn_data_domain,
         fxf: '864v-r7tf',
         column: 'category',
         transform: option => {

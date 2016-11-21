@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('../../constants');
+const Config = require('../../config');
 const Sources = require('../../sources');
 const SOQL = require('../../soql');
 
@@ -31,7 +31,7 @@ class Availability {
 }
 
 function getVariables(entities, token) {
-    return new SOQL(Constants.VARIABLE_URL)
+    return new SOQL(Config.variable_url)
         .token(token)
         .whereEntities(entities)
         .select('variable')

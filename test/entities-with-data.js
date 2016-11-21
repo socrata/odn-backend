@@ -5,11 +5,11 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const Constants = require('../app/constants');
+const Config = require('../app/config');
 
 const entitiesWithData = require('../app/entities-with-data');
 function withData(entities, variable) {
-    return entitiesWithData(Constants.APP_TOKEN, entities, variable);
+    return entitiesWithData(Config.app_token, entities, variable);
 }
 
 const washington = {id: '0400000US53'};

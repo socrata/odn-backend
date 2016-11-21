@@ -1,6 +1,6 @@
 
 const chakram = require('chakram');
-const Constants = require('../app/constants');
+const Config = require('../app/config');
 
 /**
  * Adds app token to any request.
@@ -8,7 +8,7 @@ const Constants = require('../app/constants');
 module.exports = url => {
     return chakram.get(url, {
         headers: {
-            [Constants.APP_TOKEN_HEADER]: Constants.APP_TOKEN
+            [Config.app_token_header]: Config.app_token
         }
     });
 };

@@ -1,7 +1,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('./constants');
+const Config = require('./config');
 const EntityLookup = require('./entity-lookup');
 const Exception = require('./error');
 const invalid = Exception.invalidParam;
@@ -33,8 +33,8 @@ class ParseRequest {
     }
 
     static getLimit(request, defaultValue, max) {
-        if (_.isNil(defaultValue)) defaultValue = Constants.CATALOG_LIMIT_DEFAULT;
-        if (_.isNil(max)) max = Constants.CATALOG_LIMIT_MAX;
+        if (_.isNil(defaultValue)) defaultValue = Config.catalog_limit_default;
+        if (_.isNil(max)) max = Config.catalog_limit_max;
         return ParseRequest.getInteger(request, 'limit', defaultValue, 0, max);
     }
 
