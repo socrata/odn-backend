@@ -12,7 +12,10 @@ const Constants = {
     // All dataset URLs should use the NBE FXF.
     RELATIVES_URL: 'https://odn.data.socrata.com/resource/dc4t-zwj5.json',
     ENTITY_URL: 'https://odn.data.socrata.com/resource/pvug-y23y.json',
-    VARIABLE_URL: 'https://odn.data.socrata.com/resource/gkgr-ab5r.json',
+    // Prod
+    // VARIABLE_URL: 'https://odn.data.socrata.com/resource/gkgr-ab5r.json',
+    // Staging
+    VARIABLE_URL: 'https://odn.data.socrata.com/resource/cad5-zc93.json',
 
     GEO_URL: 'https://odn.data.socrata.com/resource/j4v5-7652',
     GEO_URLS: {

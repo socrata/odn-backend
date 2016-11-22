@@ -16,7 +16,111 @@
                 },
                 "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
                 "sources": ["acs"]
+            },
+            "population_by_race_percent": {
+                "fxf": "e7fs-bg2u",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "population_1_white_pct": {
+                        "name": "Percentage of White Population",
+                        "type": "ratio",
+                        "description": "Population Percent - One Race"
+                    },
+                    "population_1_american_indian_alaska_native_pct": {
+                        "name": "Percentage of American Indian, Alaska Native Population",
+                        "type": "ratio",
+                        "description": "Population Percent - Two Races"
+                    },
+                    "population_1_black_african_american_pct": {
+                        "name": "Percentage of African American Population",
+                        "type": "ratio",
+                        "description": "Population"
+                    },
+                    "population_1_asian_pct": {
+                        "name": "Percentage of Asian Population",
+                        "type": "ratio",
+                        "description": "Population"
+                    },
+                    "population_1_native_hawaiian_and_other_pacific_islander_pct": {
+                        "name": "Percentage of Native Hawaiian, Other Pacific Islander Population",
+                        "type": "ratio",
+                        "description": "Population"
+                    },
+                    "population_1_some_other_race_pct": {
+                        "name": "Percentage of Some Other Race Population",
+                        "type": "ratio",
+                        "description": "Population Percent - Two Races"
+                    }
+                },
+                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
+                "sources": ["acs"]
+            },
+            "population_by_race": {
+                "fxf": "e7fs-bg2u",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "population_1_white": {
+                        "name": "White Population",
+                        "description": "Population - White"
+                    },
+                    "population_1_american_indian_alaska_native": {
+                        "name": "American Indian, Alaska Native",
+                        "description": "Population - American Indian, Alaska Native"
+                    },
+                    "population_1_black_african_american": {
+                        "name": "African American Population",
+                        "description": "Population - African American"
+                    }
+                    ,
+                    "population_1_asian": {
+                        "name": "Asian",
+                        "description": "Population - Asian"
+                    }
+                    ,
+                    "population_1_native_hawaiian_and_other_pacific_islander": {
+                        "name": "Native Hawaiian, Other Pacific Islander",
+                        "description": "Population - Native Hawaiian, Other Pacific Islander"
+                    }
+                    ,
+                    "population_1_some_other_race": {
+                        "name": "Some Other Race",
+                        "description": "Population - Some Other Race"
+                    }
+                },
+                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
+                "sources": ["acs"]
             }
+        }
+    },
+
+    "geographic": {
+        "datasets": {
+            "population": {
+                "fxf": "9hs5-ncz3",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "density": {
+                        "name": "Population Density"
+                    }
+                },
+                "searchTerms": ["population", "density"],
+                "sources": ["acs"]
+            },
+            "area": {
+                "fxf": "9hs5-ncz3",
+                "constraints": [["year", "desc"]],
+                 "variables": {
+                    "land_area": {
+                        "name": "Land Area"
+                    },
+                     "water_area": {
+                        "name": "Water Area"
+                    }
+                },
+                "searchTerms": ["water", "area"],
+                "sources": ["acs"]
+            }
+            
         }
     },
 
@@ -436,10 +540,6 @@
                         "name": "Long Term Debt Revenue",
                         "type": "percent"
                     },
-                    "debt_long_term": {
-                        "name": "Long Term Debt",
-                        "type": "dollar"
-                    },
                     "debt_health": {
                         "name": "Debt Per Capita",
                         "type": "dollar",
@@ -483,14 +583,9 @@
                         "type": "dollar",
                         "stoplight": true
                     },
-                     "general_fund_unrestricted_balance": {
-                        "name": "General Fund Unrestricted Balance",
-                        "type": "dollar",
-                        "stoplight": true
-                    },
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
-                        "type": "percent",
+                        "type": "ratio",
                         "stoplight": true
                     },
                     "general_fund_health": {
@@ -500,7 +595,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />The General Fund Balance Operating Budget Surplus(Deficit) is the amount of revenues collected less all expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
