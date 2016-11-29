@@ -16,79 +16,6 @@
                 },
                 "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
                 "sources": ["acs"]
-            },
-            "population_by_race_percent": {
-                "fxf": "e7fs-bg2u",
-                "constraints": [["year", "desc"]],
-                "variables": {
-                    "population_1_white_pct": {
-                        "name": "Percentage of White Population",
-                        "type": "ratio",
-                        "description": "Population Percent - One Race"
-                    },
-                    "population_1_american_indian_alaska_native_pct": {
-                        "name": "Percentage of American Indian, Alaska Native Population",
-                        "type": "ratio",
-                        "description": "Population Percent - Two Races"
-                    },
-                    "population_1_black_african_american_pct": {
-                        "name": "Percentage of African American Population",
-                        "type": "ratio",
-                        "description": "Population"
-                    },
-                    "population_1_asian_pct": {
-                        "name": "Percentage of Asian Population",
-                        "type": "ratio",
-                        "description": "Population"
-                    },
-                    "population_1_native_hawaiian_and_other_pacific_islander_pct": {
-                        "name": "Percentage of Native Hawaiian, Other Pacific Islander Population",
-                        "type": "ratio",
-                        "description": "Population"
-                    },
-                    "population_1_some_other_race_pct": {
-                        "name": "Percentage of Some Other Race Population",
-                        "type": "ratio",
-                        "description": "Population Percent - Two Races"
-                    }
-                },
-                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
-                "sources": ["acs"]
-            },
-            "population_by_race": {
-                "fxf": "e7fs-bg2u",
-                "constraints": [["year", "desc"]],
-                "variables": {
-                    "population_1_white": {
-                        "name": "White Population",
-                        "description": "Population - White"
-                    },
-                    "population_1_american_indian_alaska_native": {
-                        "name": "American Indian, Alaska Native",
-                        "description": "Population - American Indian, Alaska Native"
-                    },
-                    "population_1_black_african_american": {
-                        "name": "African American Population",
-                        "description": "Population - African American"
-                    }
-                    ,
-                    "population_1_asian": {
-                        "name": "Asian",
-                        "description": "Population - Asian"
-                    }
-                    ,
-                    "population_1_native_hawaiian_and_other_pacific_islander": {
-                        "name": "Native Hawaiian, Other Pacific Islander",
-                        "description": "Population - Native Hawaiian, Other Pacific Islander"
-                    }
-                    ,
-                    "population_1_some_other_race": {
-                        "name": "Some Other Race",
-                        "description": "Population - Some Other Race"
-                    }
-                },
-                "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
-                "sources": ["acs"]
             }
         }
     },
@@ -104,6 +31,7 @@
                     }
                 },
                 "searchTerms": ["population", "density"],
+                "description": "Population Density is computed by dividing the total population by Land Area Per Square Mile.",
                 "sources": ["acs"]
             },
             "area": {
@@ -118,6 +46,7 @@
                     }
                 },
                 "searchTerms": ["water", "area"],
+                "description": "Land area is a measurement providing the size, in square miles, of the land portions of geographic entities for which the Census Bureau tabulates and disseminates data. Area is calculated from the specific boundary recorded for each entity in the Census Bureau's geographic database. Land area is based on current information in the TIGER® data base, calculated for use with Census 2010.<br /><br />Water Area figures include inland, coastal, Great Lakes, and territorial sea water. Inland water consists of any lake, reservoir, pond, or similar body of water that is recorded in the Census Bureau's geographic database. It also includes any river, creek, canal, stream, or similar feature that is recorded in that database as a two- dimensional feature (rather than as a single line). The portions of the oceans and related large embayments (such as Chesapeake Bay and Puget Sound), the Gulf of Mexico, and the Caribbean Sea that belong to the United States and its territories are classified as coastal and territorial waters; the Great Lakes are treated as a separate water entity. Rivers and bays that empty into these bodies of water are treated as inland water from the point beyond which they are narrower than 1 nautical mile across. Identification of land and inland, coastal, territorial, and Great Lakes waters is for data presentation purposes only and does not necessarily reflect their legal definitions.",
                 "sources": ["acs"]
             }
             
