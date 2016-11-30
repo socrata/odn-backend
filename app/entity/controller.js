@@ -5,7 +5,7 @@ const Exception = require('../error');
 const invalid = Exception.invalidParam;
 const notFound = Exception.notFound;
 const EntityLookup = require('../entity-lookup');
-const Constants = require('../constants');
+const Config = require('../config');
 const SOQL = require('../soql');
 
 module.exports = (request, response) => {
@@ -25,7 +25,7 @@ module.exports = (request, response) => {
 };
 
 function getEntities(id, name, type, token) {
-    return new SOQL(Constants.ENTITY_URL)
+    return new SOQL(Config.entity_url)
         .token(token)
         .equal('id', id)
         .equal('type', type)

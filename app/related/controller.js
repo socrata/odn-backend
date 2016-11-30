@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('../constants');
+const Config = require('../config');
 const Request = require('../request');
 const EntityLookup = require('../entity-lookup');
 const Exception = require('../error');
@@ -80,6 +80,6 @@ function getEntityID(request) {
 
 function getLimit(request) {
     return ParseRequest.getLimit(request,
-            Constants.RELATED_COUNT_DEFAULT, Constants.RELATED_COUNT_MAX);
+            Config.related_count_default, Config.related_count_max);
 }
 

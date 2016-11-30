@@ -5,7 +5,7 @@ const _ = require('lodash');
 const csv = require('fast-csv');
 const fs = require('fs');
 
-const Constants = require('../../app/constants');
+const Config = require('../../app/config');
 
 const args = process.argv.slice(2);
 
@@ -22,7 +22,7 @@ if (args.length !== 2) {
             const name = entity.name;
 
             const fields = [entity.id, entity.type, entity.rank]
-                .join(Constants.SUGGEST_SEPARATOR);
+                .join(Config.suggest_separator);
             const encoded = new Buffer(fields).toString('base64');
 
             return {name: `${entity.name} ${encoded}`};

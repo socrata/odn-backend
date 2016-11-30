@@ -7,9 +7,9 @@ const memjs = require('memjs');
 const crypto = require('crypto');
 
 const Exception = require('./error');
-const Constants = require('./constants');
+const Config = require('./config');
 const Cache = require('./cache');
-const cache = new Cache(null, Constants.CACHE_OPTIONS);
+const cache = new Cache(null, Config.cache_options);
 
 class Request {
     /**
@@ -50,7 +50,7 @@ class Request {
     }
 
     static _timeout(milliseconds) {
-        milliseconds = milliseconds || Constants.TIMEOUT_MS;
+        milliseconds = milliseconds || Config.timeout_ms;
 
         return new Promise((resolve, reject) => {
             setTimeout(() => {

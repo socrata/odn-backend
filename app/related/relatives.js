@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('../constants');
+const Config = require('../config');
 const Request = require('../request');
 const SOQL = require('../soql');
 
@@ -34,14 +34,14 @@ class Relatives {
  * Finds all of the child types of an entity.
  */
 function childTypes(entity) {
-    return Constants.TYPE_RELATIONS[entity.type] || [];
+    return Config.type_relations[entity.type] || [];
 }
 
 /**
  * Finds all of the parent types of an entity.
  */
 function parentTypes(entity) {
-    return _.keys(_.pickBy(Constants.TYPE_RELATIONS, childTypes => {
+    return _.keys(_.pickBy(Config.type_relations, childTypes => {
         return _.includes(childTypes, entity.type);
     }));
 }
@@ -65,7 +65,7 @@ function parents(entity, parentType, n, token) {
  */
 function siblings(entity, n, token) {
     return new Promise((resolve, reject) => {
-        Relatives.parents(entity, Constants.RELATED_COUNT_MAX, token).then(response => {
+        Relatives.parents(entity, Config.related_count_max, token).then(response => {
             const parentIDs = _.chain(response.relatives)
                 .map(group => group.entities)
                 .flatten()
@@ -88,7 +88,7 @@ function siblings(entity, n, token) {
 function relatives(relation, ids, relativeType, n, token) {
     const complement = relation === 'parent' ? 'child' : 'parent';
 
-    return new SOQL(Constants.RELATIVES_URL)
+    return new SOQL(Config.relatives_url)
         .token(token)
         .equal(`${relation}_type`, relativeType)
         .whereIn(`${complement}_id`, ids)
@@ -110,7 +110,7 @@ function relatives(relation, ids, relativeType, n, token) {
  * Gets the peers of an entity.
  */
 function peers(entity, n) {
-    const url = Request.buildURL(`${Constants.PEERS_URL}/${entity.id}`, {n});
+    const url = Request.buildURL(`${Config.peers_url}/${entity.id}`, {n});
 
     return Request.getJSON(url).then(json => {
         json.peers.forEach(entity => {

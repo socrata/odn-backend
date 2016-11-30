@@ -4,11 +4,11 @@ const chakram = require('chakram');
 const expect = chakram.expect;
 
 const SOQL = require('../app/soql');
-const Constants = require('../app/constants');
+const Config = require('../app/config');
 
 describe('SOQL', () => {
     it('should take a url', () => {
-        const url = Constants.ENTITY_URL;
+        const url = Config.entity_url;
         const query = new SOQL(url);
         expect(query.url).to.equal(url);
     });
@@ -136,8 +136,8 @@ describe('SOQL', () => {
     });
 
     it('should send a well-formed request', () => {
-        return new SOQL(Constants.ENTITY_URL)
-            .token(Constants.APP_TOKEN)
+        return new SOQL(Config.entity_url)
+            .token(Config.app_token)
             .select('id')
             .select('name')
             .whereIn('type', ['region.state'])
@@ -154,7 +154,7 @@ describe('SOQL', () => {
     });
 
     it('should return a 403 for an invalid app token', () => {
-        return new SOQL(Constants.ENTITY_URL)
+        return new SOQL(Config.entity_url)
             .token('invalid-app-token')
             .send()
             .catch(error => {
@@ -188,13 +188,13 @@ describe('SOQL', () => {
     });
 
     it('should return a 403 if no app token is specified', () => {
-        return new SOQL(Constants.ENTITY_URL)
+        return new SOQL(Config.entity_url)
             .send()
             .catch(error => expect(error.statusCode).to.equal(403));
     });
 
     it('should return a 403 with an invalid app token', () => {
-        return new SOQL(Constants.ENTITY_URL)
+        return new SOQL(Config.entity_url)
             .token('asd')
             .send()
             .catch(error => expect(error.statusCode).to.equal(403));

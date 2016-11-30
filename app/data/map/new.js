@@ -7,7 +7,7 @@ const notFound = Exception.notFound;
 const invalid = Exception.invalidParam;
 const EntityLookup = require('../../entity-lookup');
 const Sources = require('../../sources');
-const Constants = require('../../constants');
+const Config = require('../../config');
 const SOQL = require('../../soql');
 const Session = require('./session');
 const SessionManager = require('./session-manager');
@@ -24,7 +24,7 @@ module.exports = (request, response) => {
     ]).then(([entities, dataset, constraints]) => {
         const entityType = entities[0].type;
 
-        if (!(entityType in Constants.GEO_URLS))
+        if (!(entityType in Config.geo_urls))
             return Promise.reject(notFound(`no geodata for entity of type: ${entityType}`));
 
         checkConstraints(dataset, constraints).then(() => {
@@ -50,7 +50,7 @@ function getSessionID(dataset, constraints, entityType, entities, token) {
 
 function getBoundingBox(entities, entityType, token) {
     const ids = entities.map(_.property('id'));
-    return new SOQL(`${Constants.GEO_URLS[entityType]}.json`)
+    return new SOQL(`${Config.geo_urls[entityType]}.json`)
         .token(token)
         .whereIn('id', ids)
         .select('extent(the_geom)')
@@ -89,7 +89,7 @@ function getSummaryStatistics(dataset, constraints, entityType, token) {
             return Promise.resolve({
                 values: values.map(parseFloat),
                 values_formatted: values.map(formatter),
-                names: Constants.SUMMARY_STAT_NAMES
+                names: Config.summary_stat_names
             });
         });
     });
@@ -112,7 +112,7 @@ function getAtIndex(baseQuery, index) {
 
 // given n, find indexes of minimum, lower quartile, median, upper quartile, maximum
 function getIndexes(count) {
-    const steps = Constants.SUMMARY_STAT_STEPS;
+    const steps = Config.summary_stat_steps;
     const mid = _.range(1, steps - 1).map(n => Math.floor(count * n / (steps - 1)));
     return _.concat(0, mid, count < 1 ? 0 : count - 1);
 }

@@ -6,7 +6,7 @@ const Exception = require('../../error');
 const notFound = Exception.notFound;
 const invalid = Exception.invalidParam;
 const Sources = require('../../sources');
-const Constants = require('../../constants');
+const Config = require('../../config');
 const SOQL = require('../../soql');
 const SessionManager = require('./session-manager');
 const format = require('../values/format');
@@ -49,7 +49,7 @@ function idsToSend(session, bounds, zoomLevel) {
     return getEntitiesInBounds(session.entityType, bounds, session.token)
         .then(ids => includeSelected(ids, session))
         .then(ids => session.notSent(ids, zoomLevel))
-        .then(ids => Promise.resolve(chunkIDs(ids, Constants.MAX_URL_LENGTH / 2)));
+        .then(ids => Promise.resolve(chunkIDs(ids, Config.max_url_length / 2)));
 }
 
 function parseJSON(string) {
@@ -65,11 +65,11 @@ function includeSelected(ids, session) {
 }
 
 function getGeoURL(entityType) {
-    return Constants.GEO_URLS[entityType];
+    return Config.geo_urls[entityType];
 }
 
 function getLimit(entityType) {
-    return Constants.GEO_LIMIT[entityType] || Constants.GEO_LIMIT_DEFAULT;
+    return Config.geo_limit[entityType] || Config.geo_limit_default;
 }
 
 function getEntitiesInBounds(entityType, bounds, token) {
@@ -79,7 +79,7 @@ function getEntitiesInBounds(entityType, bounds, token) {
         .equal('type', entityType)
         .limit(getLimit(entityType))
         .where(_.isNil(bounds) ? null : intersects('the_geom', bounds))
-        .order(_.includes(Constants.GEO_RANKED, entityType) ? 'rank desc' : null)
+        .order(_.includes(Config.geo_ranked, entityType) ? 'rank desc' : null)
         .send()
         .then(response => {
             return Promise.resolve(response.map(_.property('id')));
@@ -248,10 +248,10 @@ function getZoomLevel(query) {
 
     if (_.isNil(zoomLevel) || zoomLevel === '')
         return Promise.reject(invalid('parameter zoom_level required'));
-    if (zoomLevel < Constants.MAP_ZOOM_MIN)
-        return Promise.reject(invalid(`zoom_level cannot be less than ${Constants.MAP_ZOOM_MIN}`));
-    if (zoomLevel > Constants.MAP_ZOOM_MAX)
-        return Promise.reject(invalid(`zoom_level cannot be greater than ${Constants.MAP_ZOOM_MAX}`));
+    if (zoomLevel < Config.map_zoom_min)
+        return Promise.reject(invalid(`zoom_level cannot be less than ${Config.map_zoom_min}`));
+    if (zoomLevel > Config.map_zoom_max)
+        return Promise.reject(invalid(`zoom_level cannot be greater than ${Config.map_zoom_max}`));
 
     zoomLevel = parseInt(zoomLevel, 10);
 
