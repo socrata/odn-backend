@@ -1,0 +1,82 @@
+app_token_header: "X-App-Token"
+app_token_param: "app_token"
+
+app_token: "TULfSVvj7mto3wKM3qW8dMj9L"
+
+odn_data_domain: "odn.data.socrata.com"
+
+peers_url: "https://odn-peers.herokuapp.com/peers"
+
+relatives_url: "https://odn.data.socrata.com/resource/dc4t-zwj5.json"
+entity_url: "https://odn.data.socrata.com/resource/pvug-y23y.json"
+variable_url: "https://odn.data.socrata.com/resource/gkgr-ab5r.json"
+
+geo_url: "https://odn.data.socrata.com/resource/j4v5-7652"
+geo_urls:
+  region.nation: "https://odn.data.socrata.com/resource/3ma7-imys"
+  region.division: "https://odn.data.socrata.com/resource/3ma7-imys"
+  region.region: "https://odn.data.socrata.com/resource/3ma7-imys"
+  region.state: "https://odn.data.socrata.com/resource/3ma7-imys"
+  region.county: "https://odn.data.socrata.com/resource/3ma7-imys"
+  region.township: "https://mi-treasury.data.socrata.com/resource/ejw8-67dq"
+  region.msa: "https://odn.data.socrata.com/resource/3ma7-imys"
+  region.place: "https://odn.data.socrata.com/resource/4w8p-9itj"
+  region.zip_code: "https://odn.data.socrata.com/resource/92xu-eg4b"
+
+geo_ranked:
+- "region.place"
+- "region.zip_code"
+geo_limit_default: 5000
+geo_limit:
+  region.place: 1000
+  region.zip_code: 1000
+
+catalog_url: "https://api.us.socrata.com/api/catalog/v1"
+catalog_limit_default: 10
+catalog_limit_max: 100
+catalog_user_agent: "ODN/1.0"
+
+timeout_ms: 30000
+cache_options:
+  expires: 43200
+
+type_relations:
+  region.nation:
+  - "region.region"
+  region.region:
+  - "region.division"
+  region.division:
+  - "region.state"
+  region.state:
+  - "region.county"
+  - "region.msa"
+  - "region.place"
+
+related_count_default: 10
+related_count_max: 1000
+
+suggest_count_default: 5
+suggest_count_max: 100
+suggest_count_sorted: 100
+suggest_separator: ":"
+
+forecast_steps_max: 20
+
+max_url_length: 2000
+
+map_session_expire: 86400000
+map_zoom_min: 0
+map_zoom_max: 18
+
+summary_stat_steps: 9
+summary_stat_names:
+- "minimum"
+- ""
+- "lower quartile"
+- ""
+- "median"
+- ""
+- "upper quartile"
+- ""
+- "maximum"
+

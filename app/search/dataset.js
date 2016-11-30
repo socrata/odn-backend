@@ -7,7 +7,7 @@ const notFound = Exception.notFound;
 const Sources = require('../sources');
 const Stopwords = require('../stopwords');
 const Aliases = require('../aliases');
-const Constants = require('../constants');
+const Config = require('../config');
 const Request = require('../request');
 const ParseRequest = require('../parse-request');
 
@@ -31,7 +31,7 @@ module.exports = (request, response) => {
 };
 
 function searchDatasets(entities, searchTerms, limit, offset) {
-    const url = Request.buildURL(Constants.CATALOG_URL, _.assign({
+    const url = Request.buildURL(Config.catalog_url, _.assign({
         limit,
         offset,
         only: 'datasets',
@@ -41,7 +41,7 @@ function searchDatasets(entities, searchTerms, limit, offset) {
     const options = {
         url,
         headers: {
-            'User-Agent': Constants.CATALOG_USER_AGENT
+            'User-Agent': Config.catalog_user_agent
         }
     };
 

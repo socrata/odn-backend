@@ -9,7 +9,7 @@ const notFound = Exception.notFound;
 const server = Exception.server;
 
 const SOQL = require('../../soql');
-const Constants = require('../../constants');
+const Config = require('../../config');
 const Sources = require('../../sources');
 const Constraint = require('../constraint/constraint');
 const Forecast = require('./forecast');
@@ -323,8 +323,8 @@ function getForecastSteps(request) {
             return reject(invalid(`forecast parameter must be a positive integer: ${forecast}`));
         if (forecastNumber < 0)
             return reject(invalid('forecast parameter cannot be negative'));
-        if (forecastNumber > Constants.FORECAST_STEPS_MAX)
-            return reject(invalid(`forecast parameter cannot be greater than ${Constants.FORECAST_STEPS_MAX}`));
+        if (forecastNumber > Config.forecast_steps_max)
+            return reject(invalid(`forecast parameter cannot be greater than ${Config.forecast_steps_max}`));
 
         resolve(forecastNumber);
     });

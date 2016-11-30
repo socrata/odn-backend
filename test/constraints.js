@@ -109,7 +109,11 @@ describe('/data/v1/constraint', () => {
                 ]
             });
             const years = response.body.permutations.map(_.property('constraint_value'));
-            expect(years).to.deep.equal(['2013', '2012', '2011', '2010', '2009']);
+<<<<<<< HEAD
+            expect(years).to.deep.equal(['2014','2013', '2012', '2011', '2010', '2009']);
+=======
+            expect(years).to.deep.equal(['2014', '2013', '2012', '2011', '2010', '2009']);
+>>>>>>> 758f79440500cc260049b67c7b061664797d9627
         });
     });
 

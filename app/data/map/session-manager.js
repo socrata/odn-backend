@@ -1,11 +1,11 @@
 'use strict';
 
-const Constants = require('../../constants');
+const Config = require('../../config');
 const Exception = require('../../error');
 const notFound = Exception.notFound;
 const Session = require('./session');
 const Cache = require('../../cache');
-const cache = new Cache(null, Constants.CACHE_OPTIONS);
+const cache = new Cache(null, Config.cache_options);
 
 class SessionManager {
     static add(session) {

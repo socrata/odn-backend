@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const Constants = require('./constants');
+const Config = require('./config');
 const SOQL = require('./soql');
 const Exception = require('./error');
 const invalid = Exception.invalidParam;
@@ -13,7 +13,7 @@ class EntityLookup {
         if (_.isNil(id))
             return Promise.reject(invalid('entity_id cannot be null'));
 
-        return new SOQL(Constants.ENTITY_URL)
+        return new SOQL(Config.entity_url)
             .token(token)
             .equal('id', id)
             .send()

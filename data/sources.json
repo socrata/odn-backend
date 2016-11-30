@@ -20,6 +20,39 @@
         }
     },
 
+    "geographic": {
+        "datasets": {
+            "population": {
+                "fxf": "9hs5-ncz3",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "density": {
+                        "name": "Population Density"
+                    }
+                },
+                "searchTerms": ["population", "density"],
+                "description": "Population Density is computed by dividing the total population by Land Area Per Square Mile.",
+                "sources": ["acs"]
+            },
+            "area": {
+                "fxf": "9hs5-ncz3",
+                "constraints": [["year", "desc"]],
+                 "variables": {
+                    "land_area": {
+                        "name": "Land Area"
+                    },
+                     "water_area": {
+                        "name": "Water Area"
+                    }
+                },
+                "searchTerms": ["water", "area"],
+                "description": "Land area is a measurement providing the size, in square miles, of the land portions of geographic entities for which the Census Bureau tabulates and disseminates data. Area is calculated from the specific boundary recorded for each entity in the Census Bureau's geographic database. Land area is based on current information in the TIGER® data base, calculated for use with Census 2010.<br /><br />Water Area figures include inland, coastal, Great Lakes, and territorial sea water. Inland water consists of any lake, reservoir, pond, or similar body of water that is recorded in the Census Bureau's geographic database. It also includes any river, creek, canal, stream, or similar feature that is recorded in that database as a two- dimensional feature (rather than as a single line). The portions of the oceans and related large embayments (such as Chesapeake Bay and Puget Sound), the Gulf of Mexico, and the Caribbean Sea that belong to the United States and its territories are classified as coastal and territorial waters; the Great Lakes are treated as a separate water entity. Rivers and bays that empty into these bodies of water are treated as inland water from the point beyond which they are narrower than 1 nautical mile across. Identification of land and inland, coastal, territorial, and Great Lakes waters is for data presentation purposes only and does not necessarily reflect their legal definitions.",
+                "sources": ["acs"]
+            }
+            
+        }
+    },
+
     "education": {
         "datasets": {
             "graduation_rates": {
@@ -341,18 +374,34 @@
                 "variables": {
                     "per_capita_gdp": {
                         "name": "GDP per capita",
-                        "type": "dollar"
+                        "type": "dollar",
+                        "stoplight": true
                     },
                     "per_capita_gdp_percent_change": {
                         "name": "Annual change in GDP",
-                        "type": "percent"
+                        "type": "percent",
+                        "stoplight": true
                     }
                 },
                 "searchTerms": ["gdp", "gross domestic product", "economy", "production", "revenue", "gross national product", "gnp"],
                 "description": "Gross Domestic Product (GDP) is a measure of the value of all goods and services produced in a region minus the value of the goods and services used up in production. Real GDP is adjusted for changes in the value of money (inflation and deflation) so that values can be compared between years. Data is available for U.S. states and metropolitan areas.",
                 "sources": [["bea", "http://www.bea.gov/regional/index.htm"]]
             },
-
+            "personal_income": {
+                "name": "Personal Income",
+                "fxf": "a2ab-jm4u",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "annual_personal_income": {
+                        "name": "Annual Personal Income",
+                        "type": "dollar",
+                        "stoplight": true
+                    }
+                },
+                "searchTerms": ["income", "personal income", "average salary", "salaries", "wage", "wages", "salary", "salaries"],
+                "description": "Per capita personal income was computed using Census Bureau midyear population estimates. Estimates for 2010-2014 reflect county population estimates available as of March 2015. All dollar estimates are in current dollars (not adjusted for inflation).",
+                "sources": [["bea", "http://www.bea.gov/regional"]]
+            },
             "consumption": {
                 "fxf": "skua-q4dv",
                 "constraints": [["year", "desc"]],
@@ -378,11 +427,15 @@
                 "variables": {
                     "index": {
                         "name": "cost of living index",
-                        "type": "count"
+                        "type": "count",
+                        "stoplight": true,
+                        "reverse": true
                     },
                     "rank": {
                         "name": "cost of living rank",
-                        "type": "count"
+                        "type": "count",
+                        "stoplight": true,
+                        "reverse": true
                     }
                 },
                 "searchTerms": ["cost of living", "rent", "housing", "consumer price index", "expensive", "inexpensive", "housing cost", "home price"],
@@ -436,10 +489,6 @@
                         "name": "Long Term Debt Revenue",
                         "type": "percent"
                     },
-                    "debt_long_term": {
-                        "name": "Long Term Debt",
-                        "type": "dollar"
-                    },
                     "debt_health": {
                         "name": "Debt Per Capita",
                         "type": "dollar",
@@ -483,14 +532,9 @@
                         "type": "dollar",
                         "stoplight": true
                     },
-                     "general_fund_unrestricted_balance": {
-                        "name": "General Fund Unrestricted Balance",
-                        "type": "dollar",
-                        "stoplight": true
-                    },
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
-                        "type": "percent",
+                        "type": "ratio",
                         "stoplight": true
                     },
                     "general_fund_health": {
@@ -500,7 +544,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />The General Fund Balance Operating Budget Surplus(Deficit) is the amount of revenues collected less all expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
