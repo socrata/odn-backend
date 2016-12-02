@@ -160,7 +160,8 @@ describe('/data/v1/values', () => {
                     [2010],
                     [2011],
                     [2012],
-                    [2013]
+                    [2013],
+                    [2014]
                 ]
             });
         });
@@ -265,8 +266,14 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('Lafayette Metro Area (IN)');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
+<<<<<<< HEAD
+            expect(response.body.forecast_descriptions[0]).to.have.string('207,013');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
+            expect(response.body.forecast_descriptions[0]).to.have.string('growth rate');
+=======
             expect(response.body.forecast_descriptions[0]).to.have.string('214,372');
             expect(response.body.forecast_descriptions[0]).to.have.string('2014');
+>>>>>>> 758f79440500cc260049b67c7b061664797d9627
         });
     });
 
@@ -278,7 +285,11 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(2);
             expect(response.body.forecast_descriptions[0]).to.have.string('Greenville Metro Area (NC)');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
+<<<<<<< HEAD
+            expect(response.body.forecast_descriptions[0]).to.have.string('172,438');
+=======
             expect(response.body.forecast_descriptions[0]).to.have.string('172,501');
+>>>>>>> 758f79440500cc260049b67c7b061664797d9627
             expect(response.body.forecast_descriptions[0]).to.have.string('2014');
             expect(response.body.forecast_descriptions[0]).to.have.string('2017');
             expect(response.body.forecast_descriptions[0]).to.have.string('growth rate');
@@ -286,7 +297,12 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions[1]).to.have.string('Lafayette Metro Area (IN)');
             expect(response.body.forecast_descriptions[1]).to.have.string('population');
             expect(response.body.forecast_descriptions[1]).to.have.string('214,372');
+<<<<<<< HEAD
+            expect(response.body.forecast_descriptions[1]).to.have.string('2014');
+            expect(response.body.forecast_descriptions[1]).to.have.string('growth rate');
+=======
             expect(response.body.forecast_descriptions[1]).to.have.string('2013');
+>>>>>>> 758f79440500cc260049b67c7b061664797d9627
         });
     });
 
