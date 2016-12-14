@@ -3,7 +3,11 @@
   "description": "Open Data Network API",
   "private": true,
   "dependencies": {
+    "async": "^2.1.4",
     "chai-as-promised": "5.3.0",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0",
     "compression": "1.6.2",
     "cors": "2.7.1",
     "crypto": "0.0.3",
@@ -19,7 +23,10 @@
     "request-promise": "3.0.0",
     "socket.io": "1.4.8",
     "socket.io-client": "1.4.8",
+    "strftime": "^0.9.2",
+    "superagent": "^3.2.1",
     "sync-request": "^3.0.1",
+    "tmp": "0.0.31",
     "winston": "2.2.0"
   },
   "engines": {

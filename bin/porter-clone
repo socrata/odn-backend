@@ -1,0 +1,67 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var request = require('superagent');
+var yaml = require('js-yaml');
+var fs = require('fs');
+var co = require('co');
+var prompt = require('co-prompt');
+var tmp = require('tmp');
+var sys = require('sys');
+var child_process = require('child_process');
+var strftime = require('strftime')
+
+var puts = function(err, stdout, stderr) { sys.puts(stdout); sys.puts(stderr); };
+
+program
+  .version('0.0.0.1')
+  .arguments('clone <victim>')
+  .action(function(victim) {
+    var config = yaml.safeLoad(fs.readFileSync(__dirname + '/../config.yml', 'utf8'));
+
+    // Make sure we've got a username and password, we'll need it
+    co(function *() {
+      var username = yield prompt('username: ');
+      var password = yield prompt.password('password: ');
+
+      // Generate our DataSync config
+      var ds_config = {
+        domain: config.odn_data_domain,
+        username: username,
+        password: password,
+        appToken: config.app_token
+      };
+
+      // Write it out
+      var tmpfile = tmp.fileSync({ postfix: ".json" });
+      fs.writeFileSync(tmpfile.fd, JSON.stringify(ds_config));
+
+      // Fetch our victim's metadata so that we can generate a new name
+      request
+        .get("https://" + config.odn_data_domain + "/api/views.json")
+        .query({ method: "getByResourceName", name: victim })
+        .end(function(err, res) {
+          if(err || !res.ok) {
+            console.error(res.status, ":", res.text);
+            process.exit(1);
+          }
+
+          // Clone!
+          var command = "java"
+            + " -jar " +  __dirname + '/DataSync-1.7.4.jar '
+            + " --config " + tmpfile.name
+            + " --jobType PortJob"
+            + " --portMethod copy_all"
+            + " --sourceDomain https://" + config.odn_data_domain
+            + " --sourceDatasetId " + res.body.id
+            + " --destinationDomain https://" + config.odn_data_domain
+            + " --destinationDatasetTitle \"" + res.body.name + " (" + strftime("%F %T") + ")\""
+            + " --publishDestinationDataset true";
+          console.log("Command:", command);
+          child_process.execSync("cat " + tmpfile.name, puts);
+          child_process.execSync(command, puts);
+        });
+    });
+  })
+
+  .parse(process.argv);
