@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var request = require('superagent');
+var yaml = require('js-yaml');
+var fs = require('fs');
+var co = require('co');
+var prompt = require('co-prompt');
+var tmp = require('tmp');
+var sys = require('sys');
+var child_process = require('child_process');
+var strftime = require('strftime');
+var async = require('async');
+
+var puts = function(err, stdout, stderr) { sys.puts(stdout); sys.puts(stderr); };
+
+program
+  .version('0.0.0.1')
+  .arguments('promomte <uid> <alias>')
+  .option('-f, --force', 'De-alias others before proceeding')
+  .action(function(uid, alias) {
+    var config = yaml.safeLoad(fs.readFileSync(__dirname + '/../config.yml', 'utf8'));
+
+    // Make sure we've got a username and password, we'll need it
+    co(function *() {
+      var username = yield prompt('username: ');
+      var password = yield prompt.password('password: ');
+
+      async.waterfall([
+        function(callback) {
+          // First we make sure our victim is public
+          request
+            .put("https://" + config.odn_data_domain + "/api/views/" + uid + ".json")
+            .auth(username, password)
+            .query({ method: "setPermission", value: "public.read" })
+            .end(function(err, res) {
+              if(err || !res.ok) {
+                console.error(res.status, ":", res.text);
+                callback("Failed to make " + uid + " public");
+              } else {
+                console.log("Marked", uid, "public");
+                callback();
+              }
+            });
+        },
+        function(callback) {
+          // Determine what we're dealing with here
+          request
+            .get("https://" + config.odn_data_domain + "/api/views/" + uid + ".json")
+            .auth(username, password)
+            .end(function(err, res) {
+              if(err || !res.ok) {
+                callback("Failed to fetch metadata on " + uid);
+              } else {
+                // Proceed, passing on details of whether or not we're on NBE
+                callback(null, res.body.newBackend);
+              }
+            });
+        },
+        function(nbe, callback) {
+          // Make sure we're operating against the NBE version of this dataset
+          if(nbe) {
+            console.log(uid, "is already on NBE");
+            callback();
+          } else {
+            request
+              .get("https://" + config.odn_data_domain + "/api/migrations/" + uid + ".json")
+              .auth(username, password)
+              .end(function(err, res) {
+                if(err || !res.ok) {
+                  callback("Unable to identify NBE version for " + uid);
+                } else {
+                  uid = res.body.nbeId;
+                  console.log("Using NBE ID", uid);
+                  callback();
+                }
+              });
+          }
+        },
+        function(callback) {
+          // Fetch the dataset that may already have the alias
+          request
+            .get("https://" + config.odn_data_domain + "/api/views.json")
+            .auth(username, password)
+            .query({ method: "getByResourceName", name: alias})
+            .end(function(err, res) {
+              if(err || !res.ok) {
+                console.log("No dataset exists at this alias, continuing...");
+                callback(null, null);
+              } else {
+                console.log("We'll need to de-alias", res.body.id);
+                callback(null, res.body.id);
+              }
+            });
+        },
+        function(replacing_uid, callback) {
+          // De-alias an existing dataset
+          if(!replacing_uid) {
+            console.log("No need to de-alias any other datasets")
+            callback();
+          } else {
+            request
+              .put("https://" + config.odn_data_domain + "/api/views/" + replacing_uid + ".json")
+              .auth(username, password)
+              .send({ resourceName: null })
+              .end(function(err, res) {
+                if(err || !res.ok) {
+                  callback("Error clearing alias: " + res.text);
+                } else {
+                  console.log("De-aliased", replacing_uid, "successfully");
+                  callback();
+                }
+              });
+          }
+        },
+        function(callback) {
+          // Set alias for our dataset
+          request
+            .put("https://" + config.odn_data_domain + "/api/views/" + uid + ".json")
+            .auth(username, password)
+            .send({ resourceName: alias })
+            .end(function(err, res) {
+              if(err || !res.ok) {
+                callback("Error setting alias: " + res.text);
+              } else {
+                console.log("Successfully set alias to:", res.body.resourceName);
+                callback();
+              }
+            });
+        }
+      ], function(err, result) {
+        if(err) {
+          console.error("Halting due to error:", err);
+          process.exit(1);
+        } else {
+          console.log("Success!");
+        }
+      });
+    });
+  })
+
+  .parse(process.argv);
