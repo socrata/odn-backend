@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var request = require('superagent');
+var yaml = require('js-yaml');
+var fs = require('fs');
+
+program
+  .version('0.0.0.1')
+  .arguments('deref <alias>')
+  .action(function(alias) {
+    var config = yaml.safeLoad(fs.readFileSync(__dirname + '/../config.yml', 'utf8'));
+
+    request
+      .get("https://" + config.odn_data_domain + "/api/views.json")
+      .query({ method: "getByResourceName", name: alias })
+      .end(function(err, res) {
+        if(err || !res.ok) {
+          console.error(res.status, ":", res.text);
+        } else {
+          console.log("https://" + config.odn_data_domain + "/d/" + res.body.id);
+        }
+      });
+
+
+
+  })
+
+  .parse(process.argv);
