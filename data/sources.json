@@ -485,10 +485,15 @@
                         "stoplight": true,
                         "reverse": true
                     },
+                    "debt_long_term": {
+                        "name": "Long Term Debt",
+                        "type": "dollar"
+                    },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
                         "type": "percent"
-                    },
+                    }
+                    ,
                     "debt_health": {
                         "name": "Debt Per Capita",
                         "type": "dollar",
@@ -535,6 +540,11 @@
                      "liquidity_ratio": {
                         "name": "Liquidity Ratio",
                         "type": "ratio",
+                        "stoplight": true
+                    },
+                     "general_fund_unrestricted_balance": {
+                        "name": "General Fund Unrestricted Balance",
+                        "type": "dollar",
                         "stoplight": true
                     },
                     "general_fund_health": {
