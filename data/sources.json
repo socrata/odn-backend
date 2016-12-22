@@ -554,7 +554,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the total unrestricted revenues minus total unrestricted expenditures.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
