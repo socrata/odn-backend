@@ -445,16 +445,16 @@
                 "fxf": "bqx9-w8qs",
                 "constraints": [["year", "desc"], "month"],
                 "variables": {
+                    "all_goods": {
+                        "name": "Value of All Goods",
+                        "type": "dollar"
+                    },
                     "manufactured": {
                         "name": "Value of All Manufactured Goods",
                         "type": "dollar"
                     },
                     "non_manufactured": {
                         "name": "Value of All Non-Manufactured Goods",
-                        "type": "dollar"
-                    },
-                    "all_goods": {
-                        "name": "Value of All Goods",
                         "type": "dollar"
                     }
                 },
