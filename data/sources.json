@@ -441,9 +441,9 @@
                 "sources": [["bea", "http://www.bea.gov/newsreleases/regional/rpp/rpp_newsrelease.htm"]]
             },
             "state_exports": {
-                "name": "Exports of Goods by State",
+                "name": "Exports of Goods",
                 "fxf": "bqx9-w8qs",
-                "constraints": [["year_month", "desc"]],
+                "constraints": [["year", "desc"], "month"],
                 "variables": {
                     "manufactured": {
                         "name": "Manufactured Goods",
@@ -451,6 +451,10 @@
                     },
                     "non_manufactured": {
                         "name": "Non-Manufactured Goods",
+                        "type": "dollar"
+                    },
+                    "all_goods": {
+                        "name": "All Goods",
                         "type": "dollar"
                     }
                 },
