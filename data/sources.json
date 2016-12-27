@@ -485,10 +485,15 @@
                         "stoplight": true,
                         "reverse": true
                     },
+                    "debt_long_term": {
+                        "name": "Long Term Debt",
+                        "type": "dollar"
+                    },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
                         "type": "percent"
-                    },
+                    }
+                    ,
                     "debt_health": {
                         "name": "Debt Per Capita",
                         "type": "dollar",
@@ -537,6 +542,11 @@
                         "type": "ratio",
                         "stoplight": true
                     },
+                     "general_fund_unrestricted_balance": {
+                        "name": "General Fund Unrestricted Balance",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
                     "general_fund_health": {
                         "name": "General Fund Balance Per Capita",
                         "type": "dollar",
@@ -544,7 +554,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the total unrestricted revenues minus total unrestricted expenditures.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
