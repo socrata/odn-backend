@@ -443,7 +443,7 @@
             "state_exports": {
                 "name": "Exports",
                 "fxf": "bqx9-w8qs",
-                "constraints": [["year", "desc"], "month"],
+                "constraints": [["year", "desc"], ["month", "desc"]],
                 "variables": {
                     "all_goods": {
                         "name": "Value of All Goods",
