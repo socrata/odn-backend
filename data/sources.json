@@ -49,7 +49,6 @@
                 "description": "Land area is a measurement providing the size, in square miles, of the land portions of geographic entities for which the Census Bureau tabulates and disseminates data. Area is calculated from the specific boundary recorded for each entity in the Census Bureau's geographic database. Land area is based on current information in the TIGER® data base, calculated for use with Census 2010.<br /><br />Water Area figures include inland, coastal, Great Lakes, and territorial sea water. Inland water consists of any lake, reservoir, pond, or similar body of water that is recorded in the Census Bureau's geographic database. It also includes any river, creek, canal, stream, or similar feature that is recorded in that database as a two- dimensional feature (rather than as a single line). The portions of the oceans and related large embayments (such as Chesapeake Bay and Puget Sound), the Gulf of Mexico, and the Caribbean Sea that belong to the United States and its territories are classified as coastal and territorial waters; the Great Lakes are treated as a separate water entity. Rivers and bays that empty into these bodies of water are treated as inland water from the point beyond which they are narrower than 1 nautical mile across. Identification of land and inland, coastal, territorial, and Great Lakes waters is for data presentation purposes only and does not necessarily reflect their legal definitions.",
                 "sources": ["acs"]
             }
-            
         }
     },
 
@@ -419,7 +418,6 @@
                 "description": "Personal consumption expenditure is a measure of goods and services purchased by or on behalf of households. Data is available for U.S. states and for the nation as a whole.",
                 "sources": ["bea"]
             },
-
             "cost_of_living": {
                 "name": "Cost of Living",
                 "fxf": "t64z-nedn",
@@ -441,6 +439,24 @@
                 "searchTerms": ["cost of living", "rent", "housing", "consumer price index", "expensive", "inexpensive", "housing cost", "home price"],
                 "description": "The cost of living index measures the difference in the price levels of goods and services across regions. The average cost of living index in the U.S. is 100, with higher values corresponding to costlier goods and services. Data is available for U.S. states and metropolitan areas.",
                 "sources": [["bea", "http://www.bea.gov/newsreleases/regional/rpp/rpp_newsrelease.htm"]]
+            },
+            "state_exports": {
+                "name": "Exports of Goods by State",
+                "fxf": "bqx9-w8qs",
+                "constraints": [["year_month", "desc"]],
+                "variables": {
+                    "manufactured": {
+                        "name": "Manufactured Goods",
+                        "type": "dollar"
+                    },
+                    "non_manufactured": {
+                        "name": "Non-Manufactured Goods",
+                        "type": "dollar"
+                    }
+                },
+                "searchTerms": ["economy", "export", "trade", "international", "naics"],
+                "description": "Measurements of state exports of manufactured and non-manufactured goods",
+                "sources": [["census", "https://www.census.gov/foreign-trade/statistics/state/origin_movement/index.html"]]
             }
         }
     },
