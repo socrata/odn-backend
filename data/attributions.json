@@ -43,6 +43,10 @@
     "sahie": {
       "name": "Small Area Health Insurance Estimate",
       "url": "http://www.census.gov/did/www/sahie/data/20082014/index.html"
+    },
+    "foreign-trade": {
+      "name": "Census Foreign Trade Statistics",
+      "url": "https://www.census.gov/foreign-trade/statistics/state/origin_movement/index.html"
     }
 }
 

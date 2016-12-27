@@ -456,7 +456,7 @@
                 },
                 "searchTerms": ["economy", "export", "trade", "international", "naics"],
                 "description": "Measurements of state exports of manufactured and non-manufactured goods",
-                "sources": [["census", "https://www.census.gov/foreign-trade/statistics/state/origin_movement/index.html"]]
+                "sources": [["foreign-trade", "https://www.census.gov/foreign-trade/statistics/state/origin_movement/index.html"]]
             }
         }
     },
