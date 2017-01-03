@@ -3,16 +3,10 @@
     "demographics": {
         "datasets": {
             "population": {
-                "fxf": "9jg8-ki9x",
-                "constraints": [["year", "desc"]],
+                "fxf": "ushg-rxhy",
+                "constraints": [["year", "desc"], "age", "race", "sex"],
                 "variables": {
-                    "count": {"name": "Population Count"},
-                    "change": {
-                        "name": "Population Rate of Change",
-                        "description": "Percent change from the previous year",
-                        "type": "percent",
-                        "stoplight": true
-                    }
+                    "count": {"name": "Population Count"}
                 },
                 "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
                 "sources": ["acs"]
