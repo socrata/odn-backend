@@ -3,10 +3,16 @@
     "demographics": {
         "datasets": {
             "population": {
-                "fxf": "ushg-rxhy",
-                "constraints": [["year", "desc"], "age", "race", "sex"],
+                "fxf": "9jg8-ki9x",
+                "constraints": [["year", "desc"]],
                 "variables": {
-                    "count": {"name": "Population Count"}
+                    "count": {"name": "Population Count"},
+                    "change": {
+                        "name": "Population Rate of Change",
+                        "description": "Percent change from the previous year",
+                        "type": "percent",
+                        "stoplight": true
+                    }
                 },
                 "searchTerms": ["population", "household", "demographics", "ethnicity", "minority"],
                 "sources": ["acs"]
@@ -516,7 +522,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "dept per capita", "long term debt revenue"],
-                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues. <br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
+                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Long Term Debt is the unmatured principal of bonds, warrants, notes, or other forms of noncurrent or long-term obligation indebtedness.<br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues. <br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
                 "sources": ["f65"]
             },
 
@@ -536,7 +542,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "expenditures", "total general fund expenditures", "public safety fund expenditures", "public safety"],
-                "description": "Expenditures refer to all money spent by a government entity.<br /><br />Total Public Safety Fund Expenditures refers to all money spent on public safety (Police, Fire and Emergency Management).<br /><br />Total General Fund Expenditures refers to all monies spent out of the government's general budget, excluding special purpose funds.",
+                "description": "Expenditures refer to all money spent by a government entity.<br /><br />Total Public Safety Fund Expenditures refers to all money spent on public safety (Police, Fire and Emergency Management).<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.",
                 "sources": ["f65"]
             },
 
@@ -568,7 +574,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the total revenues minus total expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the total unrestricted revenues minus total unrestricted expenditures.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources - the fund equity.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
@@ -618,7 +624,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "property tax", "total taxable value", "property tax health", "debt taxable value"],
-                "description": "Property Tax is the total amount of revenue collected based on a percentage of the value of all land and real property within a government entity.<br /><br />Debt as a Percentage of Taxable Value is the ratio between all outstanding debts of an entity and the total value of all property within that entity.<br /><br />Total Taxable Value is the total value of all land and real property within an entity.<br /><br />Total Taxable Value Per Capita is the total value of all land and real property per resident.",
+                "description": "Property Tax is the total amount of revenue collected based on a percentage of the value of all land and real property within a government entity.<br /><br />Debt as a Percentage of Taxable Value is the amount of long term debt compared to taxable value.<br /><br />Total Taxable Value is the financial worth assigned to property by taxing authorities that is used as a basis or factor against which the tax rate is applied.<br /><br />Total Taxable Value Per Capita is the total value of all land and real property per resident.",
                 "sources": ["f65"]
             },
 
@@ -639,7 +645,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
-                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenue refers to all monies collected into the General Fund, excluding some grants and special purpose funds.<br /><br />Unrestricted Revenue is the percentage of funds that are unrestricted as opposed to committed to a specific purpose or program.",
+                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Unrestricted Revenue is the percentage of funds that are unrestricted as opposed to committed to a specific purpose or program.",
                 "sources": ["f65"]
             }
         }
