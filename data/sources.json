@@ -1,5 +1,83 @@
 
 {
+    "schools": {
+        "datasets": {
+            "finance": {
+                "fxf": "ddne-r9yk",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "general_fund_closing_balance": {
+                        "name": "General Fund Balance",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "gf_brev": {
+                        "name": "General Fund Balance Over Revenue",
+                        "type": "ratio",
+                        "stoplight": true
+                    },
+                    "gf_bpupil": {
+                        "name": "General Fund Balance Per Pupil FTE",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "general_fund_revenue": {
+                        "name": "Total General Fund Revenue",
+                        "type": "dollar"
+                    },
+                    "gf_revexp": {
+                        "name": "General Fund Revenue Over Expenditure",
+                        "type": "ratio",
+                        "stoplight": true
+                    },
+                    "gf_revpupil": {
+                        "name": "General Fund Revenue Per Pupil FTE",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "general_fund_expenditure": {
+                        "name": "Total General Fund Expenditures",
+                        "type": "dollar"
+                    },
+                    "gf_exppupil": {
+                        "name": "General Fund Expenditure Per Pupil FTE",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "total_assets": {
+                        "name": "Total Assets",
+                        "type": "dollar",
+                        "stoplight": true
+                    },
+                    "total_liabilities": {
+                        "name": "Total Liabilities",
+                        "type": "dollar",
+                        "stoplight": true,
+                        "reverse": true
+                    }
+                },
+                "searchTerms": ["michigan", "enrollment", "fte"],
+                "description": "Full Time Equivalent (FTE) Enrollment.<br /><br />",
+                "sources": ["cepi"]
+            },
+            "enrollment": {
+                "fxf": "ddne-r9yk",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "fte_enrollment": {
+                        "name": "FTE Enrollment",
+                        "type": "number"
+                    }
+                },
+                "searchTerms": ["michigan", "enrollment", "fte"],
+                "description": "Full Time Equivalent (FTE) Enrollment.<br /><br />",
+                "sources": ["cepi"]
+            }
+        }
+    },
+
     "demographics": {
         "datasets": {
             "population": {
