@@ -8,7 +8,7 @@ const Sources = require('../app/sources');
 const declarations = {
     entity: {
         domain: Config.odn_data_domain,
-        fxf: 'hbzr-tmdi',
+        fxf: 's2z5-sxuw',
         column: 'name',
         encoded: ['id', 'type', 'rank'],
         sort: option => -parseFloat(option.fields.rank),
