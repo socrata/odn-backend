@@ -7,37 +7,36 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "general_fund_closing_balance": {
+                    "gf_assets": {
+                        "name": "Total Assets",
+                        "type": "dollar"
+                    },
+                    "gf_liabilities": {
+                        "name": "Total Liabilities",
+                        "type": "dollar"
+                    },
+                    "gf_bal": {
                         "name": "General Fund Balance",
-                        "type": "dollar",
-                        "stoplight": true
+                        "type": "dollar"
                     },
-                    "gf_brev": {
-                        "name": "General Fund Balance Over Revenue",
-                        "type": "ratio",
-                        "stoplight": true
-                    },
-                    "gf_bpupil": {
-                        "name": "General Fund Balance Per Pupil FTE",
-                        "type": "dollar",
-                        "stoplight": true
-                    },
-                    "general_fund_revenue": {
+                    "gf_rev": {
                         "name": "Total General Fund Revenue",
+                        "type": "dollar"
+                    },
+                    "gf_exp": {
+                        "name": "Total General Fund Expenditures",
                         "type": "dollar"
                     },
                     "gf_revexp": {
                         "name": "General Fund Revenue Over Expenditure",
-                        "type": "ratio",
-                        "stoplight": true
+                        "type": "ratio"
+                    },
+                    "alRatio": {
+                        "name": "General Fund Assets over Liabilities",
+                        "type": "ratio"
                     },
                     "gf_revpupil": {
                         "name": "General Fund Revenue Per Pupil FTE",
-                        "type": "dollar",
-                        "stoplight": true
-                    },
-                    "general_fund_expenditure": {
-                        "name": "Total General Fund Expenditures",
                         "type": "dollar"
                     },
                     "gf_exppupil": {
@@ -45,20 +44,17 @@
                         "type": "dollar",
                         "stoplight": true
                     },
-                    "total_assets": {
-                        "name": "Total Assets",
-                        "type": "dollar",
-                        "stoplight": true
+                    "gf_brev": {
+                        "name": "General Fund Balance as a Percent of Revenue",
+                        "type": "ratio"
                     },
-                    "total_liabilities": {
-                        "name": "Total Liabilities",
-                        "type": "dollar",
-                        "stoplight": true,
-                        "reverse": true
+                    "gf_bpupil": {
+                        "name": "General Fund Balance Per Pupil FTE",
+                        "type": "dollar"
                     }
                 },
                 "searchTerms": ["michigan", "enrollment", "fte"],
-                "description": "Full Time Equivalent (FTE) Enrollment.<br /><br />",
+                "description": "General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources - the fund equity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.<br /><br />General Fund Revenue over Expenditure equals the General Fund Revenue divided by Expenditure.<br /><br />General Fund Assets over Liabilities equals the General Fund Assets divided by Liabilities.<br /><br />General Fund Revenue per FTE equals Total General Fund Revenues per Full Time Employee.<br /><br />General Fund Expenditure per FTE equals the Total General Fund Expenditures per Full Time Employee.<br /><br />General Fund Balance as a Percent of Revenue equals the General Fund balance as a percent of Revenue.<br /><br />General Fund Revenue Per Pupil FTE equals the General Fund Revenue per Pupil (Full Time Equivalent).<br /><br />General Fund Expenditure Per Pupil FTE equals the General Fund Expenditure per Pupil (Full Time Equivalent).<br /><br />General Fund Balance Per Pupil FTE equals the General Fund Balance per Pupil (Full Time Equivalent).<br /><br />",
                 "sources": ["cepi"]
             },
             "enrollment": {
