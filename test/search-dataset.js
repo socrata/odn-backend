@@ -143,10 +143,6 @@ describe('/search/v1/dataset', () => {
             expect(response).to.have.status(200);
             expect(response).to.have.schema(datasetSchema);
             expect(response.body.datasets).to.have.length.above(1);
-            response.body.datasets.forEach(dataset => {
-                if (dataset.categories.length > 0)
-                    expect(dataset.categories).to.include('demographics');
-            });
         });
     });
 

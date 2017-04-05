@@ -38,7 +38,11 @@
     },
     "f65": {
       "name" : "MICommunity Financial Dashboard",
-      "url" : "http://michigan.insight.socrata.com"
+      "url" : "http://micommunityfinancials.michigan.gov"
+    },
+    "cepi": {
+      "name" : "MICommunity Financial Dashboard",
+      "url" : "http://micommunityfinancials.michigan.gov"
     },
     "sahie": {
       "name": "Small Area Health Insurance Estimate",
