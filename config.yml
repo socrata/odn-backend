@@ -8,6 +8,7 @@ odn_data_domain: "odn.data.socrata.com"
 peers_url: "https://odn-peers.herokuapp.com/peers"
 
 relatives_url: "https://odn.data.socrata.com/resource/relatives.json"
+
 entity_url: "https://odn.data.socrata.com/resource/entities.json"
 #entity_url: "https://odn.data.socrata.com/resource/entities-staging.json"
 variable_url: "https://odn.data.socrata.com/resource/variables.json"
@@ -26,7 +27,6 @@ geo_urls:
   region.zip_code: "https://odn.data.socrata.com/resource/zip-codes"
   region.isd_district: "https://mi-treasury.data.socrata.com/resource/95mk-k4d8"
   region.lea_district: "https://mi-treasury.data.socrata.com/resource/tuc4-ghi6"
-
 
 geo_ranked:
 - "region.place"
