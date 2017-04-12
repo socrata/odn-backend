@@ -45,7 +45,7 @@
                     },
                     "gf_brev": {
                         "name": "General Fund Balance as a Percent of Revenue",
-                        "type": "percent"
+                        "type": "ratio"
                     },
                     "gf_revpupil": {
                         "name": "General Fund Revenue Per Pupil FTE",
