@@ -7,6 +7,10 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
+                    "gf_brev": {
+                        "name": "General Fund Balance as a Percent of Revenue",
+                        "type": "ratio"
+                    },
                     "gf_assets": {
                         "name": "General Fund Assets",
                         "type": "dollar"
@@ -43,9 +47,9 @@
                         "name": "General Fund Expenditure per Staff FTE",
                         "type": "dollar"
                     },
-                    "gf_brev": {
-                        "name": "General Fund Balance as a Percent of Revenue",
-                        "type": "ratio"
+                    "gf_bpupil": {
+                        "name": "General Fund Balance Per Pupil FTE",
+                        "type": "dollar"
                     },
                     "gf_revpupil": {
                         "name": "General Fund Revenue Per Pupil FTE",
@@ -54,14 +58,10 @@
                     "gf_exppupil": {
                         "name": "General Fund Expenditure Per Pupil FTE",
                         "type": "dollar"
-                    },
-                    "gf_bpupil": {
-                        "name": "General Fund Balance Per Pupil FTE",
-                        "type": "dollar"
                     }
                 },
                 "searchTerms": ["michigan", "enrollment", "fte"],
-                "description": "Total General Fund Assets<br /><br />Total General Fund Liabilities<br /><br />General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources - the fund equity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.<br /><br />General Fund Revenue divided by Expenditure<br /><br />General Fund Assets divided by Liabilities<br /><br />Total General Fund Revenues per Full Time Employee.<br /><br />Total General Fund Expenditures per Full Time Employee.<br /><br />General Fund balance as a percent of Revenue<br /><br />General Fund Revenue per Pupil (Full Time Equivalent)<br /><br />General Fund Expenditure per Pupil (Full Time Equivalent)<br /><br />General Fund Balance per Pupil (Full Time Equivalent)",
+                "description": "General Fund balance as a percent of revenue measures the amount of equity a district has saved compared to annual revenue.<br /><br />Total assets in the General Fund.<br /><br />Total liabilities in the General Fund.<br /><br />General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources - the fund equity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.<br /><br />Revenue divided by expenditure shows whether the district saved more money than it spent for a given year.<br /><br />The proportion of districts' assets financed through debt.<br /><br />How much revenue a district makes for each full time employee.<br /><br />How much a district spends with each full time employee.<br /><br />A measure of fund balance health: how much fund equity exists for each full time student.<br /><br />How much revenue a district receives for each full time student.<br /><br />How much a district spends with each full time student.",
                 "sources": ["cepi"]
             },
             "enrollment": {
@@ -75,7 +75,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "enrollment", "fte"],
-                "description": "Full Time Equivalent (FTE) Enrollment.<br /><br />",
+                "description": "Full time equated enrollment (FTE) is the proportion of students' instruction supported by a school district with each student's full time equal to one FTE.",
                 "sources": ["cepi"]
             }
         }
