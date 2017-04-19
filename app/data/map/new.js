@@ -76,9 +76,15 @@ function getBoundingBox(entities, entityType, token) {
 function getSummaryStatistics(dataset, constraints, entityType, token) {
     const variable = _.values(dataset.variables)[0];
     const formatter = format(variable.type);
+    const dotStripedType = _.last(entityType.split('.'));
+    const types = [entityType, dotStripedType];
+    if (entityType === 'place' || dotStripedType === 'place') {
+        types.push('city', 'county', 'township', 'village');
+    }
+
     const baseQuery = new SOQL(dataset.url)
         .token(token)
-        .whereIn('type', [entityType, _.last(entityType.split('.'))])
+        .whereIn('type', types)
         .equal('variable', _.last(variable.id.split('.')))
         .equals(constraints);
 
