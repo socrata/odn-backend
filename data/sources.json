@@ -553,7 +553,7 @@
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "general_fund_balance": {
-                        "name": "General Fund Balance",
+                        "name": "Revenue Surplus (Deficit)",
                         "type": "dollar",
                         "stoplight": true
                     },
@@ -574,7 +574,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources - the fund equity.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />Revenue Surplus (Deficit) is the excess general fund revenues over expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
