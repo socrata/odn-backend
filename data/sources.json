@@ -491,6 +491,26 @@
         }
     },
 
+    "technology": {
+        "datasets": {
+            "broadband" : {
+              "fxf": "g8i9-br5r",
+              "domain": "opendata.fcc.gov",
+              "constraints": [["year", "desc"],"adsl", "cable", "fiber", "other", "satellite", "fixed", "speed", "urban_rural", "tribal_non"],
+              "variables": {
+                "population": {
+                  "name": "Number of Residents",
+                  "type": "number",
+                  "stoplight": true
+                }
+              },
+              "searchTerms": ["broadband", "fcc"],
+              "description": "FCC",
+              "sources": ["fcc"]
+            }
+        }
+    },
+
     "finance": {
         "datasets": {
             "michigan_debt": {
