@@ -2,6 +2,28 @@
 {
     "schools": {
         "datasets": {
+            "enrollment": {
+                "fxf": "ddne-r9yk",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "fte_enrollment": {
+                        "name": "Fall Student Count (FTE)",
+                        "type": "number"
+                    },
+                    "EnrollmentChange": {
+                        "name": "Change in Fall Student Count",
+                        "type": "number"
+                    },
+                    "EnrollmentPercent": {
+                        "name": "Percent Change Fall Student Count",
+                        "type": "ratio"
+                    }
+                },
+                "searchTerms": ["michigan", "enrollment", "fte", "student count"],
+                "description": "Full time equated enrollment (FTE) is the proportion of students' instruction supported by a school district with each student's full time equal to one FTE. Thevariable tracks the Fall student count for each district.<br /><br />Numeric change in the Fall FTE student count.<br /><br />Percent change in the Fall FTE student count.",
+                "sources": ["cepi"]
+            },
             "finance": {
                 "fxf": "ddne-r9yk",
                 "domain": "mi-treasury.data.socrata.com",
@@ -11,45 +33,59 @@
                         "name": "General Fund Balance as a Percent of Revenue",
                         "type": "ratio"
                     },
-                    "gf_assets": {
-                        "name": "General Fund Assets",
-                        "type": "dollar"
-                    },
-                    "gf_liabilities": {
-                        "name": "General Fund Liabilities",
-                        "type": "dollar"
-                    },
                     "gf_bal": {
                         "name": "General Fund Balance",
                         "type": "dollar"
                     },
                     "gf_rev": {
-                        "name": "General Fund Revenue",
+                        "name": "Total General Fund Revenue",
                         "type": "dollar"
                     },
                     "gf_exp": {
-                        "name": "General Fund Expenditure",
+                        "name": "Total General Fund Expenditures",
                         "type": "dollar"
                     },
+                    "11-1-51x-xxxx": {
+                        "name": "General Fund Long Term Debt Service",
+                        "type": "dollar"
+                    },
+                    "Unrestricted": {
+                        "name": "Unrestricted General Fund Revenue",
+                        "type": "dollar"
+                    }
+                },
+                "searchTerms": ["michigan", "finance"],
+                "description": "General Fund balance as a percent of revenue measures the amount of equity a district has saved compared to annual revenue.<br /><br />General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.<br /><br />Long-term debt service payments by the district in the General Fund.<br /><br />District General Fund Revenue that is not bound to a particular use.",
+                "sources": ["cepi"]
+            },
+            "fiscal_metrics": {
+                "fxf": "ddne-r9yk",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
                     "gf_revexp": {
                         "name": "General Fund Revenue Over Expenditure",
                         "type": "ratio"
                     },
-                    "alRatio": {
-                        "name": "General Fund Assets over Liabilities",
-                        "type": "ratio"
-                    },
                     "Rev_Staff": {
-                        "name": "General Fund Revenue per Staff FTE",
+                        "name": "General Fund Revenue Per Staff FTE",
                         "type": "dollar"
                     },
                     "Exp_Staff": {
-                        "name": "General Fund Expenditure per Staff FTE",
+                        "name": "General Fund Expenditure Per Staff FTE",
                         "type": "dollar"
                     },
-                    "gf_bpupil": {
-                        "name": "General Fund Balance Per Pupil FTE",
+                    "271_SQM": {
+                        "name": "Transportation Cost Per Square Mile",
                         "type": "dollar"
+                    },
+                    "OM_Revenue": {
+                        "name": "Operations and Maintenance/Revenue",
+                        "type": "ratio"
+                    },
+                    "URRatio": {
+                        "name": "Percent Unrestricted General Fund Revenue",
+                        "type": "ratio"
                     },
                     "gf_revpupil": {
                         "name": "General Fund Revenue Per Pupil FTE",
@@ -58,24 +94,67 @@
                     "gf_exppupil": {
                         "name": "General Fund Expenditure Per Pupil FTE",
                         "type": "dollar"
+                    },
+                    
+                    "gf_bpupil": {
+                        "name": "General Fund Balance Per Pupil FTE",
+                        "type": "dollar"
                     }
                 },
                 "searchTerms": ["michigan", "enrollment", "fte"],
-                "description": "General Fund balance as a percent of revenue measures the amount of equity a district has saved compared to annual revenue.<br /><br />Total assets in the General Fund.<br /><br />Total liabilities in the General Fund.<br /><br />General Fund Balance is the difference between governmental fund assets and deferred outflows of resources, and liabilities and deferred inflows of resources - the fund equity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.<br /><br />Revenue divided by expenditure shows whether the district saved more money than it spent for a given year.<br /><br />The proportion of districts' assets financed through debt.<br /><br />How much revenue a district makes for each full time employee.<br /><br />How much a district spends with each full time employee.<br /><br />A measure of fund balance health: how much fund equity exists for each full time student.<br /><br />How much revenue a district receives for each full time student.<br /><br />How much a district spends with each full time student.",
+                "description": "Revenue divided by expenditure shows whether the district saved more money than it spent for a given year.<br /><br />How much revenue a district makes for each full time employee<br /><br />How much a district spends with each full time employee<br /><br />How much a district spends on pupil transportation per square mile of its geographic boundary.<br /><br />Percent of revenue spent on Operations and Maintance.<br /><br />Percent of total revenue that is unrestricted.<br /><br />How much revenue a district receives for each full time student<br /><br />How much a district spends with each full time student.<br /><br />A measure of fund balance health: how much fund equity exists for each full time student.",
                 "sources": ["cepi"]
             },
-            "enrollment": {
+            "staffing": {
                 "fxf": "ddne-r9yk",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "fte_enrollment": {
-                        "name": "FTE Enrollment",
+                    "TotalStaff": {
+                        "name": "Total Staff FTE",
+                        "type": "number"
+                    },
+                    "Teachers": {
+                        "name": "Teachers",
+                        "type": "number"
+                    },
+                    "Administrators": {
+                        "name": "Administrators",
+                        "type": "number"
+                    },
+                    "Paras": {
+                        "name": "Paraprofessionals/Aides",
+                        "type": "number"
+                    },
+                    "NonInstructional": {
+                        "name": "Non-Instructional",
                         "type": "number"
                     }
                 },
-                "searchTerms": ["michigan", "enrollment", "fte"],
-                "description": "Full time equated enrollment (FTE) is the proportion of students' instruction supported by a school district with each student's full time equal to one FTE.",
+                "searchTerms": ["michigan", "staffing"],
+                "description": "Full time equivalent count of all staff within the school district.<br /><br />Full time equivalent count of Teachers within the school district.<br /><br />Full time equivalent count of Administrators within the school district.<br /><br />Full time equivalent count of Paraprofessionals and Aides within the school district.<br /><br />Full time equivalent count of Non-Instructional staff within the school district.",
+                "sources": ["cepi"]
+            },
+            "statement_of_position": {
+                "fxf": "ddne-r9yk",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "gf_assets": {
+                        "name": "Total General Fund Assets",
+                        "type": "dollar"
+                    },
+                    "gf_liabilities": {
+                        "name": "Total General Fund Liabilities",
+                        "type": "dollar"
+                    },
+                    "alRatio": {
+                        "name": "General Fund Liquidity Ratio",
+                        "type": "ratio"
+                    }
+                },
+                "searchTerms": ["michigan", "assets", "liabilities", "liquidity ratio", "statement of position"],
+                "description": "Total assets in the general fund.<br /><br />Total liabilities in the general fund<br /><br />The proportion of districts' assets financed through debt.",
                 "sources": ["cepi"]
             }
         }
