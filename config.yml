@@ -22,6 +22,8 @@ geo_urls:
   region.msa: "https://odn.data.socrata.com/resource/regions"
   region.place: "https://odn.data.socrata.com/resource/places"
   region.zip_code: "https://odn.data.socrata.com/resource/zip-codes"
+  region.isd_district: "https://mi-treasury.data.socrata.com/resource/95mk-k4d8"
+  region.lea_district: "https://mi-treasury.data.socrata.com/resource/tuc4-ghi6"
 
 geo_ranked:
 - "region.place"
