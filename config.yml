@@ -8,7 +8,6 @@ odn_data_domain: "odn.data.socrata.com"
 peers_url: "https://odn-peers.herokuapp.com/peers"
 
 relatives_url: "https://odn.data.socrata.com/resource/relatives.json"
-
 entity_url: "https://odn.data.socrata.com/resource/entities.json"
 variable_url: "https://odn.data.socrata.com/resource/variables.json"
 
