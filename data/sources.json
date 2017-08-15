@@ -718,7 +718,7 @@
                         "stoplight": true
                     },
                      "liquidity_ratio": {
-                        "name": "Liquidity Ratio",
+                        "name": "Liquidity (Quick) Ratio",
                         "type": "ratio",
                         "stoplight": true
                     },
@@ -734,7 +734,7 @@
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />Revenue Surplus (Deficit) is the excess general fund revenues over expenditures.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity. <br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />Revenue Surplus (Deficit) is the excess general fund revenues over expenditures.<br /><br />Liquidity (Quick) Ratio is the ratio of assets including: cash and equivalents, investments, and receivables to current liabilities for a government entity.<br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
                 "sources": ["f65"]
             },
 
@@ -799,13 +799,13 @@
                         "type": "dollar"
                     },
                     "unrestricted_revenue": {
-                        "name": "Unrestricted Revenue",
+                        "name": "Unrestricted Fund Balance",
                         "type": "ratio",
                         "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
-                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Unrestricted Revenue is the percentage of funds that are unrestricted as opposed to committed to a specific purpose or program.",
+                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Unrestricted Fund Balance is the percentage of funds that are unrestricted as opposed to allocated for a specific purpose or program.",
                 "sources": ["f65"]
             }
         }
