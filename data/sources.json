@@ -659,9 +659,9 @@
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "debt_service": {
-                        "name": "Debt Service",
-                        "type": "ratio_1dec",
+                    "debt_health": {
+                        "name": "Debt Per Capita",
+                        "type": "dollar",
                         "stoplight": true,
                         "reverse": true
                     },
@@ -669,75 +669,61 @@
                         "name": "Long Term Debt",
                         "type": "dollar"
                     },
+                    "debt_service": {
+                        "name": "Debt Service",
+                        "type": "ratio_1dec",
+                        "stoplight": true,
+                        "reverse": true
+                    },
+                    "debt_taxable_value": {
+                        "name": "Debt as % of Taxable Value",
+                        "type": "ratio",
+                        "stoplight": true
+                    },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
                         "type": "percent"
-                    }
-                    ,
-                    "debt_health": {
-                        "name": "Debt Per Capita",
-                        "type": "dollar",
-                        "stoplight": true,
-                        "reverse": true
-                    }
-                },
-                "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "dept per capita", "long term debt revenue"],
-                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Long Term Debt is the unmatured principal of bonds, warrants, notes, or other forms of noncurrent or long-term obligation indebtedness.<br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues. <br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
-                "sources": ["f65"]
-            },
-
-            "michigan_expenditures": {
-                "name": "Expenditures",
-                "fxf": "qvun-6ew5",
-                "domain": "mi-treasury.data.socrata.com",
-                "constraints": [["year", "desc"]],
-                "variables": {
-                    "public_safety_expenditures": {
-                        "name": "Total Public Safety Fund Expenditures",
-                        "type": "dollar"
                     },
                     "total_general_fund_expenditures": {
                         "name": "Total General Fund Expenditures",
                         "type": "dollar"
                     }
                 },
-                "searchTerms": ["michigan", "financial indicators", "expenditures", "total general fund expenditures", "public safety fund expenditures", "public safety"],
-                "description": "Expenditures refer to all money spent by a government entity.<br /><br />Total Public Safety Fund Expenditures refers to all money spent on public safety (Police, Fire and Emergency Management).<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.",
+                "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "dept per capita", "long term debt revenue", "debt taxable value"],
+                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Per Capita is the amount of outstanding debt per resident.<br /><br />Long Term Debt is the unmatured principal of bonds, warrants, notes, or other forms of noncurrent or long-term obligation indebtedness.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Debt as a Percentage of Taxable Value is the amount of long term debt compared to taxable value.<br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues.<br /><br />Total General Fund Expenditures refers to decreases in net financial resources.",
                 "sources": ["f65"]
             },
-
             "michigan_general_fund": {
                 "name": "General Fund",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "general_fund_balance": {
-                        "name": "Revenue Surplus (Deficit)",
+                    "general_fund_health": {
+                        "name": "General Fund Balance Per Capita",
                         "type": "dollar",
                         "stoplight": true
                     },
-                     "liquidity_ratio": {
-                        "name": "Liquidity (Quick) Ratio",
-                        "type": "ratio",
-                        "stoplight": true
-                    },
-                     "general_fund_unrestricted_balance": {
+                    "general_fund_unrestricted_balance": {
                         "name": "General Fund Unrestricted Balance",
                         "type": "dollar",
                         "stoplight": true
                     },
-                    "general_fund_health": {
-                        "name": "General Fund Balance Per Capita",
+                     "liquidity_ratio": {
+                        "name": "Liquidity Ratio",
+                        "type": "ratio",
+                        "stoplight": true
+                    },
+                    "revenue_surplus": {
+                        "name": "Revenue Surplus (Deficit)",
                         "type": "dollar",
                         "stoplight": true
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "general fund", "liquidity ratio", "general fund health", "general fund balance"],
-                "description": "The General Fund is the primary budget for a government entity.<br /><br />Revenue Surplus (Deficit) is the excess general fund revenues over expenditures.<br /><br />Liquidity (Quick) Ratio is the ratio of assets including: cash and equivalents, investments, and receivables to current liabilities for a government entity.<br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.",
+                "description": "The General Fund is the primary budget for a government entity.<br /><br />General Fund Balance Per Capita is the balance of General Fund per resident.<br /><br />General Fund Unrestricted Balance is the part of fund balance that is not restricted by external creditors (such as through debt covenants), grantors, contributors, or laws or regulations of other governments; nor restricted through imposition law through constitutional provisions or enabling legislation.<br /><br />Liquidity Ratio is the ratio of assets to liabilities for a government entity.<br /><br />Revenue Surplus (Deficit) is the excess general fund revenues over expenditures.",
                 "sources": ["f65"]
             },
-
             "michigan_pensions": {
                 "name": "Pensions",
                 "fxf": "qvun-6ew5",
@@ -761,51 +747,28 @@
                 "description": "Pensions are the accounts used to pay for retirement benefits for former government employees.<br /><br />Unfunded Pension Liability is the difference between the current assets plus projected investment returns minus the total of all projected employee payments.<br /><br />Unfunded Pension Liability Per Capita is the unfunded pension liability per resident.",
                 "sources": ["f65"]
             },
-
             "michigan_property_tax": {
                 "name": "Property Tax",
                 "fxf": "qvun-6ew5",
                 "domain": "mi-treasury.data.socrata.com",
                 "constraints": [["year", "desc"]],
                 "variables": {
-                    "debt_taxable_value": {
-                        "name": "Debt as % of Taxable Value",
-                        "type": "ratio",
+                    "property_tax_health": {
+                        "name": "Total Taxable Value Per Capita",
+                        "type": "dollar",
                         "stoplight": true
                     },
                      "total_taxable_value": {
                         "name": "Total Taxable Value",
                         "type": "dollar"
                     },
-                    "property_tax_health": {
-                        "name": "Total Taxable Value Per Capita",
-                        "type": "dollar",
-                        "stoplight": true
-                    }
-                },
-                "searchTerms": ["michigan", "financial indicators", "property tax", "total taxable value", "property tax health", "debt taxable value"],
-                "description": "Property Tax is the total amount of revenue collected based on a percentage of the value of all land and real property within a government entity.<br /><br />Debt as a Percentage of Taxable Value is the amount of long term debt compared to taxable value.<br /><br />Total Taxable Value is the financial worth assigned to property by taxing authorities that is used as a basis or factor against which the tax rate is applied.<br /><br />Total Taxable Value Per Capita is the total value of all land and real property per resident.",
-                "sources": ["f65"]
-            },
-
-            "michigan_revenues": {
-                "name": "Revenues",
-                "fxf": "qvun-6ew5",
-                "domain": "mi-treasury.data.socrata.com",
-                "constraints": [["year", "desc"]],
-                "variables": {
                     "total_general_fund_revenue": {
                         "name": "Total General Fund Revenue",
                         "type": "dollar"
-                    },
-                    "unrestricted_revenue": {
-                        "name": "Unrestricted Fund Balance",
-                        "type": "ratio",
-                        "stoplight": true
                     }
                 },
-                "searchTerms": ["michigan", "financial indicators", "revenue", "unrestricted revenue", "total general fund revenue", "general fund"],
-                "description": "Revenues refer to all money collected by a government entity.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />Unrestricted Fund Balance is the percentage of funds that are unrestricted as opposed to allocated for a specific purpose or program.",
+                "searchTerms": ["michigan", "financial indicators", "property tax", "total taxable value", "property tax health", "total general fund revenue"],
+                "description": "Property Tax is the total amount of revenue collected based on a percentage of the value of all land and real property within a government entity.<br /><br />Total Taxable Value Per Capita is the total value of all land and real property per resident.<br /><br />Total Taxable Value is the financial worth assigned to property by taxing authorities that is used as a basis or factor against which the tax rate is applied.<br /><br />Total General Fund Revenues are the gross receipts and receivables of a governmental unit derived from taxes and other sources.<br /><br />",
                 "sources": ["f65"]
             }
         }
