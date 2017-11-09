@@ -682,7 +682,23 @@
                     },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
-                        "type": "percent"
+                        "type": "ratio"
+                    }
+                },
+                "searchTerms": ["michigan", "financial indicators", "debt service", "revenue",  "debt health", "dept per capita", "long term debt revenue"],
+                "description": "Debt refers to the total amount of outstanding dollars owed by a government entity.<br /><br />Debt Service Ratio is the percentage of annual revenues committed to paying back debts. <br /><br />Long Term Debt is the unmatured principal of bonds, warrants, notes, or other forms of noncurrent or long-term obligation indebtedness.<br /><br />Long Term Debt Revenue is the ratio of outstanding long term debts to revenues. <br /><br />Debt Per Capita is the amount of outstanding debt per resident.",
+                "sources": ["f65"]
+            },
+
+            "michigan_expenditures": {
+                "name": "Expenditures",
+                "fxf": "qvun-6ew5",
+                "domain": "mi-treasury.data.socrata.com",
+                "constraints": [["year", "desc"]],
+                "variables": {
+                    "public_safety_expenditures": {
+                        "name": "Total Public Safety Fund Expenditures",
+                        "type": "dollar"
                     },
                     "total_general_fund_expenditures": {
                         "name": "Total General Fund Expenditures",
@@ -706,7 +722,7 @@
                     },
                     "general_fund_unrestricted_balance": {
                         "name": "General Fund Unrestricted Balance",
-                        "type": "dollar",
+                        "type": "ratio",
                         "stoplight": true
                     },
                      "liquidity_ratio": {
