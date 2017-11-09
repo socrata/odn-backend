@@ -671,7 +671,7 @@
                     },
                     "long_term_debt_revenue": {
                         "name": "Long Term Debt Revenue",
-                        "type": "percent"
+                        "type": "ratio"
                     }
                     ,
                     "debt_health": {
@@ -724,7 +724,7 @@
                     },
                      "general_fund_unrestricted_balance": {
                         "name": "General Fund Unrestricted Balance",
-                        "type": "dollar",
+                        "type": "ratio",
                         "stoplight": true
                     },
                     "general_fund_health": {
