@@ -10,6 +10,7 @@ peers_url: "https://odn-peers.herokuapp.com/peers"
 relatives_url: "https://odn.data.socrata.com/resource/relatives.json"
 entity_url: "https://odn.data.socrata.com/resource/entities.json"
 variable_url: "https://odn.data.socrata.com/resource/variables.json"
+# variable_url: "https://odn.data.socrata.com/resource/variables-staging.json"
 
 geo_url: "https://odn.data.socrata.com/resource/j4v5-7652"
 geo_urls:
