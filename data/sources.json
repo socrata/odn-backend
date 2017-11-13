@@ -764,10 +764,6 @@
                      "total_taxable_value": {
                         "name": "Total Taxable Value",
                         "type": "dollar"
-                    },
-                    "total_general_fund_revenue": {
-                        "name": "Total General Fund Revenue",
-                        "type": "dollar"
                     }
                 },
                 "searchTerms": ["michigan", "financial indicators", "property tax", "total taxable value", "property tax health", "debt taxable value"],
