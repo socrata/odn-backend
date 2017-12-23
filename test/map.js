@@ -78,7 +78,7 @@ describe('/data/v1/map', () => {
             let response, sessionID;
 
             before(() => {
-                response = newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2013').then(response => {
+                response = newMap('entity_id=0400000US53,0400000US08&variable=demographics.population.count&year=2016').then(response => {
                     expect(response).to.have.status(200);
                     sessionID = response.body.session_id;
                     return Promise.resolve(response);
@@ -102,8 +102,8 @@ describe('/data/v1/map', () => {
                     expect(stats.values).to.have.lengthOf(9);
                     expect(stats.values).to.be.ascending;
                     expect(stats.values_formatted).to.have.lengthOf(9);
-                    expect(_.first(stats.values_formatted)).to.equal('570,134');
-                    expect(_.last(stats.values_formatted)).to.equal('37,659,181');
+                    expect(_.first(stats.values_formatted)).to.equal('583,029');
+                    expect(_.last(stats.values_formatted)).to.equal('38,654,206');
                     return chakram.wait();
                 });
             });

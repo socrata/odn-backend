@@ -227,14 +227,17 @@ describe('/data/v1/values', () => {
                     [2012, false],
                     [2013, false],
                     [2014, false],
-                    [2015, true],
-                    [2016, true]
+                    [2015, false],
+                    [2016, false],
+                    [2017, true],
+                    [2018, true]
+
                 ],
                 forecast_info: {
                     algorithm_name: 'linear'
                 }
             });
-            expect(response.body.data).to.have.lengthOf(10);
+            expect(response.body.data).to.have.lengthOf(12);
             expect(response.body).to.not.have.keys('forecast_descriptions');
 
             // make sure it predicts increasing population
@@ -251,10 +254,10 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('United States');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('0.84%');
+            expect(response.body.forecast_descriptions[0]).to.have.string('0.81%');
             expect(response.body.forecast_descriptions[0]).to.have.string('2009');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2017');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2016');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2019');
         });
     });
 
@@ -266,8 +269,8 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('Lafayette Metro Area (IN)');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('214,372');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
+            expect(response.body.forecast_descriptions[0]).to.have.string('212,113');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2016');
         });
     });
 
@@ -279,15 +282,15 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(2);
             expect(response.body.forecast_descriptions[0]).to.have.string('Greenville Metro Area (NC)');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('172,501');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2017');
+            expect(response.body.forecast_descriptions[0]).to.have.string('175,150');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2016');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2019');
             expect(response.body.forecast_descriptions[0]).to.have.string('growth rate');
 
             expect(response.body.forecast_descriptions[1]).to.have.string('Lafayette Metro Area (IN)');
             expect(response.body.forecast_descriptions[1]).to.have.string('population');
-            expect(response.body.forecast_descriptions[1]).to.have.string('214,372');
-            expect(response.body.forecast_descriptions[1]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[1]).to.have.string('212,113');
+            expect(response.body.forecast_descriptions[1]).to.have.string('2016');
         });
     });
 
