@@ -167,10 +167,6 @@ describe('/data/v1/values', () => {
         });
     });
 
-    it('should find no data for an invalid constraint value', () => {
-        return expect(values('entity_id=310M200US42660&variable=economy.cost_of_living.index&component=all'))
-            .to.have.status(404);
-    });
 
     it('should not be able to forecast multiple variables', () => {
         return values('variable=demographics.population&entity_id=0100000US&forecast=4').then(response => {
@@ -220,21 +216,25 @@ describe('/data/v1/values', () => {
             expect(response).to.have.schema(valuesSchema);
             expect(response).to.comprise.of.json({
                 data: [
-                    ['year', 'forecast', '0100000US'],
-                    [2009, false],
-                    [2010, false],
-                    [2011, false],
-                    [2012, false],
-                    [2013, false],
-                    [2014, false],
-                    [2015, true],
-                    [2016, true]
+                    ["year", "0100000US", "forecast"],
+                    [2009, 301461533, false],
+                    [2010, 303965272, false],
+                    [2011, 306603772, false],
+                    [2012, 309138711, false],
+                    [2013, 311536594, false],
+                    [2014, 314107084, false],
+                    [2015, 316515021, false],
+                    [2016, 318558162, false],
+                    [2017, 321004407, false],
+                    [2018, 323447266.25, true],
+                    [2019, 325890125.5, true],
+                    [2020, 328332984.75, true]
                 ],
                 forecast_info: {
                     algorithm_name: 'linear'
                 }
             });
-            expect(response.body.data).to.have.lengthOf(10);
+            expect(response.body.data).to.have.lengthOf(13);
             expect(response.body).to.not.have.keys('forecast_descriptions');
 
             // make sure it predicts increasing population
@@ -251,10 +251,10 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('United States');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('0.84%');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2009');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2017');
+            expect(response.body.forecast_descriptions[0]).to.have.string('0.81%');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2009'); // first measured
+            expect(response.body.forecast_descriptions[0]).to.have.string('2017'); // last measured
+            expect(response.body.forecast_descriptions[0]).to.have.string('2020'); // extrapolated
         });
     });
 
@@ -266,8 +266,8 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(1);
             expect(response.body.forecast_descriptions[0]).to.have.string('Lafayette Metro Area (IN)');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('214,372');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
+            expect(response.body.forecast_descriptions[0]).to.have.string('222,410');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2020');
         });
     });
 
@@ -279,15 +279,16 @@ describe('/data/v1/values', () => {
             expect(response.body.forecast_descriptions).to.have.lengthOf(2);
             expect(response.body.forecast_descriptions[0]).to.have.string('Greenville Metro Area (NC)');
             expect(response.body.forecast_descriptions[0]).to.have.string('population');
-            expect(response.body.forecast_descriptions[0]).to.have.string('172,501');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2014');
-            expect(response.body.forecast_descriptions[0]).to.have.string('2017');
+            expect(response.body.forecast_descriptions[0]).to.have.string('178,041');
+            expect(response.body.forecast_descriptions[0]).to.have.string('2009'); // first measured
+            expect(response.body.forecast_descriptions[0]).to.have.string('2017'); // last measured
+            expect(response.body.forecast_descriptions[0]).to.have.string('2020'); // extrapolated
             expect(response.body.forecast_descriptions[0]).to.have.string('growth rate');
 
             expect(response.body.forecast_descriptions[1]).to.have.string('Lafayette Metro Area (IN)');
             expect(response.body.forecast_descriptions[1]).to.have.string('population');
-            expect(response.body.forecast_descriptions[1]).to.have.string('214,372');
-            expect(response.body.forecast_descriptions[1]).to.have.string('2013');
+            expect(response.body.forecast_descriptions[1]).to.have.string('222,410');
+            expect(response.body.forecast_descriptions[1]).to.have.string('2020');
         });
     });
 
