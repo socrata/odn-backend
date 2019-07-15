@@ -93,7 +93,7 @@ class AutosuggestDataset {
             if (this.fields.length > 0) {
                 const index = allText.lastIndexOf(' ');
                 if (index === -1)
-                    reject(Exception.server(`expected hidden this.fields ${this.fields.join(', ')}
+                    reject(Exception.server(`expected hidden fields ${this.fields.join(', ')}
                                 in ${allText} but found none`));
 
                 const text = allText.substring(0, index);
@@ -102,8 +102,8 @@ class AutosuggestDataset {
                 const attributes = decoded.split(Config.suggest_separator);
 
                 if (attributes.length !== this.fields.length)
-                    reject(Exception.server(`expected ${this.fields.length} hidden this.fields in
-                                ${decoded} but found ${this.fields.length}`));
+                    reject(Exception.server(`expected ${this.fields.length} hidden fields in
+                                ${decoded} but found ${attributes.length}`));
 
                 resolve({text, fields: _.zipObject(this.fields, attributes)});
             } else {
