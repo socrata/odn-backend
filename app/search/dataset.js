@@ -35,7 +35,7 @@ function searchDatasets(entities, searchTerms, limit, offset) {
         limit,
         offset,
         only: 'datasets',
-        q_internal: qInternal(entities, searchTerms)
+        q: q(entities, searchTerms)
     }));
 
     const options = {
@@ -68,11 +68,11 @@ function getDataset(result) {
     });
 }
 
-function qInternal(entities, searchTerms) {
-    return and([
-        or(entities.map(queryEntity)),
-        or(searchTerms.map(quote))
-    ]);
+function q(entities, searchTerms) {
+    return [
+        ...entities.map(queryEntity),
+        ...searchTerms.map(quote)
+    ].join(' ');
 }
 
 function queryEntity(entity) {
@@ -83,7 +83,7 @@ function queryEntity(entity) {
         .groupBy(_.size)
         .values()
         .value();
-    return and(grouped.map(aliases => or(aliases.map(or))));
+    return _.flattenDeep(grouped).join(' ');
 }
 
 function split(phrase) {
