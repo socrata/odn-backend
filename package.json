@@ -16,7 +16,7 @@
     "geojson-merge": "0.1.0",
     "gulp-mocha": "3.0.1",
     "istanbul-middleware": "0.2.2",
-    "lodash": "4.13.1",
+    "lodash": "4.17.15",
     "memjs": "0.10.0",
     "numeral": "1.5.3",
     "querystring": "0.2.0",
