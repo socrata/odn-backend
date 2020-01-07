@@ -95,7 +95,7 @@
                         "name": "General Fund Expenditure Per Pupil FTE",
                         "type": "dollar"
                     },
-                    
+
                     "gf_bpupil": {
                         "name": "General Fund Balance Per Pupil FTE",
                         "type": "dollar"
@@ -654,8 +654,8 @@
         "datasets": {
             "michigan_debt": {
                 "name": "Debt",
-                "fxf": "qvun-6ew5",
-                "domain": "mi-treasury.data.socrata.com",
+                "fxf": "4eh8-kaka",
+                "domain": "data.michigan.gov",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "debt_health": {
@@ -690,8 +690,8 @@
             },
             "michigan_general_fund": {
                 "name": "General Fund",
-                "fxf": "qvun-6ew5",
-                "domain": "mi-treasury.data.socrata.com",
+                "fxf": "4eh8-kaka",
+                "domain": "data.michigan.gov",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "general_fund_health": {
@@ -729,8 +729,8 @@
             },
             "michigan_pensions": {
                 "name": "Pensions",
-                "fxf": "qvun-6ew5",
-                "domain": "mi-treasury.data.socrata.com",
+                "fxf": "4eh8-kaka",
+                "domain": "data.michigan.gov",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "unfunded_pension_liability": {
@@ -752,8 +752,8 @@
             },
             "michigan_property_tax": {
                 "name": "Property Tax",
-                "fxf": "qvun-6ew5",
-                "domain": "mi-treasury.data.socrata.com",
+                "fxf": "4eh8-kaka",
+                "domain": "data.michigan.gov",
                 "constraints": [["year", "desc"]],
                 "variables": {
                     "property_tax_health": {
@@ -773,4 +773,3 @@
         }
     }
 }
-

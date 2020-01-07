@@ -19,12 +19,12 @@ geo_urls:
   region.region: "https://odn.data.socrata.com/resource/3ma7-imys"
   region.state: "https://odn.data.socrata.com/resource/3ma7-imys"
   region.county: "https://odn.data.socrata.com/resource/3ma7-imys"
-  region.township: "https://mi-treasury.data.socrata.com/resource/ejw8-67dq"
+  region.township: "https://data.michigan.gov/resource/8xya-jycw"
   region.msa: "https://odn.data.socrata.com/resource/3ma7-imys"
   region.place: "https://odn.data.socrata.com/resource/4w8p-9itj"
   region.zip_code: "https://odn.data.socrata.com/resource/92xu-eg4b"
-  region.isd_district: "https://mi-treasury.data.socrata.com/resource/95mk-k4d8"
-  region.lea_district: "https://mi-treasury.data.socrata.com/resource/tuc4-ghi6"
+  region.isd_district: "https://mi-treasury.data.socrata.com/resource/95mk-k4d8" # to be deprecated
+  region.lea_district: "https://mi-treasury.data.socrata.com/resource/tuc4-ghi6" # to be deprecated
 
 geo_ranked:
 - "region.place"
@@ -82,4 +82,3 @@ summary_stat_names:
 - "upper quartile"
 - ""
 - "maximum"
-
