@@ -3,17 +3,12 @@
 process.isDevelopment = process.env.NODE_ENV === 'development';
 process.isProduction = !process.isDevelopment;
 
-const istanbul = require('istanbul-middleware');
-if (process.isDevelopment) istanbul.hookLoader(__dirname);
-
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.use(require('compression')());
 app.use(require('cors')());
-
-if (process.isDevelopment) app.use('/coverage', istanbul.createHandler());
 
 app.get('/', require('./app/home'));
 
