@@ -3,7 +3,7 @@
   "description": "Open Data Network API",
   "private": true,
   "dependencies": {
-    "async": "^2.1.4",
+    "async": "^3.2.2",
     "chai-as-promised": "5.3.0",
     "co": "^4.6.0",
     "co-prompt": "^1.0.0",
