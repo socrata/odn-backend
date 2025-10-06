@@ -54,7 +54,12 @@ function searchDatasets(entities, searchTerms, limit, offset) {
 function getDataset(result) {
     const resource = result.resource;
     const fxf = resource.nbe_fxf || resource.id;
-    const domain = result.metadata.domain;
+    let domain = result.metadata.domain;
+
+    // Apply domain replacements if configured
+    if (Config.domain_replacements && Config.domain_replacements.has(domain)) {
+        domain = Config.domain_replacements.get(domain);
+    }
 
     return _.assign(_.pick(resource, ['name', 'description', 'attribution']), {
         fxf,

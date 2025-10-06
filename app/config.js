@@ -24,6 +24,32 @@ var loadConfig = function() {
 const GlobalConfig = loadConfig();
 
 /**
+ * Parse domain replacements from environment variable.
+ * Format: "old1.com:new1.com,old2.com:new2.com"
+ * Returns a Map of old domain -> new domain
+ */
+const parseDomainReplacements = function() {
+  const replacements = new Map();
+  const envVar = process.env.DOMAIN_REPLACEMENTS;
+
+  if (!envVar || envVar.trim() === '') {
+    return replacements;
+  }
+
+  const pairs = envVar.split(',');
+  for (const pair of pairs) {
+    const [oldDomain, newDomain] = pair.split(':').map(s => s.trim());
+    if (oldDomain && newDomain) {
+      replacements.set(oldDomain, newDomain);
+    }
+  }
+
+  return replacements;
+};
+
+GlobalConfig.domain_replacements = parseDomainReplacements();
+
+/**
  * Makes this accessible inside of server side executed controllers stuff
  */
 if (typeof module !== 'undefined') module.exports = GlobalConfig;
