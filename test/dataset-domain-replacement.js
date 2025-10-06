@@ -57,7 +57,7 @@ describe('Dataset Domain Replacement in Search Results', () => {
             createMockResult('datahub.austintexas.gov', 'test-fxf')
         ];
 
-        const Request = require('../request');
+        const Request = require('../app/request');
         const originalGetJSON = Request.getJSON;
         const originalBuildURL = Request.buildURL;
 
@@ -102,7 +102,7 @@ describe('Dataset Domain Replacement in Search Results', () => {
             createMockResult('datahub.austintexas.gov', 'test-fxf')
         ];
 
-        const Request = require('../request');
+        const Request = require('../app/request');
         const originalGetJSON = Request.getJSON;
         const originalBuildURL = Request.buildURL;
 
@@ -148,7 +148,7 @@ describe('Dataset Domain Replacement in Search Results', () => {
             createMockResult('data.seattle.gov', 'test-fxf-2')
         ];
 
-        const Request = require('../request');
+        const Request = require('../app/request');
         const originalGetJSON = Request.getJSON;
         const originalBuildURL = Request.buildURL;
 
@@ -197,7 +197,7 @@ describe('Dataset Domain Replacement in Search Results', () => {
             createMockResult('data.seattle.gov', 'test-fxf-3')
         ];
 
-        const Request = require('../request');
+        const Request = require('../app/request');
         const originalGetJSON = Request.getJSON;
         const originalBuildURL = Request.buildURL;
 
