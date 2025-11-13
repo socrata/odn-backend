@@ -44,7 +44,7 @@
     "jshint": "2.10.3",
     "mkdirp": "0.5.1",
     "mocha": "6.2.2",
-    "mocha-parallel-tests": "0.5.3",
+    "mocha-parallel-tests": "2.3.0",
     "nodemon": "2.0.0",
     "ogr2ogr": "1.4.0"
   },
